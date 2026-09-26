@@ -1,547 +1,848 @@
-'use client';
+'use client'
 
-/**
- * DryRun — UploadScreen
- * Onboarding & codebase ingestion screen.
- *
- * Hero → GitHub URL input → ZIP drop-zone → Quick Demo scenarios → Architecture highlights.
- */
+import { useRef, useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Sparkles, Lock } from 'lucide-react'
+import { DEMO_SCENARIOS } from '@/lib/demo-data'
 
-import React, { useCallback, useRef, useState } from 'react';
-import {
-  Github,
-  Upload,
-  Zap,
-  GitBranch,
-  Activity,
-  Shield,
-  ArrowRight,
-  FolderArchive,
-  AlertTriangle,
-  Heart,
-  Server,
-} from 'lucide-react';
-import type { DemoScenario } from '@/lib/demo-data';
-
-// ---------------------------------------------------------------------------
-// Constants
-// ---------------------------------------------------------------------------
-
-const FONT_MONO: React.CSSProperties = {
-  fontFamily: '"JetBrains Mono", "Fira Code", monospace',
-};
-
-const MAX_FILE_BYTES = 50 * 1024 * 1024; // 50 MB
-
-interface ArchHighlight {
-  icon: React.ElementType;
-  label: string;
-  body: string;
-  accent: string;
-  border: string;
-  bg: string;
+interface UploadScreenProps {
+  onFileSelected: (file: File) => void
+  onDemo: (scenarioId?: string) => void
+  onRepoUrl?: (url: string) => void
+  privateRepoNotice?: {
+    isOpen: boolean
+    repoUrl?: string
+    error?: string
+  } | null
+  onClosePrivateRepoNotice?: () => void
 }
 
-const ARCH_HIGHLIGHTS: ArchHighlight[] = [
-  {
-    icon: GitBranch,
-    label: 'Static AST Parsing',
-    body: 'TypeScript Compiler API extracts every import, re-export, and HTTP call site without executing code.',
-    accent: 'text-violet-400',
-    border: 'border-violet-500/20',
-    bg: 'bg-violet-500/5',
-  },
-  {
-    icon: Activity,
-    label: 'Reverse BFS Reachability',
-    body: 'Weighted reverse BFS assigns blast-radius scores to every node reachable from your changed files.',
-    accent: 'text-orange-400',
-    border: 'border-orange-500/20',
-    bg: 'bg-orange-500/5',
-  },
-  {
-    icon: Zap,
-    label: 'Chaos Fault Injection',
-    body: 'SERVICE_OUTAGE, LATENCY_P99_SPIKE, ERROR_RATE_BREACH and more — propagated via exponential decay.',
-    accent: 'text-yellow-400',
-    border: 'border-yellow-500/20',
-    bg: 'bg-yellow-500/5',
-  },
-  {
-    icon: Shield,
-    label: 'watsonx Granite Gate',
-    body: 'IBM Granite streams a risk narrative and issues a binary APPROVED / BLOCKED release decision.',
-    accent: 'text-emerald-400',
-    border: 'border-emerald-500/20',
-    bg: 'bg-emerald-500/5',
-  },
-];
+interface Particle {
+  id: number
+  x: number
+  y: number
+  color: string
+  size: number
+  velocityX: number
+  velocityY: number
+}
 
-// Scenario severity → icon mapping
-const SEVERITY_ICON: Record<string, React.ElementType> = {
-  CRITICAL: AlertTriangle,
-  HIGH: Heart,
-  MEDIUM: Server,
-};
+/* Exact Violet Sparkle from GitDiagram hero.tsx (User Image 1) */
+const VioletSparkle = ({ className }: { className?: string }) => (
+  <svg
+    className={className}
+    viewBox="0 0 91 98"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden
+  >
+    <path
+      d="m35.878 14.162 1.333-5.369 1.933 5.183c4.47 11.982 14.036 21.085 25.828 24.467l5.42 1.555-5.209 2.16c-11.332 4.697-19.806 14.826-22.888 27.237l-1.333 5.369-1.933-5.183C34.56 57.599 24.993 48.496 13.201 45.114l-5.42-1.555 5.21-2.16c11.331-4.697 19.805-14.826 22.887-27.237Z"
+      className="fill-violet-500 stroke-black dark:fill-[hsl(var(--neo-button))] dark:stroke-black"
+      strokeWidth="3.445"
+    />
+    <path
+      d="M79.653 5.729c-2.436 5.323-9.515 15.25-18.341 12.374m9.197 16.336c2.6-5.851 10.008-16.834 18.842-13.956m-9.738-15.07c-.374 3.787 1.076 12.078 9.869 14.943M70.61 34.6c.503-4.21-.69-13.346-9.49-16.214M14.922 65.967c1.338 5.677 6.372 16.756 15.808 15.659M18.21 95.832c-1.392-6.226-6.54-18.404-15.984-17.305m12.85-12.892c-.41 3.771-3.576 11.588-12.968 12.681M18.025 96c.367-4.21 3.453-12.905 12.854-14"
+      className="stroke-black dark:stroke-[hsl(var(--foreground))]"
+      strokeWidth="2.548"
+      strokeLinecap="round"
+    />
+  </svg>
+)
 
-// ---------------------------------------------------------------------------
-// Sub-components
-// ---------------------------------------------------------------------------
+/* Exact Sky Sparkle from GitDiagram hero.tsx (User Image 2) */
+const SkySparkle = ({ className }: { className?: string }) => (
+  <svg
+    className={className}
+    viewBox="0 0 92 80"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden
+  >
+    <path
+      d="m35.213 16.953.595-5.261 2.644 4.587a35.056 35.056 0 0 0 26.432 17.33l5.261.594-4.587 2.644A35.056 35.056 0 0 0 48.23 63.28l-.595 5.26-2.644-4.587a35.056 35.056 0 0 0-26.432-17.328l-5.261-.595 4.587-2.644a35.056 35.056 0 0 0 17.329-26.433Z"
+      className="fill-sky-400 stroke-black dark:fill-[hsl(var(--neo-button-hover))] dark:stroke-black"
+      strokeWidth="2.868"
+    />
+    <path
+      d="M75.062 40.108c1.07 5.255 1.072 16.52-7.472 19.54m7.422-19.682c1.836 2.965 7.643 8.14 16.187 5.121-8.544 3.02-8.207 15.23-6.971 20.957-1.97-3.343-8.044-9.274-16.588-6.254M12.054 28.012c1.34-5.22 6.126-15.4 14.554-14.369M12.035 28.162c-.274-3.487-2.93-10.719-11.358-11.75C9.104 17.443 14.013 6.262 15.414.542c.226 3.888 2.784 11.92 11.212 12.95"
+      className="stroke-black dark:stroke-[hsl(var(--foreground))]"
+      strokeWidth="2.319"
+      strokeLinecap="round"
+    />
+  </svg>
+)
 
-function ScenarioCard({
-  scenario,
-  onSelect,
+/* Exact Flank Sparkle from GitDiagram hero.tsx for mobile */
+const FlankSparkle = ({
+  className,
+  fillClassName,
 }: {
-  scenario: DemoScenario;
-  onSelect: (scenario: DemoScenario) => void;
-}): React.JSX.Element {
-  const score = scenario.data.aiResult.risk_score;
-  const Icon = SEVERITY_ICON[scenario.tag] ?? Zap;
-
-  let ringColor = 'text-emerald-400';
-  if (score >= 80) ringColor = 'text-red-400';
-  else if (score >= 60) ringColor = 'text-orange-400';
-  else if (score >= 35) ringColor = 'text-yellow-400';
-
-  const RADIUS = 16;
-  const STROKE = 3;
-  const CIRC = 2 * Math.PI * RADIUS;
-  const offset = CIRC * (1 - score / 100);
-  const cx = RADIUS + STROKE;
-  const cy = RADIUS + STROKE;
-  const size = (RADIUS + STROKE) * 2;
-
-  return (
-    <button
-      type="button"
-      onClick={() => onSelect(scenario)}
-      className="group w-full text-left rounded-xl border border-slate-700 bg-slate-800/60
-                 hover:border-violet-500/50 hover:bg-slate-800
-                 transition-all duration-200 hover:-translate-y-0.5
-                 focus-visible:outline focus-visible:ring-2 focus-visible:ring-violet-500
-                 p-4 card-surface-hover corner-cut"
-      aria-label={`Load scenario: ${scenario.name}`}
-    >
-      {/* Header row */}
-      <div className="flex items-start justify-between gap-2 mb-2.5">
-        <div className="flex items-center gap-2">
-          <Icon size={15} className={ringColor} aria-hidden="true" />
-          <span
-            className={`px-1.5 py-0.5 rounded border text-[10px] font-bold tracking-wide ${scenario.badgeClass}`}
-            style={FONT_MONO}
-          >
-            {scenario.tag}
-          </span>
-        </div>
-
-        {/* Circular score gauge */}
-        <svg
-          width={size}
-          height={size}
-          aria-label={`Blast score ${score}`}
-          className="shrink-0"
-        >
-          <circle
-            cx={cx}
-            cy={cy}
-            r={RADIUS}
-            fill="none"
-            stroke="#1e293b"
-            strokeWidth={STROKE}
-          />
-          <circle
-            cx={cx}
-            cy={cy}
-            r={RADIUS}
-            fill="none"
-            stroke="currentColor"
-            className={ringColor}
-            strokeWidth={STROKE}
-            strokeLinecap="round"
-            strokeDasharray={CIRC}
-            strokeDashoffset={offset}
-            transform={`rotate(-90 ${cx} ${cy})`}
-          />
-          <text
-            x={cx}
-            y={cy}
-            textAnchor="middle"
-            dominantBaseline="central"
-            fill="currentColor"
-            className={ringColor}
-            fontSize="8"
-            fontWeight="700"
-            fontFamily='"JetBrains Mono", monospace'
-          >
-            {score}
-          </text>
-        </svg>
-      </div>
-
-      {/* Title + subtitle */}
-      <p
-        className="text-sm font-bold text-slate-200 mb-0.5 group-hover:text-white transition-colors"
-        style={FONT_MONO}
-      >
-        {scenario.name}
-      </p>
-      <p className="text-xs text-slate-500 leading-relaxed mb-3">{scenario.subtitle}</p>
-
-      {/* CTA row */}
-      <div className="flex items-center justify-between">
-        <span className="text-xs text-slate-500 font-medium" style={FONT_MONO}>
-          {scenario.data.stack.slice(0, 3).join(' · ')}
-        </span>
-        <span className="flex items-center gap-1 text-xs text-violet-400 font-semibold group-hover:text-violet-300">
-          Load Scenario
-          <ArrowRight
-            size={11}
-            className="group-hover:translate-x-0.5 transition-transform"
-            aria-hidden="true"
-          />
-        </span>
-      </div>
-    </button>
-  );
-}
-
-// ---------------------------------------------------------------------------
-// Props
-// ---------------------------------------------------------------------------
-
-export interface UploadScreenProps {
-  scenarios: DemoScenario[];
-  onSelectScenario: (scenario: DemoScenario) => void;
-  onSubmitUrl: (url: string) => void;
-  onUploadFile: (file: File) => void;
-}
-
-// ---------------------------------------------------------------------------
-// Component
-// ---------------------------------------------------------------------------
+  className?: string
+  fillClassName: string
+}) => (
+  <svg
+    className={className}
+    viewBox="10.8 10.2 61.4 60"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden
+  >
+    <path
+      d="m35.213 16.953.595-5.261 2.644 4.587a35.056 35.056 0 0 0 26.432 17.33l5.261.594-4.587 2.644A35.056 35.056 0 0 0 48.23 63.28l-.595 5.26-2.644-4.587a35.056 35.056 0 0 0-26.432-17.328l-5.261-.595 4.587-2.644a35.056 35.056 0 0 0 17.329-26.433Z"
+      className={`${fillClassName} stroke-black dark:stroke-black`}
+      strokeWidth="2.868"
+    />
+  </svg>
+)
 
 export default function UploadScreen({
-  scenarios,
-  onSelectScenario,
-  onSubmitUrl,
-  onUploadFile,
-}: UploadScreenProps): React.JSX.Element {
-  const [repoUrl, setRepoUrl] = useState<string>('');
-  const [urlError, setUrlError] = useState<string | null>(null);
-  const [dragActive, setDragActive] = useState<boolean>(false);
-  const [fileError, setFileError] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  onFileSelected,
+  onDemo,
+  onRepoUrl,
+  privateRepoNotice,
+  onClosePrivateRepoNotice,
+}: UploadScreenProps) {
+  const [repoUrlInput, setRepoUrlInput] = useState('')
+  const [isDragOver, setIsDragOver] = useState(false)
+  const [isFocused, setIsFocused] = useState(false)
+  const [dropError, setDropError] = useState<string | null>(null)
+  const [particles, setParticles] = useState<Particle[]>([])
+  const [manualModalOpen, setManualModalOpen] = useState(false)
+  const inputRef = useRef<HTMLInputElement>(null)
 
-  // ── URL submit ──
-  const handleUrlSubmit = useCallback(
-    (e: React.FormEvent<HTMLFormElement>): void => {
-      e.preventDefault();
-      const trimmed = repoUrl.trim();
-      if (!trimmed) {
-        setUrlError('Repository URL cannot be empty.');
-        return;
-      }
-      try {
-        new URL(trimmed);
-      } catch {
-        setUrlError('Please enter a valid URL (e.g. https://github.com/org/repo).');
-        return;
-      }
-      setUrlError(null);
-      onSubmitUrl(trimmed);
-    },
-    [repoUrl, onSubmitUrl],
-  );
+  const closeModal = () => {
+    setManualModalOpen(false)
+    if (onClosePrivateRepoNotice) onClosePrivateRepoNotice()
+  }
 
-  // ── File validation + upload ──
-  const handleFile = useCallback(
-    (file: File): void => {
-      if (!file.name.endsWith('.zip')) {
-        setFileError('Only .zip archives are supported.');
-        return;
-      }
-      if (file.size > MAX_FILE_BYTES) {
-        setFileError(`File exceeds the 50 MB limit (${(file.size / 1024 / 1024).toFixed(1)} MB).`);
-        return;
-      }
-      setFileError(null);
-      onUploadFile(file);
-    },
-    [onUploadFile],
-  );
+  const handleUploadZipInstead = () => {
+    closeModal()
+    const dropzone = document.getElementById('sandbox-dropzone')
+    if (dropzone) {
+      dropzone.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }
+    setTimeout(() => {
+      inputRef.current?.click()
+    }, 250)
+  }
 
-  const handleDrop = useCallback(
-    (e: React.DragEvent<HTMLDivElement>): void => {
-      e.preventDefault();
-      setDragActive(false);
-      const droppedFile = e.dataTransfer.files[0];
-      if (droppedFile) handleFile(droppedFile);
-    },
-    [handleFile],
-  );
+  const createParticles = (x: number, y: number) => {
+    const colors = ['#c084fc', '#a855f7', '#8b5cf6', '#38bdf8', '#22c55e']
+    const newParticles: Particle[] = Array.from({ length: 14 }).map((_, i) => ({
+      id: Date.now() + i,
+      x,
+      y,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      size: Math.random() * 7 + 4,
+      velocityX: (Math.random() - 0.5) * 160,
+      velocityY: (Math.random() - 0.5) * 160,
+    }))
+    setParticles(newParticles)
+    setTimeout(() => setParticles([]), 700)
+  }
 
-  const handleDragOver = useCallback((e: React.DragEvent<HTMLDivElement>): void => {
-    e.preventDefault();
-    setDragActive(true);
-  }, []);
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragOver(false)
 
-  const handleDragLeave = useCallback((): void => {
-    setDragActive(false);
-  }, []);
+    const rect = e.currentTarget.getBoundingClientRect()
+    const x = e.clientX - rect.left
+    const y = e.clientY - rect.top
+    createParticles(x, y)
 
-  const handleInputChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>): void => {
-      const selected = e.target.files?.[0];
-      if (selected) handleFile(selected);
-    },
-    [handleFile],
-  );
+    const file = e.dataTransfer.files[0]
+    if (file && file.name.toLowerCase().endsWith('.zip')) {
+      setDropError(null)
+      setTimeout(() => onFileSelected(file), 300)
+    } else {
+      setDropError('Please drop a .zip archive to analyze.')
+    }
+  }
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    if (!file.name.toLowerCase().endsWith('.zip')) {
+      setDropError('Please select a .zip archive.')
+      return
+    }
+    setDropError(null)
+    onFileSelected(file)
+  }
+
+  const handleSubmitRepo = (e: React.FormEvent) => {
+    e.preventDefault()
+    const trimmed = repoUrlInput.trim()
+    if (trimmed && onRepoUrl) {
+      onRepoUrl(trimmed)
+    }
+  }
 
   return (
-    <div className="min-h-screen bg-slate-950 bg-micro-grid overflow-x-hidden">
-      <div className="max-w-5xl mx-auto px-5 pt-14 pb-20">
+    <motion.div
+      style={{
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        padding: '36px 16px 64px',
+        gap: '24px',
+        position: 'relative',
+        maxWidth: '820px',
+        margin: '0 auto',
+        width: '100%',
+      }}
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -16 }}
+      transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+    >
+      {/* Exact GitDiagram Announcement Pill with breathing glow */}
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.05 }}
+      >
+        <div
+          className="promo-banner"
+          onClick={() => onDemo()}
+          role="button"
+          tabIndex={0}
+        >
+          <div className="promo-banner-glow" />
+          <span className="new-badge">⚡ IBM BOB 2.0</span>
+          <span style={{ fontSize: '13px', fontWeight: 600 }}>
+            Pre-Flight Release Simulation Engine
+          </span>
+          <span className="promo-banner-arrow font-bold text-sm">→</span>
+        </div>
+      </motion.div>
 
-        {/* ── Hero ── */}
-        <section className="text-center mb-14 animate-fade-up">
-          <span
-            className="inline-flex items-center gap-1.5 mb-5 px-3 py-1 rounded-full
-                       border border-slate-700 bg-slate-900 text-slate-400
-                       text-[10px] tracking-widest uppercase"
-            style={FONT_MONO}
-          >
-            Pre-deployment · Blast Radius · Chaos Simulation
+      {/* Hero Header with Exact Sparkles (User Images 1 & 2) */}
+      <div style={{ position: 'relative', width: '100%', textAlign: 'center' }}>
+        {/* Mobile Fluid Title with FlankSparkles */}
+        <div className="mx-auto w-fit sm:hidden mb-4">
+          <h1 className="text-center text-[clamp(2.3rem,10.5vw,3.1rem)] leading-[0.98] font-bold tracking-tight">
+            Watch it break here. <br />
+            <span className="relative inline-block text-[hsl(var(--neo-button))]">
+              Not in production.
+              <FlankSparkle
+                className="flank-sparkle-left pointer-events-none absolute top-[57%] -left-[1.18em] h-auto w-[0.8em] -translate-y-1/2 -rotate-10"
+                fillClassName="fill-violet-500 dark:fill-[hsl(var(--neo-button))]"
+              />
+              <FlankSparkle
+                className="flank-sparkle-right pointer-events-none absolute top-[57%] -right-[1.18em] h-auto w-[0.8em] -translate-y-1/2 rotate-10"
+                fillClassName="fill-sky-400 dark:fill-[hsl(var(--neo-button-hover))]"
+              />
+            </span>
+          </h1>
+        </div>
+
+        {/* Desktop Title with Exact VioletSparkle (User Image 1) & SkySparkle (User Image 2) */}
+        <div className="relative mx-auto hidden w-full flex-row items-center justify-center sm:flex">
+          <VioletSparkle className="absolute left-0 h-auto w-20 flex-shrink-0 -translate-y-16 p-2 md:relative md:ml-0 md:w-24 md:translate-x-10 md:-translate-y-0 lg:absolute lg:ml-32 lg:-translate-x-full lg:-translate-y-10" />
+          <h1 className="relative inline-block w-full text-center text-5xl font-bold tracking-tighter md:text-6xl lg:pt-5 lg:text-7xl">
+            Watch it break here. <br />
+            <span className="text-[hsl(var(--neo-button))]">Not in production.</span>
+          </h1>
+          <SkySparkle className="right-0 bottom-0 hidden h-auto w-16 flex-shrink-0 -translate-x-10 translate-y-20 md:block lg:absolute lg:w-20 lg:-translate-x-12 lg:translate-y-4" />
+        </div>
+
+        {/* Subtitle */}
+        <p style={{
+          fontFamily: "'Geist', sans-serif",
+          fontSize: '16px',
+          color: 'hsl(var(--muted-foreground))',
+          lineHeight: 1.5,
+          maxWidth: '580px',
+          margin: '12px auto 6px',
+        }}>
+          DryRun simulates architectural failure modes, isolates blast radius, and audits deployment risk before your code ever touches users. Powered by IBM Bob 2.0 &amp; watsonx.ai.
+        </p>
+        <p style={{
+          fontFamily: "'Geist', sans-serif",
+          fontSize: '13.5px',
+          color: 'hsl(var(--muted-foreground) / 0.8)',
+        }}>
+          Built with purpose for the IBM Bob 2.0 Hackathon · Enter any repo or drop an archive below
+        </p>
+      </div>
+
+      {/* Main Neo-Panel Card (Exact GitDiagram Card with User Image 3 Corner Sparkle) */}
+      <div style={{ position: 'relative', width: '100%', maxWidth: '720px' }}>
+        {/* Exact Bottom-Left Corner Sparkle from GitDiagram (User Image 3) */}
+        <div className="absolute -bottom-8 -left-12 hidden sm:block pointer-events-none select-none z-10">
+          <Sparkles
+            className="h-20 w-20 fill-sky-400 text-black dark:fill-[hsl(var(--neo-button))] dark:text-[hsl(var(--background))]"
+            strokeWidth={0.6}
+            style={{ transform: "rotate(-15deg)" }}
+          />
+        </div>
+
+        <div className="neo-panel p-5 sm:p-7 relative" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          {/* Subtle + corner watermarks (User Image 3) */}
+          <span className="absolute bottom-2.5 left-3 text-xs font-mono select-none opacity-40 leading-none pointer-events-none">
+            +
+          </span>
+          <span className="absolute top-2.5 right-3 text-xs font-mono select-none opacity-40 leading-none pointer-events-none">
+            +
           </span>
 
-          <h1
-            className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight
-                       text-slate-100 leading-[1.1] mb-5"
-            style={FONT_MONO}
-          >
-            Watch it break here.
-            <br />
-            <span className="text-violet-500">Not in production.</span>
-          </h1>
-
-          <p className="text-base sm:text-lg text-slate-400 max-w-2xl mx-auto leading-relaxed">
-            Simulate failure modes, calculate blast radius, and enforce deployment gates
-            before code hits staging.
-          </p>
-        </section>
-
-        {/* ── Target Codebase Ingestion ── */}
-        <section
-          className="mb-10 rounded-2xl border border-slate-800 bg-slate-900/70
-                     p-6 sm:p-8 glass-panel"
-          aria-label="Target codebase ingestion"
-        >
-          <h2
-            className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-5"
-            style={FONT_MONO}
-          >
-            Target Codebase
-          </h2>
-
-          {/* GitHub URL */}
-          <form onSubmit={handleUrlSubmit} className="mb-6" noValidate>
-            <label
-              htmlFor="repo-url"
-              className="block text-xs font-semibold text-slate-400 mb-1.5"
-              style={FONT_MONO}
+          {/* GitHub Input + Diagram Button (Exact GitDiagram form) */}
+          <form onSubmit={handleSubmitRepo} style={{ display: 'flex', gap: '10px', alignItems: 'stretch' }}>
+            <input
+              type="text"
+              value={repoUrlInput}
+              onChange={(e) => setRepoUrlInput(e.target.value)}
+              placeholder="owner/repo or GitHub URL (e.g. expressjs/express)"
+              className="neo-input"
+              style={{
+                flex: 1,
+                padding: '12px 16px',
+                fontSize: '15px',
+                fontWeight: 600,
+              }}
+            />
+            <button
+              type="submit"
+              disabled={!repoUrlInput.trim()}
+              className="neo-button"
+              style={{
+                padding: '12px 24px',
+                fontSize: '15px',
+              }}
             >
-              GitHub Repository URL
-            </label>
-            <div className="flex gap-2">
-              <div className="relative flex-1">
-                <Github
-                  size={15}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"
-                  aria-hidden="true"
-                />
-                <input
-                  id="repo-url"
-                  type="url"
-                  value={repoUrl}
-                  onChange={(e) => {
-                    setRepoUrl(e.target.value);
-                    setUrlError(null);
-                  }}
-                  placeholder="https://github.com/org/repo"
-                  className="w-full pl-9 pr-4 py-2.5 rounded-lg bg-slate-800 border border-slate-700
-                             text-slate-200 text-sm placeholder-slate-600
-                             focus:outline-none focus:border-violet-500
-                             transition-colors"
-                  style={FONT_MONO}
-                  aria-describedby={urlError ? 'url-error' : undefined}
-                  aria-invalid={urlError !== null}
-                />
-              </div>
-              <button
-                type="submit"
-                className="neo-btn px-5 py-2.5 rounded-lg text-sm shrink-0"
-              >
-                Inspect Repo
-              </button>
-            </div>
-            {urlError !== null && (
-              <p
-                id="url-error"
-                className="mt-1.5 text-xs text-red-400"
-                style={FONT_MONO}
-                role="alert"
-              >
-                {urlError}
-              </p>
-            )}
+              Simulate Release
+            </button>
           </form>
 
-          {/* Divider */}
-          <div className="flex items-center gap-3 mb-6">
-            <div className="flex-1 h-px bg-slate-800" />
-            <span className="text-xs text-slate-600" style={FONT_MONO}>
-              OR
+          {/* "Try these example repositories:" Chips Row (Exact GitDiagram) */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <span style={{
+              fontSize: '13px',
+              fontWeight: 600,
+              color: 'hsl(var(--foreground) / 0.8)',
+            }}>
+              Try example release candidates:
             </span>
-            <div className="flex-1 h-px bg-slate-800" />
+
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+              {[
+                { label: 'FastAPI', url: 'https://github.com/tiangolo/fastapi' },
+                { label: 'expressjs/express', url: 'https://github.com/expressjs/express' },
+                { label: 'Flask', url: 'https://github.com/pallets/flask' },
+                { label: 'Monkeytype', url: 'https://github.com/monkeytypegame/monkeytype' },
+                { label: 'toufiqfarhan0/3d-game', url: 'https://github.com/toufiqfarhan0/3d-game' },
+              ].map((sample) => (
+                <button
+                  key={sample.label}
+                  type="button"
+                  className="neo-chip"
+                  onClick={() => {
+                    setRepoUrlInput(sample.url)
+                    if (onRepoUrl) onRepoUrl(sample.url)
+                  }}
+                >
+                  {sample.label}
+                </button>
+              ))}
+            </div>
           </div>
 
-          {/* Drop zone */}
+          {/* Divider */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', margin: '2px 0' }}>
+            <div style={{ flex: 1, height: '1.5px', background: 'hsl(var(--foreground) / 0.12)' }} />
+            <span style={{
+              fontSize: '11px',
+              fontWeight: 700,
+              textTransform: 'uppercase',
+              letterSpacing: '0.06em',
+              color: 'hsl(var(--muted-foreground))',
+            }}>
+              or upload release candidate .zip archive
+            </span>
+            <div style={{ flex: 1, height: '1.5px', background: 'hsl(var(--foreground) / 0.12)' }} />
+          </div>
+
+          {/* Integrated .ZIP Dropzone */}
           <div
+            id="sandbox-dropzone"
             role="button"
             tabIndex={0}
-            aria-label="Drop .zip archive here or click to browse"
-            onDrop={handleDrop}
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-            onClick={() => fileInputRef.current?.click()}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') fileInputRef.current?.click();
+            aria-label="Upload a .zip archive: press Enter to browse for a file, or drop one here"
+            style={{
+              position: 'relative',
+              width: '100%',
+              minHeight: '100px',
+              padding: '16px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '12px',
+              cursor: 'pointer',
+              background: 'hsl(var(--neo-input-bg))',
+              border: '2px dashed #000',
+              borderRadius: '8px',
+              boxShadow: '3px 3px 0 0 #000',
+              overflow: 'hidden',
+              transition: 'all 0.15s ease',
             }}
-            className={`drop-zone relative rounded-xl p-10 flex flex-col items-center
-                        justify-center gap-3 cursor-pointer select-none
-                        ${dragActive ? 'drag-active' : ''}`}
+            onClick={() => inputRef.current?.click()}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault()
+                inputRef.current?.click()
+              }
+            }}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+            onDragOver={(e) => { e.preventDefault(); setIsDragOver(true) }}
+            onDragLeave={() => setIsDragOver(false)}
+            onDrop={handleDrop}
           >
-            {/* Floating particle dots */}
-            {dragActive && (
-              <>
-                <span
-                  className="absolute top-4 left-8 w-1.5 h-1.5 rounded-full bg-violet-500/60 animate-particle"
-                  style={{ animationDelay: '0s' }}
-                  aria-hidden="true"
+            {(isDragOver || isFocused) && <div className="scan-line" />}
+
+            {/* Particle Effects */}
+            <AnimatePresence>
+              {particles.map((particle) => (
+                <motion.div
+                  key={particle.id}
+                  style={{
+                    position: 'absolute',
+                    left: particle.x,
+                    top: particle.y,
+                    width: particle.size,
+                    height: particle.size,
+                    background: particle.color,
+                    borderRadius: '50%',
+                    pointerEvents: 'none',
+                  }}
+                  initial={{ opacity: 1, scale: 0 }}
+                  animate={{
+                    opacity: 0,
+                    scale: 1.2,
+                    x: particle.velocityX,
+                    y: particle.velocityY,
+                  }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.6, ease: 'easeOut' }}
                 />
-                <span
-                  className="absolute top-6 right-12 w-1 h-1 rounded-full bg-violet-400/50 animate-particle"
-                  style={{ animationDelay: '0.4s' }}
-                  aria-hidden="true"
-                />
-                <span
-                  className="absolute bottom-5 left-1/3 w-1.5 h-1.5 rounded-full bg-violet-500/40 animate-particle"
-                  style={{ animationDelay: '0.8s' }}
-                  aria-hidden="true"
-                />
-              </>
+              ))}
+            </AnimatePresence>
+
+            <div style={{
+              width: '36px',
+              height: '36px',
+              borderRadius: '8px',
+              background: 'hsl(var(--neo-button))',
+              border: '2px solid #000',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#000',
+              flexShrink: 0,
+            }}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="17 8 12 3 7 8" />
+                <line x1="12" y1="3" x2="12" y2="15" />
+              </svg>
+            </div>
+
+            <div>
+              <div style={{
+                fontSize: '13.5px',
+                fontWeight: 700,
+                color: 'hsl(var(--foreground))',
+              }}>
+                {isDragOver ? 'Drop your release candidate archive here' : 'Drop a .zip codebase archive here'}
+              </div>
+              <div style={{
+                fontSize: '12px',
+                color: 'hsl(var(--muted-foreground))',
+              }}>
+                Drop any repository .zip · Instant blast radius analysis up to 50 MB
+              </div>
+            </div>
+
+            {dropError && (
+              <div style={{
+                fontSize: '12px',
+                color: '#dc2626',
+                background: 'rgba(220,38,38,0.1)',
+                padding: '4px 8px',
+                borderRadius: '6px',
+              }}>
+                {dropError}
+              </div>
             )}
 
-            <FolderArchive
-              size={32}
-              className={`transition-colors ${dragActive ? 'text-violet-400' : 'text-slate-600'}`}
-              aria-hidden="true"
-            />
-            <div className="text-center">
-              <p
-                className={`text-sm font-semibold mb-0.5 transition-colors ${dragActive ? 'text-violet-300' : 'text-slate-400'}`}
-                style={FONT_MONO}
-              >
-                {dragActive ? 'Release to upload' : 'Drag & drop .zip archive'}
-              </p>
-              <p className="text-xs text-slate-600" style={FONT_MONO}>
-                or click to browse · max 50 MB
-              </p>
-            </div>
-
-            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800/70 border border-slate-700">
-              <Upload size={12} className="text-slate-500" aria-hidden="true" />
-              <span className="text-xs text-slate-500" style={FONT_MONO}>
-                .zip only
-              </span>
-            </div>
-
             <input
-              ref={fileInputRef}
+              ref={inputRef}
               type="file"
               accept=".zip"
-              className="sr-only"
-              onChange={handleInputChange}
-              tabIndex={-1}
-              aria-hidden="true"
+              style={{ display: 'none' }}
+              onChange={handleChange}
             />
           </div>
 
-          {fileError !== null && (
-            <p
-              className="mt-2 text-xs text-red-400"
-              style={FONT_MONO}
-              role="alert"
+          {/* Action Row */}
+          <div style={{ display: 'flex', gap: '10px' }}>
+            <button
+              type="button"
+              className="neo-button"
+              onClick={() => inputRef.current?.click()}
+              style={{
+                flex: 1,
+                padding: '10px 14px',
+                background: 'hsl(var(--neo-subtle))',
+                fontSize: '13px',
+              }}
             >
-              {fileError}
-            </p>
-          )}
-        </section>
-
-        {/* ── Quick Demo Scenarios ── */}
-        <section className="mb-12" aria-label="Quick demo scenarios">
-          <h2
-            className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4"
-            style={FONT_MONO}
-          >
-            Quick Demo Scenarios
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {scenarios.map((s) => (
-              <ScenarioCard key={s.id} scenario={s} onSelect={onSelectScenario} />
-            ))}
+              Upload .ZIP
+            </button>
+            <button
+              type="button"
+              className="neo-button"
+              onClick={() => onDemo()}
+              style={{
+                flex: 1,
+                padding: '10px 14px',
+                fontSize: '13px',
+              }}
+            >
+              Run Release Demo
+            </button>
           </div>
-        </section>
 
-        {/* ── Architecture Highlights ── */}
-        <section aria-label="Architecture highlights">
-          <h2
-            className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4"
-            style={FONT_MONO}
-          >
-            How It Works
-          </h2>
-          <ol className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {ARCH_HIGHLIGHTS.map(({ icon: Icon, label, body, accent, border, bg }, idx) => (
-              <li
-                key={label}
-                className={`flex items-start gap-3 rounded-xl border p-4 ${border} ${bg}`}
-              >
-                <span
-                  className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full
-                             border border-slate-700 text-xs text-slate-500 mt-0.5"
-                  style={FONT_MONO}
-                  aria-hidden="true"
+          {/* Selectable Demo Scenarios (FinTech, E-Commerce, Risk 0) */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '4px' }}>
+            <span style={{
+              fontSize: '12px',
+              fontWeight: 700,
+              textTransform: 'uppercase',
+              letterSpacing: '0.04em',
+              color: 'hsl(var(--muted-foreground))',
+            }}>
+              Or run a live failure scenario:
+            </span>
+
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+              gap: '8px',
+              width: '100%',
+            }}>
+              {DEMO_SCENARIOS.map((scenario) => (
+                <button
+                  key={scenario.id}
+                  type="button"
+                  onClick={() => onDemo(scenario.id)}
+                  className="scenario-card"
                 >
-                  {idx + 1}
-                </span>
-                <Icon
-                  size={15}
-                  className={`${accent} mt-0.5 shrink-0`}
-                  aria-hidden="true"
-                />
-                <div>
-                  <p
-                    className="text-sm font-semibold text-slate-200 mb-1"
-                    style={FONT_MONO}
-                  >
-                    {label}
-                  </p>
-                  <p className="text-xs text-slate-500 leading-relaxed">{body}</p>
-                </div>
-              </li>
-            ))}
-          </ol>
-        </section>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '6px' }}>
+                    <span style={{
+                      fontSize: '11px',
+                      fontWeight: 800,
+                      color: 'hsl(var(--foreground))',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.05em',
+                    }}>
+                      {scenario.tag}
+                    </span>
+                    <span className={`risk-badge ${scenario.badgeClass}`} style={{ fontSize: '10px', padding: '1px 6px' }}>
+                      Risk {scenario.data.aiResult.risk_score}
+                    </span>
+                  </div>
+                  <div style={{
+                    fontSize: '13px',
+                    fontWeight: 700,
+                    color: 'hsl(var(--foreground))',
+                  }}>
+                    {scenario.name}
+                  </div>
+                  <div style={{
+                    fontFamily: "'Geist Mono', monospace",
+                    fontSize: '11px',
+                    color: 'hsl(var(--muted-foreground))',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                  }}>
+                    {scenario.data.projectName}
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Analysis Scope Banner */}
+          <div className="supported-tech-banner">
+            <div className="supported-tech-sub">
+              <strong>Audits:</strong> Architecture Breakage <span className="supported-tech-dot">·</span> Cascading Faults <span className="supported-tech-dot">·</span> Dependency Drifts <span className="supported-tech-dot">·</span> Security CVEs
+            </div>
+          </div>
+
+        </div>
       </div>
-    </div>
-  );
+
+      {/* Public Repositories Only / Private Repo Guidance Modal */}
+      <AnimatePresence>
+        {(manualModalOpen || (privateRepoNotice && privateRepoNotice.isOpen)) && (
+          <div
+            style={{
+              position: 'fixed',
+              inset: 0,
+              zIndex: 9999,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '20px 16px',
+              background: 'rgba(0,0,0,0.65)',
+              backdropFilter: 'blur(6px)',
+            }}
+            onClick={closeModal}
+          >
+            <motion.div
+              className="neo-panel p-6 sm:p-8 relative"
+              style={{
+                width: '100%',
+                maxWidth: '580px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '20px',
+                boxShadow: '6px 6px 0 0 #000',
+              }}
+              initial={{ scale: 0.95, opacity: 0, y: 15 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.95, opacity: 0, y: 15 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 350 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Header */}
+              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '14px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                  <div style={{
+                    width: '42px',
+                    height: '42px',
+                    borderRadius: '8px',
+                    background: 'hsl(var(--neo-button))',
+                    border: '2px solid #000',
+                    boxShadow: '2px 2px 0 0 #000',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexShrink: 0,
+                  }}>
+                    <Lock className="w-5 h-5 text-black" strokeWidth={2.2} />
+                  </div>
+                  <div>
+                    <h3 style={{
+                      fontSize: '18px',
+                      fontWeight: 800,
+                      color: 'hsl(var(--foreground))',
+                      letterSpacing: '-0.02em',
+                      margin: 0,
+                    }}>
+                      Public Repositories Only
+                    </h3>
+                    <p style={{
+                      fontSize: '13px',
+                      color: 'hsl(var(--muted-foreground))',
+                      margin: '3px 0 0 0',
+                    }}>
+                      Private or restricted repositories cannot be streamed directly
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={closeModal}
+                  aria-label="Close dialog"
+                  className="nav-link-btn"
+                  style={{
+                    width: '34px',
+                    height: '34px',
+                    padding: 0,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '15px',
+                    fontWeight: 800,
+                    cursor: 'pointer',
+                  }}
+                >
+                  ✕
+                </button>
+              </div>
+
+              {/* Alert Message */}
+              <div style={{
+                background: 'rgba(239, 68, 68, 0.12)',
+                border: '1.5px solid #000',
+                borderRadius: '8px',
+                boxShadow: '2px 2px 0 0 #000',
+                padding: '12px 16px',
+                fontFamily: 'var(--font-mono)',
+                fontSize: '12.5px',
+                color: '#ef4444',
+                lineHeight: 1.55,
+              }}>
+                {privateRepoNotice?.error ||
+                  'GitHub security restricts direct unauthenticated URL downloads for private or unauthorized repositories.'}
+              </div>
+
+              {/* 3 Step Guidance */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                <span style={{
+                  fontSize: '11px',
+                  fontWeight: 800,
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase',
+                  color: 'hsl(var(--neo-button))',
+                  display: 'inline-block',
+                }}>
+                  How to analyze your private repository (3 easy steps):
+                </span>
+
+                <div style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '16px',
+                  background: 'hsl(var(--neo-panel-muted))',
+                  border: '2px solid #000',
+                  borderRadius: '10px',
+                  boxShadow: '3px 3px 0 0 #000',
+                  padding: '18px 20px',
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
+                    <span style={{
+                      width: '22px',
+                      height: '22px',
+                      borderRadius: '6px',
+                      background: 'hsl(var(--neo-button))',
+                      color: '#000',
+                      border: '1.5px solid #000',
+                      boxShadow: '1.5px 1.5px 0 0 #000',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontFamily: 'var(--font-mono)',
+                      fontSize: '11px',
+                      fontWeight: 800,
+                      flexShrink: 0,
+                      marginTop: '1px',
+                    }}>
+                      1
+                    </span>
+                    <span style={{ fontSize: '13.5px', color: 'hsl(var(--foreground))', lineHeight: 1.55 }}>
+                      Open your repository on <strong>GitHub.com</strong> in your browser.
+                    </span>
+                  </div>
+
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
+                    <span style={{
+                      width: '22px',
+                      height: '22px',
+                      borderRadius: '6px',
+                      background: 'hsl(var(--neo-button))',
+                      color: '#000',
+                      border: '1.5px solid #000',
+                      boxShadow: '1.5px 1.5px 0 0 #000',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontFamily: 'var(--font-mono)',
+                      fontSize: '11px',
+                      fontWeight: 800,
+                      flexShrink: 0,
+                      marginTop: '1px',
+                    }}>
+                      2
+                    </span>
+                    <span style={{ fontSize: '13.5px', color: 'hsl(var(--foreground))', lineHeight: 1.55 }}>
+                      Click the green <strong>&lt;&gt; Code</strong> button and select <strong>Download ZIP</strong>.
+                    </span>
+                  </div>
+
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
+                    <span style={{
+                      width: '22px',
+                      height: '22px',
+                      borderRadius: '6px',
+                      background: 'hsl(var(--neo-button))',
+                      color: '#000',
+                      border: '1.5px solid #000',
+                      boxShadow: '1.5px 1.5px 0 0 #000',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontFamily: 'var(--font-mono)',
+                      fontSize: '11px',
+                      fontWeight: 800,
+                      flexShrink: 0,
+                      marginTop: '1px',
+                    }}>
+                      3
+                    </span>
+                    <span style={{ fontSize: '13.5px', color: 'hsl(var(--foreground))', lineHeight: 1.55 }}>
+                      Click the button below to upload your downloaded <strong>.zip</strong> archive into DryRun for complete local readiness evaluation!
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Action Footer */}
+              <div style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                alignItems: 'center',
+                gap: '12px',
+                marginTop: '6px',
+                paddingTop: '4px',
+              }}>
+                <button
+                  type="button"
+                  onClick={closeModal}
+                  className="nav-link-btn"
+                  style={{
+                    padding: '9px 18px',
+                    fontSize: '13.5px',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                  }}
+                >
+                  Dismiss
+                </button>
+                <button
+                  type="button"
+                  onClick={handleUploadZipInstead}
+                  className="neo-button"
+                  style={{
+                    padding: '9px 20px',
+                    fontSize: '13.5px',
+                    fontWeight: 700,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    cursor: 'pointer',
+                  }}
+                >
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline points="17 8 12 3 7 8" />
+                    <line x1="12" y1="3" x2="12" y2="15" />
+                  </svg>
+                  Upload .ZIP Instead
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  )
 }

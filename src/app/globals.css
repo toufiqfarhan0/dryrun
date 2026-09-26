@@ -1,401 +1,838 @@
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800;900&family=Geist+Mono:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* ---------------------------------------------------------------------------
- * DryRun — Global Design System
- * Retro-brutalist / De Stijl dark telemetry aesthetic per .bobrules
- * --------------------------------------------------------------------------- */
+/* ============================================================
+   DRY RUN — Exact GitDiagram Design System
+   With Full Dark Mode & Light Mode Support
+   ============================================================ */
 
-/* ── CSS Custom Properties ── */
+/* === LIGHT MODE (Default GitDiagram Light) === */
 :root {
-  /* HSL design tokens (Tailwind-compatible) */
-  --background: 240 10% 3.9%;         /* slate-950 equiv */
-  --foreground: 0 0% 98%;
+  --background: 269 100% 95%;
+  --foreground: 0 0% 3.9%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 0 0% 3.9%;
+  --primary: 0 0% 9%;
+  --primary-foreground: 0 0% 98%;
+  --muted-foreground: 0 0% 45.1%;
+  --accent: 0 0% 96.1%;
+  --accent-foreground: 0 0% 9%;
+  --border: 0 0% 89.8%;
+  --input: 0 0% 89.8%;
+  --ring: 0 0% 3.9%;
+  --radius: 0.5rem;
+  --neo-panel: 270 100% 92%;
+  --neo-panel-muted: 270 95% 88%;
+  --neo-button: 270 97% 75%;
+  --neo-button-hover: 271 90% 80%;
+  --neo-subtle: 0 0% 98%;
+  --neo-subtle-muted: 0 0% 93%;
+  --neo-link: 271 81% 55%;
+  --neo-link-hover: 271 70% 48%;
+  --neo-soft-text: 220 13% 30%;
+  --neo-input-bg: 270 92% 89%;
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
 
-  /* Neo-button accent */
-  --neo-button: 262 83% 58%;          /* violet-ish */
-  --neo-button-hover: 262 83% 65%;
+  --font-sans: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'Geist Mono', 'JetBrains Mono', monospace;
 
-  /* Border */
-  --border: 240 3.7% 15.9%;
+  /* Semantic status colors */
+  --ok: #16a34a;
+  --ok-dim: rgba(22, 163, 74, 0.15);
+  --warn: #d97706;
+  --warn-dim: rgba(217, 119, 6, 0.15);
+  --danger: #dc2626;
+  --danger-dim: rgba(220, 38, 38, 0.15);
+  --critical: #b91c1c;
+  --critical-dim: rgba(185, 28, 28, 0.2);
 
-  /* Status tokens */
-  --status-ok:     142 71% 45%;       /* emerald */
-  --status-warn:    38 92% 50%;       /* amber */
-  --status-danger:   0 84% 60%;       /* red */
-
-  /* Background layers */
-  --color-bg-base:        #020617;    /* slate-950 */
-  --color-bg-surface:     #0f172a;    /* slate-900 */
-  --color-bg-card:        #1e293b;    /* slate-800 */
-
-  /* Borders */
-  --color-border:         #334155;    /* slate-700 */
-  --color-border-subtle:  #1e293b;    /* slate-800 */
-
-  /* Typography */
-  --color-text-primary:   #f1f5f9;    /* slate-100 */
-  --color-text-muted:     #94a3b8;    /* slate-400 */
-  --color-text-faint:     #475569;    /* slate-600 */
-
-  /* Telemetry severity spectrum */
-  --color-critical:       #ef4444;    /* red-500 */
-  --color-high:           #f97316;    /* orange-500 */
-  --color-medium:         #facc15;    /* yellow-400 */
-  --color-low:            #10b981;    /* emerald-500 */
-  --color-info:           #38bdf8;    /* sky-400 */
-
-  /* Interactive accent */
-  --color-accent:         #8b5cf6;    /* violet-500 */
-
-  /* Monospace stack */
-  --font-mono: "JetBrains Mono", "Fira Code", ui-monospace, monospace;
+  --topbar-bg: rgba(243, 232, 255, 0.85);
+  --topbar-border: rgba(0, 0, 0, 0.1);
 }
 
-/* ── Base reset ── */
-html,
+/* === DARK MODE (Exact GitDiagram Dark) === */
+.dark,
+html[data-theme='dark'] {
+  --background: 264 22% 9%;
+  --foreground: 270 25% 93%;
+  --popover: 264 20% 13%;
+  --popover-foreground: 270 25% 93%;
+  --primary: 270 25% 93%;
+  --primary-foreground: 264 22% 9%;
+  --muted-foreground: 270 15% 65%;
+  --accent: 264 20% 22%;
+  --accent-foreground: 270 25% 93%;
+  --border: 264 28% 22%;
+  --input: 264 22% 17%;
+  --ring: 270 85% 68%;
+  --neo-panel: 264 20% 13%;
+  --neo-panel-muted: 264 18% 17%;
+  --neo-button: 270 85% 68%;
+  --neo-button-hover: 270 90% 75%;
+  --neo-subtle: 270 35% 72%;
+  --neo-subtle-muted: 270 28% 62%;
+  --neo-link: 280 80% 72%;
+  --neo-link-hover: 275 90% 80%;
+  --neo-soft-text: 270 18% 72%;
+  --neo-input-bg: 264 24% 11%;
+
+  /* Semantic status colors */
+  --ok: #22c55e;
+  --ok-dim: rgba(34, 197, 94, 0.15);
+  --warn: #f59e0b;
+  --warn-dim: rgba(245, 158, 11, 0.15);
+  --danger: #ef4444;
+  --danger-dim: rgba(239, 68, 68, 0.15);
+  --critical: #dc2626;
+  --critical-dim: rgba(220, 38, 38, 0.2);
+
+  --topbar-bg: rgba(19, 17, 28, 0.85);
+  --topbar-border: rgba(255, 255, 255, 0.08);
+}
+
+/* ---- Reset ---- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  overflow-x: hidden;
+}
+
 body {
-  background-color: var(--color-bg-base);
-  color: var(--color-text-primary);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  font-family: var(--font-sans);
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  min-height: 100dvh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 200ms ease, color 200ms ease;
 }
 
-/* ── Monospace utility ── */
-.font-telemetry {
-  font-family: var(--font-mono);
-}
-
-/* ===========================================================================
- * Micro-grid background
- * =========================================================================== */
-
-.bg-micro-grid {
+/* Light mode background */
+html[data-theme='light'] body {
+  background-color: hsl(var(--background));
   background-image:
-    linear-gradient(rgba(51, 65, 85, 0.25) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(51, 65, 85, 0.25) 1px, transparent 1px);
-  background-size: 24px 24px;
+    radial-gradient(
+      ellipse at 18% 5%,
+      hsl(270 90% 85% / 0.6) 0%,
+      transparent 52%
+    ),
+    radial-gradient(
+      ellipse at 85% 90%,
+      hsl(280 80% 88% / 0.5) 0%,
+      transparent 46%
+    ),
+    linear-gradient(135deg, hsl(269 100% 95%) 0%, hsl(270 95% 92%) 100%);
+  background-attachment: fixed;
 }
 
-.bg-micro-grid-dense {
+/* Dark mode background gradient (exact GitDiagram) */
+.dark body,
+html[data-theme='dark'] body {
+  background-color: hsl(var(--background));
   background-image:
-    linear-gradient(rgba(51, 65, 85, 0.18) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(51, 65, 85, 0.18) 1px, transparent 1px);
-  background-size: 12px 12px;
+    radial-gradient(
+      ellipse at 18% 5%,
+      hsl(270 60% 20% / 0.4) 0%,
+      transparent 52%
+    ),
+    radial-gradient(
+      ellipse at 85% 90%,
+      hsl(280 50% 16% / 0.25) 0%,
+      transparent 46%
+    ),
+    linear-gradient(135deg, hsl(265 25% 10%) 0%, hsl(258 20% 8%) 100%);
+  background-attachment: fixed;
 }
 
-/* ===========================================================================
- * Scanline overlay effect
- * =========================================================================== */
-
-.scanlines::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    rgba(0, 0, 0, 0.15) 2px,
-    rgba(0, 0, 0, 0.15) 4px
-  );
-  pointer-events: none;
-  z-index: 1;
-}
-
-/* ===========================================================================
- * Glassmorphic panels
- * =========================================================================== */
-
-.glass-panel {
-  background: rgba(15, 23, 42, 0.72);      /* slate-900 at 72% */
-  backdrop-filter: blur(12px) saturate(1.4);
-  -webkit-backdrop-filter: blur(12px) saturate(1.4);
-  border: 1px solid rgba(51, 65, 85, 0.55);
-}
-
-.glass-panel-dark {
-  background: rgba(2, 6, 23, 0.85);        /* slate-950 at 85% */
-  backdrop-filter: blur(16px) saturate(1.2);
-  -webkit-backdrop-filter: blur(16px) saturate(1.2);
-  border: 1px solid rgba(51, 65, 85, 0.4);
-}
-
-/* ===========================================================================
- * Retro-brutalist / De Stijl geometric borders
- * =========================================================================== */
-
-.border-brutalist {
-  border: 2px solid var(--color-border);
-  box-shadow: 3px 3px 0 0 var(--color-border);
-}
-
-.border-brutalist-accent {
-  border: 2px solid var(--color-accent);
-  box-shadow: 3px 3px 0 0 var(--color-accent);
-}
-
-.border-brutalist-danger {
-  border: 2px solid var(--color-critical);
-  box-shadow: 3px 3px 0 0 rgba(239, 68, 68, 0.4);
-}
-
-/* Corner-cut card shape (De Stijl diagonal notch) */
-.corner-cut {
-  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%);
-}
-
-/* ===========================================================================
- * Severity badge utilities
- * =========================================================================== */
-
-.badge-critical {
-  color: var(--color-critical);
-  border-color: var(--color-critical);
-  background-color: rgba(239, 68, 68, 0.12);
-}
-.badge-high {
-  color: var(--color-high);
-  border-color: var(--color-high);
-  background-color: rgba(249, 115, 22, 0.12);
-}
-.badge-medium {
-  color: var(--color-medium);
-  border-color: var(--color-medium);
-  background-color: rgba(250, 204, 21, 0.12);
-}
-.badge-low {
-  color: var(--color-low);
-  border-color: var(--color-low);
-  background-color: rgba(16, 185, 129, 0.12);
-}
-
-/* ===========================================================================
- * Glowing status pills
- * =========================================================================== */
-
-.status-pill-ok {
-  color: hsl(var(--status-ok));
-  border-color: hsl(var(--status-ok) / 0.45);
-  background-color: hsl(var(--status-ok) / 0.12);
-  box-shadow: 0 0 6px 0 hsl(var(--status-ok) / 0.25);
-}
-
-.status-pill-warn {
-  color: hsl(var(--status-warn));
-  border-color: hsl(var(--status-warn) / 0.45);
-  background-color: hsl(var(--status-warn) / 0.12);
-  box-shadow: 0 0 6px 0 hsl(var(--status-warn) / 0.25);
-}
-
-.status-pill-danger {
-  color: hsl(var(--status-danger));
-  border-color: hsl(var(--status-danger) / 0.45);
-  background-color: hsl(var(--status-danger) / 0.12);
-  box-shadow: 0 0 8px 0 hsl(var(--status-danger) / 0.35);
-}
-
-/* ===========================================================================
- * Neo-button
- * =========================================================================== */
-
-.neo-btn {
-  background-color: hsl(var(--neo-button));
-  color: #fff;
-  font-family: var(--font-mono);
-  font-weight: 700;
-  letter-spacing: 0.03em;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
-  box-shadow: 0 0 14px 0 hsl(var(--neo-button) / 0.35);
-}
-
-.neo-btn:hover {
-  background-color: hsl(var(--neo-button-hover));
-  box-shadow: 0 0 22px 0 hsl(var(--neo-button-hover) / 0.5);
-}
-
-.neo-btn:active {
-  transform: translateY(1px);
-}
-
-/* ===========================================================================
- * Animations
- * =========================================================================== */
-
-/* Pulse dot (live status indicator) */
-@keyframes pulse-dot {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50%       { opacity: 0.5; transform: scale(1.35); }
-}
-.animate-pulse-dot {
-  animation: pulse-dot 1.4s ease-in-out infinite;
-}
-
-/* Slow spin (dual-ring loader) */
-@keyframes spin-slow {
-  to { transform: rotate(360deg); }
-}
-.animate-spin-slow {
-  animation: spin-slow 2.4s linear infinite;
-}
-
-/* Counter-spin */
-@keyframes spin-reverse {
-  to { transform: rotate(-360deg); }
-}
-.animate-spin-reverse {
-  animation: spin-reverse 1.8s linear infinite;
-}
-
-/* Shimmer / scan sweep */
-@keyframes shimmer {
-  0%   { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
-}
-.animate-shimmer {
-  position: relative;
-  overflow: hidden;
-}
-.animate-shimmer::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(139, 92, 246, 0.12) 50%,
-    transparent 100%
-  );
-  animation: shimmer 2s ease-in-out infinite;
-}
-
-/* Fade-up entrance */
-@keyframes fade-up {
-  from { opacity: 0; transform: translateY(12px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-.animate-fade-up {
-  animation: fade-up 0.4s ease-out both;
-}
-
-/* Blink cursor (terminal) */
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0; }
-}
-.animate-blink {
-  animation: blink 1s step-start infinite;
-}
-
-/* Progress bar fill */
-@keyframes progress-fill {
-  from { width: 0%; }
-  to   { width: var(--progress-width, 100%); }
-}
-
-/* Particle float (upload zone hover) */
-@keyframes particle-float {
-  0%   { transform: translateY(0) scale(1);    opacity: 0.6; }
-  50%  { transform: translateY(-8px) scale(1.1); opacity: 1; }
-  100% { transform: translateY(0) scale(1);    opacity: 0.6; }
-}
-.animate-particle {
-  animation: particle-float 2.2s ease-in-out infinite;
-}
-
-/* ===========================================================================
- * Card utilities
- * =========================================================================== */
-
-.card-surface {
-  background-color: var(--color-bg-card);
-  border: 1px solid var(--color-border);
-  border-radius: 0.75rem;
-}
-
-.card-surface-hover {
-  transition: border-color 0.15s ease, background-color 0.15s ease, transform 0.15s ease;
-}
-
-.card-surface-hover:hover {
-  border-color: rgba(139, 92, 246, 0.4);
-  background-color: rgba(30, 41, 59, 0.85);
-  transform: translateY(-2px);
-}
-
-/* ===========================================================================
- * Scrollbar — dark themed
- * =========================================================================== */
-
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-::-webkit-scrollbar-track {
-  background: var(--color-bg-surface);
-}
+/* ---- Scrollbar ---- */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb {
-  background: var(--color-border);
-  border-radius: 3px;
+  background: hsl(var(--muted-foreground) / 0.3);
+  border-radius: 99px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #475569; /* slate-600 */
+  background: hsl(var(--neo-button));
 }
 
-/* ===========================================================================
- * Focus & selection
- * =========================================================================== */
-
-*:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: 2px;
+/* ============================================================
+   TOPBAR
+   ============================================================ */
+.topbar {
+  background: var(--topbar-bg);
+  border-bottom: 1px solid var(--topbar-border);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 32px;
+  height: 60px;
+  transition: background-color 200ms ease, border-color 200ms ease;
 }
 
-::selection {
-  background-color: rgba(139, 92, 246, 0.35);
-  color: var(--color-text-primary);
-}
-
-/* ===========================================================================
- * Terminal / log pane
- * =========================================================================== */
-
-.terminal-pane {
-  background-color: #020617;           /* slate-950 */
-  border: 1px solid #1e293b;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  line-height: 1.6;
-}
-
-/* ===========================================================================
- * Upload drop-zone
- * =========================================================================== */
-
-.drop-zone {
-  border: 2px dashed var(--color-border);
-  background-color: rgba(15, 23, 42, 0.5);
-  transition: border-color 0.2s ease, background-color 0.2s ease;
-}
-
-.drop-zone:hover,
-.drop-zone.drag-active {
-  border-color: var(--color-accent);
-  background-color: rgba(139, 92, 246, 0.06);
-}
-
-/* ===========================================================================
- * Overrides to remove forced light-mode (no light-mode in this app)
- * =========================================================================== */
-
-@media (prefers-color-scheme: light) {
-  html,
-  body {
-    background-color: var(--color-bg-base);
-    color: var(--color-text-primary);
+@media (max-width: 720px) {
+  .topbar {
+    padding: 0 16px;
+    height: 54px;
   }
 }
+
+.nav-link-btn {
+  background: transparent;
+  border: none;
+  color: hsl(var(--foreground) / 0.75);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  transition: all 160ms var(--ease-out);
+}
+.nav-link-btn:hover {
+  color: hsl(var(--foreground));
+  background: hsl(var(--muted-foreground) / 0.12);
+}
+
+.theme-toggle-btn {
+  background: transparent;
+  border: none;
+  color: hsl(var(--foreground));
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 160ms var(--ease-out);
+}
+.theme-toggle-btn:hover {
+  background: hsl(var(--muted-foreground) / 0.12);
+}
+
+/* ============================================================
+   EXACT GITDIAGRAM NEO BRUTALIST COMPONENTS
+   ============================================================ */
+
+/* Neo Panel (exact GitDiagram card) */
+.neo-panel {
+  border: 3px solid #000 !important;
+  background: linear-gradient(
+    165deg,
+    hsl(var(--neo-panel)) 0%,
+    hsl(var(--neo-panel-muted)) 100%
+  ) !important;
+  box-shadow: 8px 8px 0 0 #000 !important;
+  color: hsl(var(--foreground));
+  border-radius: 12px;
+}
+
+.dark .neo-panel,
+html[data-theme='dark'] .neo-panel {
+  border: 2px solid #000 !important;
+  box-shadow: 6px 6px 0 0 #000 !important;
+}
+
+/* Neo Button (exact GitDiagram purple button) */
+.neo-button {
+  border: 3px solid #000 !important;
+  background: hsl(var(--neo-button)) !important;
+  color: #000 !important;
+  box-shadow: 4px 4px 0 0 #000 !important;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition:
+    transform 160ms var(--ease-out),
+    background-color 160ms ease,
+    box-shadow 160ms ease;
+  border-radius: 8px;
+  text-decoration: none;
+}
+.neo-button:hover {
+  background: hsl(var(--neo-button-hover)) !important;
+  transform: translate(-1px, -1px);
+  box-shadow: 5px 5px 0 0 #000 !important;
+}
+.neo-button:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 0 #000 !important;
+}
+
+.dark .neo-button,
+html[data-theme='dark'] .neo-button {
+  border: 2px solid #000 !important;
+  box-shadow: 3px 3px 0 0 #000 !important;
+}
+
+/* Neo Input (exact GitDiagram input box) */
+.neo-input {
+  background: hsl(var(--neo-input-bg)) !important;
+  border: 2px solid #000 !important;
+  box-shadow: 3px 3px 0 0 #000 !important;
+  color: hsl(var(--foreground)) !important;
+  font-family: var(--font-sans);
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+.neo-input:focus {
+  border-color: #000 !important;
+  box-shadow: 4px 4px 0 0 hsl(var(--ring)) !important;
+}
+
+/* Neo Chip / Example Repo Button (exact GitDiagram style) */
+.neo-chip {
+  height: 36px;
+  padding: 0 14px;
+  border: 2px solid #000 !important;
+  border-radius: 8px;
+  background: hsl(var(--neo-panel-muted)) !important;
+  color: hsl(var(--foreground)) !important;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition:
+    transform 140ms var(--ease-out),
+    background-color 140ms ease,
+    box-shadow 140ms ease;
+  white-space: nowrap;
+}
+.neo-chip:hover {
+  background: hsl(var(--neo-button)) !important;
+  color: #000 !important;
+  transform: translate(-1px, -1px);
+  box-shadow: 2px 2px 0 0 #000 !important;
+}
+.neo-chip:active {
+  transform: translate(1px, 1px);
+  box-shadow: none !important;
+}
+
+/* NEW badge with shine effect (exact GitDiagram) */
+.new-badge {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  height: 20px;
+  padding: 0 8px;
+  border: 2px solid #000;
+  border-radius: 999px;
+  --new-badge-fill: hsl(var(--neo-button));
+  background-color: var(--new-badge-fill);
+  box-shadow: 2px 2px 0 #000;
+  color: #000;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  line-height: 1;
+}
+.new-badge::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  width: 260%;
+  height: 100%;
+  background: linear-gradient(
+    110deg,
+    var(--new-badge-fill) 0%,
+    var(--new-badge-fill) 38%,
+    #fbcfe8 48%,
+    #fde68a 52%,
+    var(--new-badge-fill) 62%,
+    var(--new-badge-fill) 100%
+  );
+  pointer-events: none;
+  animation: new-badge-shine 3.2s ease-in-out infinite;
+}
+
+@keyframes new-badge-shine {
+  0% {
+    transform: translateX(-61.54%);
+  }
+  60%, 100% {
+    transform: translateX(36.92%);
+  }
+}
+
+/* Homepage Video / Announcement Banner */
+.promo-banner {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 16px;
+  border-radius: 999px;
+  border: 2px solid #000;
+  background: hsl(var(--neo-panel));
+  color: hsl(var(--foreground));
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: 3px 3px 0 0 #000;
+  transition: transform 160ms var(--ease-out);
+}
+.promo-banner:hover {
+  transform: translateY(-1px);
+}
+.promo-banner-glow {
+  position: absolute;
+  inset: -6px -12px -10px -10px;
+  z-index: -1;
+  border-radius: 999px;
+  background: linear-gradient(
+    100deg,
+    #a855f7 0%,
+    #ec4899 45%,
+    #f59e0b 80%,
+    #a855f7 100%
+  );
+  filter: blur(18px);
+  opacity: 0.75;
+  pointer-events: none;
+  animation: promo-banner-glow 3.2s ease-in-out infinite;
+}
+@keyframes promo-banner-glow {
+  0%, 100% {
+    transform: scale(0.94);
+    opacity: 0.45;
+  }
+  50% {
+    transform: scale(1.04);
+    opacity: 0.75;
+  }
+}
+
+/* Mobile Flank Stars floating animation */
+.flank-sparkle-left {
+  animation: flank-float-left 4.2s ease-in-out infinite;
+}
+.flank-sparkle-right {
+  animation: flank-float-right 5.2s ease-in-out -1.7s infinite;
+}
+
+@keyframes flank-float-left {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg) scale(1);
+  }
+  33% {
+    transform: translate(-3px, -4px) rotate(12deg) scale(1.08);
+  }
+  66% {
+    transform: translate(2px, 2px) rotate(-8deg) scale(0.96);
+  }
+}
+
+@keyframes flank-float-right {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg) scale(1);
+  }
+  33% {
+    transform: translate(3px, -4px) rotate(-12deg) scale(1.08);
+  }
+  66% {
+    transform: translate(-2px, 2px) rotate(8deg) scale(0.96);
+  }
+}
+
+/* Scenario Cards */
+.scenario-card {
+  background: hsl(var(--neo-panel-muted)) !important;
+  border: 2px solid #000 !important;
+  border-radius: 10px;
+  padding: 14px 16px;
+  text-align: left;
+  cursor: pointer;
+  transition: transform 160ms var(--ease-out), background-color 160ms ease, box-shadow 160ms ease;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  box-shadow: 3px 3px 0 0 #000;
+}
+.scenario-card:hover {
+  background: hsl(var(--neo-panel)) !important;
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 0 #000;
+}
+.scenario-card:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 0 #000;
+}
+
+/* ============================================================
+   RESPONSIVE DASHBOARD LAYOUT (SIDE-BY-SIDE 3-COLUMNS)
+   ============================================================ */
+
+.dashboard-root {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  padding: 16px;
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 320px 1fr 380px;
+  gap: 16px;
+  width: 100%;
+  max-width: 1920px;
+  margin: 0 auto;
+  height: 100%;
+  min-height: 0;
+}
+
+.dashboard-col {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 100%;
+  min-height: 0;
+}
+
+.dash-panel {
+  background: hsl(var(--neo-panel));
+  border: 2px solid #000;
+  border-radius: 10px;
+  box-shadow: 4px 4px 0 0 #000;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.dash-panel-map {
+  padding: 14px;
+  height: 340px;
+  flex-shrink: 0;
+}
+
+.dash-panel-modules {
+  padding: 14px;
+  flex: 1;
+  min-height: 0;
+}
+
+.dash-panel-timeline {
+  padding: 16px;
+  height: 100%;
+  min-height: 0;
+}
+
+.dash-panel-report {
+  padding: 16px;
+  height: 100%;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.dash-module-item {
+  transition: all 0.12s ease;
+}
+.dash-module-item:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 0 #000 !important;
+}
+
+/* Timeline Playback Buttons (Neo-brutalist style) */
+.pb-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 12px;
+  border: 2px solid #000 !important;
+  border-radius: 6px;
+  background: hsl(var(--neo-panel-muted)) !important;
+  color: hsl(var(--foreground)) !important;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 2px 2px 0 0 #000;
+  transition: transform 140ms var(--ease-out), background-color 140ms ease, box-shadow 140ms ease;
+  white-space: nowrap;
+  user-select: none;
+}
+.pb-btn:hover {
+  background: hsl(var(--neo-button)) !important;
+  color: #000 !important;
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 0 #000;
+}
+.pb-btn:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 0 #000;
+}
+.pb-btn.active {
+  background: hsl(var(--neo-button)) !important;
+  color: #000 !important;
+}
+
+.pb-counter-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 30px;
+  padding: 0 10px;
+  border: 1.5px solid #000;
+  border-radius: 6px;
+  background: hsl(var(--neo-input-bg));
+  color: hsl(var(--foreground));
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  box-shadow: 1.5px 1.5px 0 0 #000;
+  user-select: none;
+}
+
+@media (max-width: 1200px) {
+  .dashboard-grid {
+    grid-template-columns: 280px 1fr 340px;
+    gap: 12px;
+  }
+}
+
+@media (max-width: 900px) {
+  .dashboard-root {
+    overflow-y: auto;
+    min-height: auto;
+    padding: 12px;
+  }
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+  .dashboard-col {
+    height: auto;
+  }
+  .dash-panel-map {
+    height: 320px;
+  }
+  .dash-panel-modules {
+    flex: none;
+    max-height: 400px;
+  }
+  .dash-panel-timeline {
+    height: auto;
+    min-height: 450px;
+  }
+  .dash-panel-report {
+    height: auto;
+    max-height: 600px;
+    overflow-y: auto;
+  }
+}
+
+/* ============================================================
+   DASHBOARD & RISK REPORT
+   ============================================================ */
+.panel {
+  background: hsl(var(--neo-panel));
+  border: 2px solid #000;
+  border-radius: 12px;
+  box-shadow: 5px 5px 0 0 #000;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  border-bottom: 2px solid #000;
+}
+
+.panel-title {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: hsl(var(--foreground));
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.status-dot.ok       { background: var(--ok);     box-shadow: 0 0 8px var(--ok); }
+.status-dot.warn     { background: var(--warn);   box-shadow: 0 0 8px var(--warn); }
+.status-dot.danger   { background: var(--danger); box-shadow: 0 0 8px var(--danger); }
+.status-dot.critical { background: var(--critical); box-shadow: 0 0 12px var(--critical); animation: pulse-ring 1.5s ease-in-out infinite; }
+.status-dot.idle     { background: hsl(var(--muted-foreground)); }
+
+@keyframes pulse-ring {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.3); }
+}
+
+.pulse { animation: pulse-ring 2s ease-in-out infinite; }
+
+.risk-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 8px;
+  border-radius: 99px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  border: 1.5px solid #000;
+}
+.risk-badge.low {
+  background: #4ade80;
+  color: #000;
+}
+.risk-badge.medium {
+  background: #fde047;
+  color: #000;
+}
+.risk-badge.high {
+  background: #fb923c;
+  color: #000;
+}
+.risk-badge.critical {
+  background: #f87171;
+  color: #000;
+}
+
+.damage-bar {
+  width: 100%;
+  height: 8px;
+  background: hsl(var(--neo-input-bg));
+  border-radius: 99px;
+  overflow: hidden;
+  border: 1.5px solid #000;
+}
+.damage-fill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 0.3s ease;
+}
+
+.sec-header {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+  margin-bottom: 8px;
+}
+
+/* Scan line */
+.scan-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, hsl(var(--neo-button)) 50%, transparent 100%);
+  animation: scan 2s linear infinite;
+  pointer-events: none;
+}
+@keyframes scan {
+  0% { top: 0; opacity: 0.8; }
+  100% { top: 100%; opacity: 0; }
+}
+
+/* Supported Technologies Banner - Exact GitDiagram Match */
+.supported-tech-banner {
+  width: 100%;
+  text-align: center;
+  padding: 12px 18px;
+  border-radius: 10px;
+  border: 2px solid #000 !important;
+  background: hsl(var(--neo-panel-muted)) !important;
+  box-shadow: 3px 3px 0 0 #000 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 6px;
+  transition: transform 160ms var(--ease-out), background-color 160ms ease, box-shadow 160ms ease;
+}
+
+.supported-tech-banner:hover {
+  background: hsl(var(--neo-panel)) !important;
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 0 #000 !important;
+}
+
+.supported-tech-list {
+  font-family: var(--font-mono);
+  font-size: 14.5px;
+  font-weight: 600;
+  line-height: 1.6;
+  letter-spacing: 0.02em;
+  color: hsl(var(--foreground));
+}
+
+.supported-tech-dot {
+  color: hsl(var(--neo-button));
+  font-weight: 800;
+  margin: 0 4px;
+}
+
+html[data-theme='light'] .supported-tech-dot {
+  color: hsl(var(--neo-link));
+}
+
+.supported-tech-sub {
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: hsl(var(--foreground));
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .supported-tech-sub {
+    font-size: 11.5px;
+    white-space: normal;
+  }
+}
+
+
+

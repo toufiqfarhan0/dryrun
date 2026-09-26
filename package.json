@@ -7,36 +7,40 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "typecheck": "tsc --noEmit"
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:accuracy": "node tests/helpers/run-accuracy.mjs"
   },
   "dependencies": {
-    "@ibm-cloud/watsonx-ai": "^1.7.16",
-    "dotenv": "^18.0.4",
-    "framer-motion": "^13.4.4",
-    "jszip": "^3.10.2",
-    "lucide-react": "^0.469.0",
-    "next": "15.1.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "zod": "^3.23.8"
+    "@ibm-cloud/watsonx-ai": "^1.7.12",
+    "@xyflow/react": "^12.3.6",
+    "adm-zip": "^0.5.17",
+    "dotenv": "^17.4.2",
+    "framer-motion": "^11.15.0",
+    "jszip": "^3.10.1",
+    "lucide-react": "^1.48.0",
+    "next": "15.5.9",
+    "react": "19.0.0",
+    "react-dom": "19.0.0"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.0",
     "@types/adm-zip": "^0.5.8",
-    "@types/node": "^22.10.2",
-    "@types/react": "^19.0.2",
-    "@types/react-dom": "^19.0.2",
-    "@typescript-eslint/eslint-plugin": "^8.18.1",
-    "@typescript-eslint/parser": "^8.18.1",
-    "adm-zip": "^0.6.1",
-    "autoprefixer": "^10.4.20",
-    "eslint": "^8.57.1",
-    "eslint-config-next": "15.1.0",
-    "postcss": "^8.4.49",
-    "tailwindcss": "^3.4.17",
-    "typescript": "^5.7.2"
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "postcss": "^8.5.14",
+    "tailwindcss": "^4.0.0",
+    "typescript": "^5",
+    "vitest": "^4.1.6"
   },
-  "engines": {
-    "node": ">=20.0.0"
+  "description": "DryRun — Pre-Flight Release Simulation Engine powered by IBM Bob 2.0 & watsonx.ai",
+  "main": "test-api.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/toufiqfarhan0/dryrun.git"
   },
-  "packageManager": "pnpm@9.15.0"
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }

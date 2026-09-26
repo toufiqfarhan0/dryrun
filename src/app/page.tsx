@@ -1,439 +1,392 @@
-/**
- * DryRun — / — Hero Landing Page (Server Component)
- *
- * Developer-first hero with three preset launch cards, architectural
- * highlights, and a one-click path into /analyze.
- *
- * Fully static Server Component — no "use client" required.
- */
+'use client'
 
-import React from 'react';
-import Link from 'next/link';
+import { useState, useCallback, useEffect } from 'react'
+import { AnimatePresence } from 'framer-motion'
+import TopBar from '@/components/TopBar'
+import UploadScreen from '@/components/UploadScreen'
+import ProcessingScreen, { type LogEntry } from '@/components/ProcessingScreen'
+import Dashboard from '@/components/Dashboard'
+import AnalyzingOverlay from '@/components/AnalyzingOverlay'
 import {
-  Zap,
-  GitBranch,
-  Activity,
-  Shield,
-  ExternalLink,
-  ArrowRight,
-  AlertTriangle,
-  Database,
-  FolderGit2,
-} from 'lucide-react';
-import { ENTERPRISE_MESH, FIXTURE_SCENARIOS } from '@/lib/fixtures/enterprise-mesh';
+  DEMO_DATA,
+  DEMO_SCENARIOS,
+  PROCESSING_STAGES_DEMO,
+  PROCESSING_STAGES_UPLOAD,
+} from '@/lib/demo-data'
+import { sleep, statusColors, formatFileSize } from '@/lib/utils'
+import type { Screen, StatusType, ProjectData, AIResult } from '@/types'
 
-// ---------------------------------------------------------------------------
-// Static derived values — computed at build-time on the server
-// ---------------------------------------------------------------------------
+export default function HomePage() {
+  const [mounted, setMounted] = useState(false)
+  const [theme, setTheme] = useState<'dark' | 'light'>('dark')
+  const [screen, setScreen] = useState<Screen>('upload')
+  const [status, setStatus] = useState<StatusType>('IDLE')
+  const [projectName, setProjectName] = useState('no project loaded')
+  const [riskScore, setRiskScore] = useState<number | null>(null)
 
-const MESH_STATS = ENTERPRISE_MESH.stats;
-const SCENARIO_COUNT = Object.keys(FIXTURE_SCENARIOS).length;
+  useEffect(() => {
+    setMounted(true)
+    const saved = (localStorage.getItem('dryrun-theme') as 'dark' | 'light') || (localStorage.getItem('breakwater-theme') as 'dark' | 'light') || 'dark'
+    setTheme(saved)
+    document.documentElement.setAttribute('data-theme', saved)
+    if (saved === 'dark') {
+      document.documentElement.classList.add('dark')
+    } else {
+      document.documentElement.classList.remove('dark')
+    }
+  }, [])
 
-const READINESS_INDICATORS: Array<{
-  label: string;
-  value: string;
-  status: 'ok' | 'warn' | 'info';
-}> = [
-  { label: 'Graph Nodes', value: String(MESH_STATS.totalNodes), status: 'ok' },
-  { label: 'Dependency Edges', value: String(MESH_STATS.totalEdges), status: 'ok' },
-  { label: 'Service Boundaries', value: String(MESH_STATS.serviceCount), status: 'ok' },
-  { label: 'Loaded Scenarios', value: String(SCENARIO_COUNT), status: 'info' },
-];
+  const toggleTheme = useCallback(() => {
+    setTheme((prev) => {
+      const next = prev === 'dark' ? 'light' : 'dark'
+      localStorage.setItem('dryrun-theme', next)
+      document.documentElement.setAttribute('data-theme', next)
+      if (next === 'dark') {
+        document.documentElement.classList.add('dark')
+      } else {
+        document.documentElement.classList.remove('dark')
+      }
+      return next
+    })
+  }, [])
 
-const STATUS_COLOR: Record<'ok' | 'warn' | 'info', string> = {
-  ok: 'text-emerald-400 border-emerald-500/30 bg-emerald-500/10',
-  warn: 'text-yellow-400 border-yellow-400/30 bg-yellow-400/10',
-  info: 'text-sky-400 border-sky-400/30 bg-sky-400/10',
-};
+  const [procStage, setProcStage] = useState('')
+  const [procLogs, setProcLogs] = useState<LogEntry[]>([])
+  const [procStack, setProcStack] = useState<string[]>([])
 
-// ---------------------------------------------------------------------------
-// Pipeline architecture highlights
-// ---------------------------------------------------------------------------
+  const [dashboardData, setDashboardData] = useState<ProjectData | null>(null)
+  const [isDemo, setIsDemo] = useState(false)
+  const [analyzing, setAnalyzing] = useState(false)
+  const [privateRepoNotice, setPrivateRepoNotice] = useState<{
+    isOpen: boolean
+    repoUrl?: string
+    error?: string
+  } | null>(null)
 
-const PIPELINE_STAGES = [
-  {
-    icon: GitBranch,
-    label: 'AST Ingestion',
-    description: 'TypeScript Compiler API walks import graphs, call sites, and service boundaries.',
-    accent: 'text-violet-400',
-    border: 'border-violet-500/20',
-    bg: 'bg-violet-500/5',
-  },
-  {
-    icon: Activity,
-    label: 'Reverse BFS Reachability',
-    description: 'Weighted graph traversal assigns blast-radius scores to every reachable node.',
-    accent: 'text-orange-400',
-    border: 'border-orange-500/20',
-    bg: 'bg-orange-500/5',
-  },
-  {
-    icon: Zap,
-    label: 'Weighted Chaos Decay',
-    description: 'Fault propagation via EXPONENTIAL / LINEAR / STEP decay models across edges.',
-    accent: 'text-yellow-400',
-    border: 'border-yellow-500/20',
-    bg: 'bg-yellow-500/5',
-  },
-  {
-    icon: Shield,
-    label: 'watsonx SSE Gate',
-    description: 'IBM Granite streams a risk narrative → severity → APPROVED / BLOCKED decision.',
-    accent: 'text-emerald-400',
-    border: 'border-emerald-500/20',
-    bg: 'bg-emerald-500/5',
-  },
-] as const;
+  /* ── Helpers ── */
+  const updateStatus = useCallback((text: StatusType, color?: string) => {
+    setStatus(text)
+  }, [])
 
-// ---------------------------------------------------------------------------
-// Preset launch cards
-// ---------------------------------------------------------------------------
+  const addLog = useCallback((text: string, type: LogEntry['type']) => {
+    const ts = new Date().toISOString().slice(11, 19)
+    setProcLogs((prev) => [...prev, { ts, text, type }])
+  }, [])
 
-interface PresetCard {
-  title: string;
-  subtitle: string;
-  blastScore: number;
-  severity: 'CRITICAL' | 'HIGH' | 'CUSTOM';
-  description: string;
-  href: string;
-  icon: React.ElementType;
-  iconColor: string;
-  borderColor: string;
-  bgColor: string;
-  badgeColor: string;
-  badgeText: string;
-  cta: string;
-  ctaColor: string;
-}
+  /* ── Run stages animation ── */
+  const runStages = useCallback(
+    async (stages: typeof PROCESSING_STAGES_DEMO) => {
+      for (const stage of stages) {
+        setProcStage(stage.msg)
+        for (const log of stage.logs) {
+          await sleep(400 + Math.random() * 300)
+          addLog(log.text, log.type)
+        }
+        await sleep(600)
+      }
+    },
+    [addLog]
+  )
 
-const PRESET_CARDS: PresetCard[] = [
-  {
-    title: 'Auth Token Schema',
-    subtitle: 'Breaking Change',
-    blastScore: 87,
-    severity: 'CRITICAL',
-    description:
-      'JWT token schema renamed fields cascade through 9 downstream services. ' +
-      'Auth → API Gateway → Order → Billing → Payment.',
-    href: '/analyze?preset=authSchemaBreaking',
-    icon: AlertTriangle,
-    iconColor: 'text-red-400',
-    borderColor: 'border-red-500/30',
-    bgColor: 'bg-red-500/5',
-    badgeColor: 'text-red-400 border-red-500/40 bg-red-500/10',
-    badgeText: 'CRITICAL',
-    cta: 'Run Auth Scenario',
-    ctaColor:
-      'bg-red-600 hover:bg-red-500 focus-visible:ring-red-500',
-  },
-  {
-    title: 'DB Connection Pool',
-    subtitle: 'Exhaustion',
-    blastScore: 72,
-    severity: 'HIGH',
-    description:
-      'Shared Postgres pool starved under load burst. ' +
-      'Inventory DB → Order Service → Billing → Payment gateway.',
-    href: '/analyze?preset=dbPoolExhaustion',
-    icon: Database,
-    iconColor: 'text-orange-400',
-    borderColor: 'border-orange-500/30',
-    bgColor: 'bg-orange-500/5',
-    badgeColor: 'text-orange-400 border-orange-500/40 bg-orange-500/10',
-    badgeText: 'HIGH',
-    cta: 'Run DB Scenario',
-    ctaColor:
-      'bg-orange-600 hover:bg-orange-500 focus-visible:ring-orange-500',
-  },
-  {
-    title: 'Custom Repository',
-    subtitle: 'Analysis',
-    blastScore: 0,
-    severity: 'CUSTOM',
-    description:
-      'Paste a GitHub URL or upload a zip to ingest any codebase with the AST dependency analyser.',
-    href: '/analyze',
-    icon: FolderGit2,
-    iconColor: 'text-violet-400',
-    borderColor: 'border-violet-500/30',
-    bgColor: 'bg-violet-500/5',
-    badgeColor: 'text-violet-400 border-violet-500/40 bg-violet-500/10',
-    badgeText: 'CUSTOM',
-    cta: 'Open Command Center',
-    ctaColor:
-      'bg-violet-600 hover:bg-violet-500 focus-visible:ring-violet-500',
-  },
-];
+  /* ── Demo flow ── */
+  const handleDemo = useCallback(async (scenarioId?: string) => {
+    const selectedScenario = DEMO_SCENARIOS.find((s) => s.id === scenarioId) || DEMO_SCENARIOS[0]
+    const data = selectedScenario.data
+    const stages = selectedScenario.stages
 
-// ---------------------------------------------------------------------------
-// Sub-components
-// ---------------------------------------------------------------------------
+    setIsDemo(true)
+    setScreen('processing')
+    updateStatus('ANALYZING')
+    setProcLogs([])
+    setProcStack([])
+    setProjectName(data.projectName)
 
-function BlastScoreBadge({ score }: { score: number }): React.JSX.Element {
-  if (score === 0) return <></>;
+    await runStages(stages)
 
-  let color = '#10b981';
-  if (score >= 80) color = '#ef4444';
-  else if (score >= 60) color = '#f97316';
-  else if (score >= 40) color = '#facc15';
+    data.stack.forEach((s) =>
+      setProcStack((prev) => [...prev, s])
+    )
+    await sleep(800)
 
-  const RADIUS = 14;
-  const STROKE = 3;
-  const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
-  const dashOffset = CIRCUMFERENCE * (1 - score / 100);
-  const cx = RADIUS + STROKE;
-  const cy = RADIUS + STROKE;
-  const size = (RADIUS + STROKE) * 2;
+    setRiskScore(data.aiResult.risk_score)
+    setDashboardData(data)
+    setScreen('dashboard')
+    updateStatus('ACTIVE')
+  }, [runStages, updateStatus])
+
+  /* ── Upload flow ── */
+  const handleFile = useCallback(
+    async (file: File) => {
+      setIsDemo(false)
+      setScreen('processing')
+      updateStatus('ANALYZING')
+      setProcLogs([])
+      setProcStack([])
+      setProjectName(file.name.replace('.zip', ''))
+
+      const stages = PROCESSING_STAGES_UPLOAD.map((s, i) => {
+        if (i === 0) {
+          return {
+            ...s,
+            logs: [
+              { text: 'Decompressing archive...', type: 'info' as const },
+              {
+                text: `Archive size: ${formatFileSize(file.size)}`,
+                type: 'ok' as const,
+              },
+              { text: 'Reading file tree...', type: 'ok' as const },
+            ],
+          }
+        }
+        return s
+      })
+
+      await runStages(stages)
+
+      // Read file as base64
+      const base64: string = await new Promise((resolve) => {
+        const reader = new FileReader()
+        reader.onload = (e) =>
+          resolve((e.target?.result as string).split(',')[1])
+        reader.readAsDataURL(file)
+      })
+
+      // Call AI
+      setAnalyzing(true)
+      addLog('Connecting to IBM WatsonX AI...', 'info')
+
+      let aiResult: AIResult
+
+      try {
+        const res = await fetch('/api/analyze', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            fileSize: (file.size / 1024).toFixed(1),
+            base64Data: base64,
+          }),
+        })
+        const json = await res.json()
+        aiResult = json.result
+        addLog('AI analysis complete!', 'ok')
+      } catch {
+        addLog('AI request failed — showing inconclusive result.', 'warn')
+        aiResult = {
+          projectName: file.name.replace('.zip', ''),
+          stack: ['Unknown'],
+          modules: [],
+          risk_score: 0,
+          summary:
+            'Analysis could not reach the server. No risk assessment was produced. Please retry; if the failure persists, check server logs.',
+          issues: [],
+          simulation: [
+            {
+              time: 'T+0s',
+              event: 'Analysis request failed before completion.',
+              type: 'warn' as const,
+            },
+          ],
+        }
+      } finally {
+        setAnalyzing(false)
+      }
+
+      const detectedStack = aiResult.stack ?? ['Unknown Stack']
+      const detectedModules = aiResult.modules ?? [
+        { name: 'Main Module', risk: 'warn' as const, files: 20 },
+        { name: 'API Layer', risk: 'danger' as const, files: 8 },
+        { name: 'Database', risk: 'warn' as const, files: 5 },
+      ]
+
+      detectedStack.forEach((s) => setProcStack((prev) => [...prev, s]))
+      await sleep(1200)
+
+      const projectData: ProjectData = {
+        projectName: aiResult.projectName ?? file.name.replace('.zip', ''),
+        modules: detectedModules,
+        stack: detectedStack,
+        aiResult,
+      }
+
+      setRiskScore(aiResult.risk_score)
+      setDashboardData(projectData)
+      setScreen('dashboard')
+      updateStatus('ACTIVE')
+    },
+    [runStages, addLog, updateStatus]
+  )
+
+  /* ── GitHub Repo Flow ── */
+  const handleRepoUrl = useCallback(
+    async (url: string) => {
+      const match = url.match(/github\.com\/([^/]+)\/([^/#?]+)/i)
+      const repoName = match ? match[2].replace(/\.git$/i, '') : 'github-repo'
+
+      setIsDemo(false)
+      setScreen('processing')
+      updateStatus('ANALYZING')
+      setProcLogs([])
+      setProcStack([])
+      setProjectName(repoName)
+
+      // Fire analyze request immediately so we check access without making user wait
+      const analyzePromise = fetch('/api/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ repoUrl: url }),
+      })
+        .then(async (res) => {
+          const json = await res.json()
+          return { ok: res.ok, status: res.status, json }
+        })
+        .catch((err) => {
+          return { ok: false, status: 500, json: { error: err.message || 'Network error' } }
+        })
+
+      const initialStages = [
+        {
+          msg: 'Connecting to GitHub API...',
+          logs: [
+            { text: `Resolving repository ${url}...`, type: 'info' as const },
+            { text: 'Streaming repository archive...', type: 'ok' as const },
+          ],
+        },
+      ]
+
+      await runStages(initialStages)
+
+      const response = await analyzePromise
+
+      if (!response.ok) {
+        // Repository is private, not found, or inaccessible!
+        // Return to upload screen and trigger the Private Repo Popup Card
+        setScreen('upload')
+        updateStatus('IDLE')
+        setProjectName('')
+        setPrivateRepoNotice({
+          isOpen: true,
+          repoUrl: url,
+          error:
+            response.json?.error ||
+            'GitHub repository not found or is private. Only public repositories can be analyzed directly.',
+        })
+        return
+      }
+
+      // Repository is accessible and unpacked! Proceed with remaining stages
+      const remainingStages = [
+        {
+          msg: 'Unpacking source tree...',
+          logs: [
+            { text: 'Unpacking source tree in memory...', type: 'ok' as const },
+          ],
+        },
+        ...PROCESSING_STAGES_UPLOAD.slice(1),
+      ]
+
+      await runStages(remainingStages)
+
+      const aiResult: AIResult = response.json.result
+      addLog('AI analysis complete!', 'ok')
+
+      const detectedStack = aiResult.stack ?? ['Unknown Stack']
+      const detectedModules = aiResult.modules ?? [
+        { name: 'Main Service', risk: 'warn' as const, files: 15 },
+        { name: 'API Router', risk: 'danger' as const, files: 8 },
+        { name: 'Database', risk: 'warn' as const, files: 6 },
+      ]
+
+      detectedStack.forEach((s) => {
+        setProcStack((prev) => (prev.includes(s) ? prev : [...prev, s]))
+      })
+      await sleep(600)
+
+      const projectData: ProjectData = {
+        projectName: aiResult.projectName ?? repoName,
+        modules: detectedModules,
+        stack: detectedStack,
+        aiResult,
+      }
+
+      setRiskScore(aiResult.risk_score)
+      setDashboardData(projectData)
+      setScreen('dashboard')
+      updateStatus('ACTIVE')
+    },
+    [runStages, addLog, updateStatus]
+  )
+
+  /* ── Reset ── */
+  const handleReset = useCallback(() => {
+    setScreen('upload')
+    setStatus('IDLE')
+    setProjectName('no project loaded')
+    setRiskScore(null)
+    setProcLogs([])
+    setProcStack([])
+    setDashboardData(null)
+  }, [])
+
+  /* ── Status change from timeline ── */
+  const handleStatusChange = useCallback((text: string, color: string) => {
+    setStatus(text as StatusType)
+  }, [])
+
+  const statusColor = statusColors[status] ?? '#4ade80'
+
+  // Prevent hydration mismatch by not rendering until mounted
+  if (!mounted) {
+    return null
+  }
 
   return (
-    <div className="flex items-center gap-1.5">
-      <svg width={size} height={size} aria-label={`Blast score ${score}`}>
-        <circle cx={cx} cy={cy} r={RADIUS} fill="none" stroke="#1e293b" strokeWidth={STROKE} />
-        <circle
-          cx={cx}
-          cy={cy}
-          r={RADIUS}
-          fill="none"
-          stroke={color}
-          strokeWidth={STROKE}
-          strokeLinecap="round"
-          strokeDasharray={CIRCUMFERENCE}
-          strokeDashoffset={dashOffset}
-          transform={`rotate(-90 ${cx} ${cy})`}
-        />
-        <text
-          x={cx}
-          y={cy}
-          textAnchor="middle"
-          dominantBaseline="central"
-          fill={color}
-          fontSize="8"
-          fontWeight="700"
-          fontFamily='"JetBrains Mono", monospace'
-        >
-          {score}
-        </text>
-      </svg>
-      <span
-        className="text-xs text-slate-400"
-        style={{ fontFamily: '"JetBrains Mono", "Fira Code", monospace' }}
-      >
-        Blast Score
-      </span>
+    <div className="flex flex-col" style={{ height: '100dvh', overflow: 'hidden' }}>
+      <TopBar
+        status={status}
+        statusColor={statusColor}
+        projectName={projectName}
+        riskScore={riskScore}
+        theme={theme}
+        onToggleTheme={toggleTheme}
+        onOpenPrivateRepoHelp={() => setPrivateRepoNotice({ isOpen: true })}
+        onSelectDemo={() => {
+          if (screen !== 'upload') setScreen('upload')
+        }}
+      />
+
+      <AnalyzingOverlay visible={analyzing} />
+
+      <main className={`flex flex-col flex-1 min-h-0 ${screen === 'dashboard' ? 'overflow-hidden' : 'overflow-y-auto'}`}>
+        <AnimatePresence mode="wait">
+          {screen === 'upload' && (
+            <UploadScreen
+              key="upload"
+              onFileSelected={handleFile}
+              onDemo={handleDemo}
+              onRepoUrl={handleRepoUrl}
+              privateRepoNotice={privateRepoNotice}
+              onClosePrivateRepoNotice={() => setPrivateRepoNotice(null)}
+            />
+          )}
+          {screen === 'processing' && (
+            <ProcessingScreen
+              key="processing"
+              stage={procStage}
+              logs={procLogs}
+              stackTags={procStack}
+            />
+          )}
+          {screen === 'dashboard' && dashboardData && (
+            <Dashboard
+              key="dashboard"
+              data={dashboardData}
+              isDemo={isDemo}
+              onStatusChange={handleStatusChange}
+              onReset={handleReset}
+            />
+          )}
+        </AnimatePresence>
+      </main>
     </div>
-  );
-}
-
-// ---------------------------------------------------------------------------
-// Page
-// ---------------------------------------------------------------------------
-
-export default function HomePage(): React.JSX.Element {
-  return (
-    <main className="min-h-screen bg-slate-950 text-slate-100 overflow-x-hidden">
-      {/* ── Nav bar ── */}
-      <nav className="flex items-center justify-between px-6 py-4 border-b border-slate-800/60 bg-slate-950/80 backdrop-blur-sm sticky top-0 z-20">
-        <span
-          className="font-mono text-xl font-bold text-slate-100"
-          style={{ fontFamily: '"JetBrains Mono", "Fira Code", monospace' }}
-        >
-          Dry<span className="text-violet-500">Run</span>
-        </span>
-        <div className="flex items-center gap-3">
-          <span
-            className="hidden sm:inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full border border-violet-500/40 bg-violet-500/10 text-violet-400 text-xs font-semibold tracking-widest uppercase"
-            style={{ fontFamily: '"JetBrains Mono", "Fira Code", monospace' }}
-          >
-            <Zap size={10} />
-            IBM Bob 2.0 · Hackathon
-          </span>
-          <Link
-            href="/analyze"
-            className="flex items-center gap-1.5 px-4 py-2 rounded-md bg-violet-600 hover:bg-violet-500 text-white text-sm font-semibold transition-colors focus-visible:outline focus-visible:ring-2 focus-visible:ring-violet-400"
-          >
-            Launch
-            <ArrowRight size={14} />
-          </Link>
-        </div>
-      </nav>
-
-      {/* ── Hero ── */}
-      <section className="flex flex-col items-center text-center px-6 pt-20 pb-16 max-w-4xl mx-auto">
-        {/* Eyebrow tag */}
-        <span
-          className="inline-flex items-center gap-1.5 mb-6 px-3 py-1 rounded-full border border-slate-700 bg-slate-800 text-slate-400 text-xs tracking-widest uppercase"
-          style={{ fontFamily: '"JetBrains Mono", "Fira Code", monospace' }}
-        >
-          Pre-deployment · Blast Radius · Chaos Simulation
-        </span>
-
-        {/* Main headline */}
-        <h1
-          className="text-5xl sm:text-6xl font-bold tracking-tight text-slate-100 mb-5 leading-[1.1]"
-          style={{ fontFamily: '"JetBrains Mono", "Fira Code", monospace' }}
-        >
-          Watch it break here.
-          <br />
-          <span className="text-violet-500">Not in production.</span>
-        </h1>
-
-        <p className="text-lg text-slate-400 max-w-2xl leading-relaxed mb-10">
-          <span className="text-slate-200 font-semibold">DryRun</span> simulates fault propagation
-          through your live dependency graph before a single byte ships — powered by{' '}
-          <span className="text-violet-400 font-semibold">IBM Bob 2.0</span> and{' '}
-          <span className="text-sky-400 font-semibold">watsonx Granite</span>.
-        </p>
-
-        {/* Primary CTA */}
-        <Link
-          href="/analyze"
-          className="inline-flex items-center gap-2.5 px-8 py-3.5 rounded-lg bg-violet-600 hover:bg-violet-500 text-white text-base font-bold transition-colors shadow-lg shadow-violet-900/40 focus-visible:outline focus-visible:ring-2 focus-visible:ring-violet-400"
-        >
-          <Zap size={18} />
-          Open Command Center
-          <ArrowRight size={16} />
-        </Link>
-      </section>
-
-      {/* ── Preset Launch Cards ── */}
-      <section className="px-6 pb-16 max-w-5xl mx-auto">
-        <h2
-          className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-5 text-center"
-          style={{ fontFamily: '"JetBrains Mono", "Fira Code", monospace' }}
-        >
-          Choose a Scenario
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          {PRESET_CARDS.map((card) => {
-            const Icon = card.icon;
-            return (
-              <Link
-                key={card.title}
-                href={card.href}
-                className={`group flex flex-col rounded-xl border p-5 transition-all hover:border-opacity-60 hover:-translate-y-0.5 focus-visible:outline focus-visible:ring-2 focus-visible:ring-violet-400 ${card.borderColor} ${card.bgColor}`}
-              >
-                {/* Card header */}
-                <div className="flex items-start justify-between gap-2 mb-3">
-                  <div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <Icon
-                        size={16}
-                        className={`${card.iconColor} shrink-0`}
-                        aria-hidden="true"
-                      />
-                      <span
-                        className={`px-1.5 py-0.5 rounded border text-xs font-semibold ${card.badgeColor}`}
-                        style={{ fontFamily: '"JetBrains Mono", "Fira Code", monospace' }}
-                      >
-                        {card.badgeText}
-                      </span>
-                    </div>
-                    <h3
-                      className="text-sm font-bold text-slate-200 leading-tight"
-                      style={{ fontFamily: '"JetBrains Mono", "Fira Code", monospace' }}
-                    >
-                      {card.title}
-                    </h3>
-                    <p
-                      className="text-xs text-slate-500"
-                      style={{ fontFamily: '"JetBrains Mono", "Fira Code", monospace' }}
-                    >
-                      {card.subtitle}
-                    </p>
-                  </div>
-                  {card.blastScore > 0 && <BlastScoreBadge score={card.blastScore} />}
-                </div>
-
-                {/* Description */}
-                <p className="text-sm text-slate-400 leading-relaxed flex-1 mb-4">
-                  {card.description}
-                </p>
-
-                {/* CTA */}
-                <div
-                  className={`mt-auto flex items-center justify-center gap-2 w-full py-2 rounded-md text-white text-sm font-semibold transition-colors ${card.ctaColor} focus-visible:ring-2`}
-                >
-                  {card.cta}
-                  <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
-                </div>
-              </Link>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* ── Readiness indicators ── */}
-      <section className="px-6 pb-16 max-w-3xl mx-auto">
-        <h2
-          className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-4 text-center"
-          style={{ fontFamily: '"JetBrains Mono", "Fira Code", monospace' }}
-        >
-          System Readiness
-        </h2>
-        <ul className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          {READINESS_INDICATORS.map(({ label, value, status }) => (
-            <li
-              key={label}
-              className={`flex flex-col items-center justify-center rounded-lg border px-4 py-3 font-mono text-sm gap-1 ${STATUS_COLOR[status]}`}
-            >
-              <span className="text-xl font-bold">{value}</span>
-              <span className="text-xs text-slate-500">{label}</span>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      {/* ── Architecture highlights ── */}
-      <section className="px-6 pb-16 max-w-4xl mx-auto">
-        <h2
-          className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-5 text-center"
-          style={{ fontFamily: '"JetBrains Mono", "Fira Code", monospace' }}
-        >
-          How it works
-        </h2>
-        <ol className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {PIPELINE_STAGES.map(({ icon: Icon, label, description, accent, border, bg }, i) => (
-            <li
-              key={label}
-              className={`flex items-start gap-3 rounded-lg border p-4 ${border} ${bg}`}
-            >
-              <span
-                className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-slate-700 text-xs text-slate-500 font-mono mt-0.5"
-                style={{ fontFamily: '"JetBrains Mono", "Fira Code", monospace' }}
-              >
-                {i + 1}
-              </span>
-              <Icon size={16} className={`${accent} mt-0.5 shrink-0`} aria-hidden="true" />
-              <div>
-                <p
-                  className="text-sm font-semibold text-slate-200 mb-0.5"
-                  style={{ fontFamily: '"JetBrains Mono", "Fira Code", monospace' }}
-                >
-                  {label}
-                </p>
-                <p className="text-xs text-slate-500 leading-relaxed">{description}</p>
-              </div>
-            </li>
-          ))}
-        </ol>
-      </section>
-
-      {/* ── Footer ── */}
-      <footer className="flex flex-col items-center gap-2 px-6 py-8 border-t border-slate-800">
-        <p
-          className="text-xs text-slate-600"
-          style={{ fontFamily: '"JetBrains Mono", "Fira Code", monospace' }}
-        >
-          DryRun · IBM Bob 2.0 Hackathon · Release Readiness &amp; Deployment Processes
-        </p>
-        <Link
-          href="/analyze"
-          className="flex items-center gap-1 text-xs text-slate-600 hover:text-violet-400 transition-colors"
-        >
-          <ExternalLink size={11} />
-          Open Command Center
-        </Link>
-      </footer>
-    </main>
-  );
+  )
 }
