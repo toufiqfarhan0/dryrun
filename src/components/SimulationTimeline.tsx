@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { RotateCcw, Play, Pause, RefreshCw } from 'lucide-react'
-import { computeDamage } from '@/lib/utils'
+import { computeDamage } from '@/lib/simulation-helpers'
 import type { SimulationEvent } from '@/types'
 
 const eventColors = {
@@ -270,7 +270,7 @@ export default function Timeline({
                     lineHeight: '1.5',
                     margin: 0,
                   }}>
-                    {ev.event}
+                    {ev.event.replace(/^[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F1E6}-\u{1F1FF}\u{1F600}-\u{1F64F}\u{1F680}-\u{1F6FF}\u{2B50}\u{231A}-\u{23F3}\u{200D}\s]+/u, '')}
                   </p>
                 </div>
               </motion.div>
@@ -299,7 +299,7 @@ export default function Timeline({
 
         <button
           onClick={togglePlay}
-          className={`pb-btn ${isPlaying ? 'active' : ''}`}
+          className="pb-btn"
           title={isPlaying ? 'Pause simulation' : 'Play simulation'}
         >
           {isPlaying ? (
@@ -324,10 +324,6 @@ export default function Timeline({
         <button
           onClick={onReset}
           className="pb-btn"
-          style={{
-            background: 'hsl(var(--neo-button))',
-            color: '#000',
-          }}
           title="Analyze another repository"
         >
           <RefreshCw className="w-3.5 h-3.5" />
