@@ -28,7 +28,12 @@ import {
   ShieldX,
   ShieldAlert,
   ExternalLink,
+  FolderSearch,
+  FileText,
 } from 'lucide-react';
+import { TelemetryDrawer } from '@/components/TelemetryDrawer';
+import { ReleaseNotesModal } from '@/components/ReleaseNotesModal';
+import { RepoUploadModal } from '@/components/RepoUploadModal';
 import {
   SimulationProvider,
   useSimulation,
@@ -266,7 +271,15 @@ function PresetSwitcher(): React.JSX.Element {
 // Telemetry Header
 // ---------------------------------------------------------------------------
 
-function TelemetryHeader({ onOpenGate }: { onOpenGate: () => void }): React.JSX.Element {
+function TelemetryHeader({
+  onOpenGate,
+  onOpenReleaseNotes,
+  onOpenRepoUpload,
+}: {
+  onOpenGate: () => void;
+  onOpenReleaseNotes: () => void;
+  onOpenRepoUpload: () => void;
+}): React.JSX.Element {
   const { state } = useSimulation();
   const blastScore =
     state.gateDecision?.blastScore ??
@@ -291,7 +304,7 @@ function TelemetryHeader({ onOpenGate }: { onOpenGate: () => void }): React.JSX.
         </span>
       </div>
 
-      {/* Centre: PR metadata + preset switcher */}
+      {/* Centre: PR metadata + preset switcher + utility buttons */}
       <div className="flex items-center gap-3 min-w-0">
         {/* PR chip */}
         <div
@@ -309,6 +322,32 @@ function TelemetryHeader({ onOpenGate }: { onOpenGate: () => void }): React.JSX.
         </div>
 
         <PresetSwitcher />
+
+        {/* Repo upload button */}
+        <button
+          type="button"
+          onClick={onOpenRepoUpload}
+          className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border border-slate-600 bg-slate-800 hover:border-violet-500 text-slate-400 hover:text-violet-300 text-xs transition-colors"
+          style={FONT_MONO}
+          title="Ingest custom repository"
+          aria-label="Open repository ingestion modal"
+        >
+          <FolderSearch className="h-3.5 w-3.5" />
+          <span className="hidden lg:inline">Ingest Repo</span>
+        </button>
+
+        {/* Release notes button */}
+        <button
+          type="button"
+          onClick={onOpenReleaseNotes}
+          className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border border-slate-600 bg-slate-800 hover:border-violet-500 text-slate-400 hover:text-violet-300 text-xs transition-colors"
+          style={FONT_MONO}
+          title="Generate release notes"
+          aria-label="Open release notes modal"
+        >
+          <FileText className="h-3.5 w-3.5" />
+          <span className="hidden lg:inline">Release Notes</span>
+        </button>
       </div>
 
       {/* Right: blast gauge + gate pill */}
@@ -328,6 +367,8 @@ function WorkspaceInner(): React.JSX.Element {
   const { state, selectNode } = useSimulation();
   const [animOffset, setAnimOffset] = useState(0);
   const [gateOpen, setGateOpen] = useState(false);
+  const [releaseNotesOpen, setReleaseNotesOpen] = useState(false);
+  const [repoUploadOpen, setRepoUploadOpen] = useState(false);
 
   const handleAnimOffset = useCallback((offset: number): void => {
     setAnimOffset(offset);
@@ -339,6 +380,22 @@ function WorkspaceInner(): React.JSX.Element {
 
   const handleCloseGate = useCallback((): void => {
     setGateOpen(false);
+  }, []);
+
+  const handleOpenReleaseNotes = useCallback((): void => {
+    setReleaseNotesOpen(true);
+  }, []);
+
+  const handleCloseReleaseNotes = useCallback((): void => {
+    setReleaseNotesOpen(false);
+  }, []);
+
+  const handleOpenRepoUpload = useCallback((): void => {
+    setRepoUploadOpen(true);
+  }, []);
+
+  const handleCloseRepoUpload = useCallback((): void => {
+    setRepoUploadOpen(false);
   }, []);
 
   // Auto-open gate report when streaming starts
@@ -366,7 +423,11 @@ function WorkspaceInner(): React.JSX.Element {
 
   return (
     <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
-      <TelemetryHeader onOpenGate={handleOpenGate} />
+      <TelemetryHeader
+        onOpenGate={handleOpenGate}
+        onOpenReleaseNotes={handleOpenReleaseNotes}
+        onOpenRepoUpload={handleOpenRepoUpload}
+      />
 
       {/* Main content area */}
       <div className="flex flex-1 min-h-0 overflow-hidden">
@@ -414,8 +475,17 @@ function WorkspaceInner(): React.JSX.Element {
         </aside>
       </div>
 
+      {/* Telemetry Event Stream drawer — pinned to bottom */}
+      <TelemetryDrawer />
+
       {/* Gate Report slide-over */}
       <GateReport open={gateOpen} onClose={handleCloseGate} />
+
+      {/* Release Notes modal */}
+      <ReleaseNotesModal open={releaseNotesOpen} onClose={handleCloseReleaseNotes} />
+
+      {/* Repository ingestion modal */}
+      <RepoUploadModal open={repoUploadOpen} onClose={handleCloseRepoUpload} />
     </div>
   );
 }
