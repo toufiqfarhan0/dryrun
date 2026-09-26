@@ -1,0 +1,96 @@
+# DryRun — Bob Coding Rules
+# Applied to every agent interaction in this repository.
+
+---
+
+## Language & Runtime
+
+- **Language:** TypeScript 5+ · strict mode always on (`"strict": true` in tsconfig).
+- **Runtime target:** Node 20 LTS for server code; ES2022 for client bundles.
+- **Framework:** Next.js 14+ App Router exclusively. No `pages/` directory.
+- **Package manager:** pnpm. Never use npm or yarn commands.
+
+---
+
+## TypeScript Standards
+
+- `strict: true` — no exceptions, no `// @ts-ignore`, no `any` unless wrapping an external SDK boundary (must be commented).
+- All function parameters and return types must be explicitly annotated.
+- Prefer `interface` for object shapes that are extended; `type` for unions, intersections, and utility types.
+- No implicit `undefined` — use optional chaining and nullish coalescing consistently.
+- Zod schemas must exist for every external input (API request bodies, watsonx responses, parsed AST payloads).
+- Enum values: prefer `const` enums or string-literal union types over `enum` keyword.
+
+---
+
+## Code Quality
+
+- **Zero console errors** in browser or server output at all times.
+- **Zero TypeScript compiler errors** — `tsc --noEmit` must pass on every commit.
+- **ESLint** config: `@typescript-eslint/recommended` + `eslint-config-next`. No warnings suppressed without a dated comment explaining why.
+- **Prettier** for formatting — single quotes, 2-space indent, trailing commas (`"trailingComma": "all"`), 100-char print width.
+- Functions longer than 60 lines must be decomposed.
+- No magic numbers — extract named constants.
+
+---
+
+## Architecture Constraints
+
+- **App Router only:** all routes live under `src/app/`. API handlers are `route.ts` files using the Web Request/Response API.
+- **Server Components by default.** Add `"use client"` only when browser APIs or React state are genuinely needed.
+- **Data fetching:** server actions or route handlers — never `useEffect` + fetch for initial data.
+- **State management:** React Context + `useReducer` for graph/simulation state. No external state library unless justified in an ADR.
+- **No ORMs** — raw SQL via `postgres` driver or Drizzle if persistence is added.
+
+---
+
+## Naming Conventions
+
+| Construct | Convention | Example |
+|-----------|-----------|---------|
+| Files (components) | PascalCase | `BlastRadiusGraph.tsx` |
+| Files (lib/util) | kebab-case | `compute-impact-score.ts` |
+| React components | PascalCase | `NodeDetailPanel` |
+| Hooks | `use` prefix, camelCase | `useSimulation` |
+| Types / Interfaces | PascalCase | `DependencyGraph`, `FaultScenario` |
+| Constants | SCREAMING_SNAKE_CASE | `MAX_BLAST_RADIUS_DEPTH` |
+| Variables / functions | camelCase | `computeImpactScore` |
+
+---
+
+## Visual & Aesthetic Standards
+
+- **Palette — dark developer-first aesthetic:**
+  - Background: `slate-950` (`#020617`) / `slate-900` (`#0f172a`)
+  - Surface cards: `slate-800` (`#1e293b`)
+  - Borders: `slate-700` (`#334155`)
+  - Primary text: `slate-100` (`#f1f5f9`)
+  - Muted text: `slate-400` (`#94a3b8`)
+  - **Telemetry colours (danger/warning system):**
+    - CRITICAL: `red-500` (`#ef4444`) — node fill, gate badge
+    - HIGH: `orange-500` (`#f97316`)
+    - MEDIUM: `yellow-400` (`#facc15`)
+    - LOW / SAFE: `emerald-500` (`#10b981`)
+    - Info / neutral: `sky-400` (`#38bdf8`)
+  - Accent: `violet-500` (`#8b5cf6`) for interactive controls
+- **No light mode** — this is a developer operations tool; dark only.
+- High contrast ratios required: text on background ≥ 7:1 (WCAG AAA for critical telemetry).
+- Monospace font for all graph labels, impact scores, and code references: `"JetBrains Mono", "Fira Code", monospace`.
+
+---
+
+## Testing
+
+- Unit tests: Vitest. Test files colocated: `*.test.ts` alongside source.
+- Integration tests for API routes: `supertest` against the Next.js server.
+- Graph algorithm tests must cover: empty graph, single-node graph, cyclic dependency, and deep fan-out (≥ 10 levels).
+- Minimum coverage targets: 80 % line coverage on `src/lib/`.
+
+---
+
+## Agent Collaboration
+
+- Each agent owns a clearly bounded directory (`src/lib/ingester/`, `src/lib/blast-radius/`, `src/lib/chaos/`, `src/components/visualizer/`).
+- Cross-agent communication happens **only through the typed interfaces** in `src/types/`.
+- Never import directly from another agent's internal implementation — import from its public `index.ts` barrel.
+- When in doubt: keep it simple, keep it typed, keep it testable.
