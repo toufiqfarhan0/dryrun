@@ -6,7 +6,7 @@ import {
   generateDeterministicRiskScore,
   simpleHash,
   type SystemSnapshot,
-} from '@/lib/analysis'
+} from '@/lib/codebase-analyzer'
 
 // adm-zip is a Node-only library, so this route cannot run on the Edge runtime.
 export const runtime = 'nodejs'
@@ -104,6 +104,11 @@ export async function POST(request: NextRequest) {
       }
     } else {
       result = generateDeterministicAnalysis(snapshot)
+    }
+
+    // Ensure modules are always populated with rich architectural modules
+    if (!result.modules || !Array.isArray(result.modules) || result.modules.length === 0) {
+      result.modules = generateDeterministicAnalysis(snapshot).modules
     }
 
     result._meta = {
