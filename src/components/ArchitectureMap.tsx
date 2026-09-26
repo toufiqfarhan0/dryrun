@@ -11,7 +11,7 @@ import {
   type NodeProps,
 } from '@xyflow/react'
 import '@xyflow/react/dist/style.css'
-import { riskColors, riskGlows } from '@/lib/utils'
+import { riskColors, riskGlows } from '@/lib/simulation-helpers'
 import type { Module, RiskLevel } from '@/types'
 
 /* ── Custom node ── */
