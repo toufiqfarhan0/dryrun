@@ -1,4 +1,247 @@
-/**
+# Role: Frontend Application Assembler Agent
+Context: Refer to `AGENTS.md`, `.bobrules`, `docs/architecture.md`, and the components created in `src/components/visualizer/`.
+
+Assemble the full end-to-end Command Center application:
+
+1. `src/app/analyze/page.tsx` (The Primary Workspace):
+   - Wrap in `SimulationProvider` from `src/components/visualizer/context/SimulationContext`.
+   - Top Header / Telemetry Bar:
+     * Project branding: "DryRun" + "IBM Bob 2.0 Hackathon" badge
+     * Live Deployment Gate status pill (APPROVED / WARNING / BLOCKED)
+     * Overall Blast Score radial gauge (0-100)
+     * Scenario Preset switcher dropdown (Auth Token Schema Change, DB Pool Exhaustion, Monolith to Microservices)
+     * Active PR metadata chip (PR #142, author, branch target)
+   - Main Canvas Area:
+     * Full-screen interactive `GraphCanvas` with live `EdgeLayer` fault cascade animations
+     * Floating `ImpactLegend` and floating `ScenarioTimeline` scrubber at the bottom
+   - Side Drawers & Panels:
+     * Floating / docked `ControlPanel` with "Run Simulation" and "Synthesize watsonx Gate" buttons
+     * Slide-in `NodeDetailPanel` when any node is clicked
+     * Slide-over `GateReport` when watsonx synthesis completes or when triggered
+   - Real-time API wiring:
+     * Connect "Run Simulation" to `/api/simulate`
+     * Connect "Synthesize watsonx Gate" to `/api/gate` with real-time SSE streaming
+
+2. `src/app/page.tsx` (Hero Landing Page):
+   - Developer-first hero: "DryRun — Watch it break here. Not in production."
+   - Subtitle: "Pre-deployment blast-radius & chaos simulation powered by IBM Bob 2.0 and watsonx Granite."
+   - One-click launch into `/analyze` with preset selection cards:
+     * Card 1: Auth Token Schema Breaking Change (Blast Score: 87 · CRITICAL)
+     * Card 2: DB Connection Pool Exhaustion (Blast Score: 72 · HIGH)
+     * Card 3: Custom Repository Analysis (Input GitHub URL or zip)
+   - Key architectural highlights: AST Ingestion, Reverse BFS Reachability, Weighted Chaos Decay, watsonx SSE Gate Decision.
+
+3. Verify:
+   - Ensure clean client-side hydration ("use client" where appropriate).
+   - Ensure `pnpm build` or `pnpm tsc --noEmit` builds cleanly with zero errors.
+
+---
+
+**Status:** active  **Date:** 2026-09-26
+
+---
+
+### 👤 User
+
+Role: Frontend Application Assembler Agent
+Context: Refer to `AGENTS.md`, `.bobrules`, `docs/architecture.md`, and the components created in `src/components/visualizer/`.
+
+Assemble the full end-to-end Command Center application:
+
+1. `src/app/analyze/page.tsx` (The Primary Workspace):
+   - Wrap in `SimulationProvider` from `src/components/visualizer/context/SimulationContext`.
+   - Top Header / Telemetry Bar:
+     * Project branding: "DryRun" + "IBM Bob 2.0 Hackathon" badge
+     * Live Deployment Gate status pill (APPROVED / WARNING / BLOCKED)
+     * Overall Blast Score radial gauge (0-100)
+     * Scenario Preset switcher dropdown (Auth Token Schema Change, DB Pool Exhaustion, Monolith to Microservices)
+     * Active PR metadata chip (PR #142, author, branch target)
+   - Main Canvas Area:
+     * Full-screen interactive `GraphCanvas` with live `EdgeLayer` fault cascade animations
+     * Floating `ImpactLegend` and floating `ScenarioTimeline` scrubber at the bottom
+   - Side Drawers & Panels:
+     * Floating / docked `ControlPanel` with "Run Simulation" and "Synthesize watsonx Gate" buttons
+     * Slide-in `NodeDetailPanel` when any node is clicked
+     * Slide-over `GateReport` when watsonx synthesis completes or when triggered
+   - Real-time API wiring:
+     * Connect "Run Simulation" to `/api/simulate`
+     * Connect "Synthesize watsonx Gate" to `/api/gate` with real-time SSE streaming
+
+2. `src/app/page.tsx` (Hero Landing Page):
+   - Developer-first hero: "DryRun — Watch it break here. Not in production."
+   - Subtitle: "Pre-deployment blast-radius & chaos simulation powered by IBM Bob 2.0 and watsonx Granite."
+   - One-click launch into `/analyze` with preset selection cards:
+     * Card 1: Auth Token Schema Breaking Change (Blast Score: 87 · CRITICAL)
+     * Card 2: DB Connection Pool Exhaustion (Blast Score: 72 · HIGH)
+     * Card 3: Custom Repository Analysis (Input GitHub URL or zip)
+   - Key architectural highlights: AST Ingestion, Reverse BFS Reachability, Weighted Chaos Decay, watsonx SSE Gate Decision.
+
+3. Verify:
+   - Ensure clean client-side hydration ("use client" where appropriate).
+   - Ensure `pnpm build` or `pnpm tsc --noEmit` builds cleanly with zero errors.
+
+---
+
+### 🤖 Assistant
+
+> 🔧 called: update_todo_list
+
+
+
+> 🔧 **update_todo_list** — 
+[-] Explore existing codebase: read AGENTS.md, .bobrules, docs/architecture.md, and src/components/visualizer/
+[ ] Scaffold src/app/analyze/page.tsx (Primary Workspace)
+[ ] Scaffold src/app/page.tsx (Hero Landing Page)
+[ ] Wire real-time API endpoints (check existing /api routes)
+[ ] Run pnpm tsc --noEmit and fix all type errors
+
+
+### 🤖 Assistant
+
+> 🔧 called: list_files, list_files
+
+
+
+> 🔧 **list_files** — .
+
+> 🔧 **list_files** — src/components/visualizer
+
+### 🤖 Assistant
+
+> 🔧 called: read_file, list_files
+
+
+
+> 🔧 **read_file** — .bobrules
+
+> 🔧 **list_files** — src
+
+### 🤖 Assistant
+
+> 🔧 called: read_file, read_file, read_file
+
+
+
+> 🔧 **read_file** — src/types/index.ts
+
+> 🔧 **read_file** — src/components/visualizer/context/simulation-reducer.ts
+
+> 🔧 **read_file** — src/components/visualizer/context/SimulationContext.tsx
+
+### 🤖 Assistant
+
+> 🔧 called: read_file, read_file, read_file
+
+
+
+> 🔧 **read_file** — src/components/visualizer/ControlPanel.tsx
+
+> 🔧 **read_file** — src/components/visualizer/GraphCanvas.tsx
+
+> 🔧 **read_file** — src/components/visualizer/NodeDetailPanel.tsx
+
+### 🤖 Assistant
+
+> 🔧 called: read_file, read_file, read_file
+
+
+
+> 🔧 **read_file** — src/components/visualizer/GateReport.tsx
+
+> 🔧 **read_file** — src/components/visualizer/ImpactLegend.tsx
+
+> 🔧 **read_file** — src/components/visualizer/ScenarioTimeline.tsx
+
+### 🤖 Assistant
+
+> 🔧 called: read_file, read_file, read_file
+
+
+
+> 🔧 **read_file** — src/components/visualizer/index.ts
+
+> 🔧 **read_file** — src/app/layout.tsx
+
+> 🔧 **read_file** — src/app/page.tsx
+
+### 🤖 Assistant
+
+> 🔧 called: read_file, read_file, read_file
+
+
+
+> 🔧 **read_file** — src/app/api/simulate/route.ts
+
+> 🔧 **read_file** — src/app/api/gate/route.ts
+
+> 🔧 **read_file** — src/lib/fixtures/enterprise-mesh.ts
+
+### 🤖 Assistant
+
+> 🔧 called: read_file, read_file
+
+Now I have a complete picture of the codebase. Let me also quickly check the `package.json` for available dependencies:
+
+> 🔧 **read_file** — package.json
+
+> 🔧 **read_file** — src/lib/fixtures/enterprise-mesh.ts
+
+### 🤖 Assistant
+
+> 🔧 called: read_file
+
+
+
+> 🔧 **read_file** — src/lib/fixtures/enterprise-mesh.ts
+
+### 🤖 Assistant
+
+> 🔧 called: update_todo_list
+
+Now I have everything I need. I can see that:
+1. The gate API expects `simulationResult` + `blastRadiusReport` (not `chaosSimulationResultId`)
+2. The `FIXTURE_SCENARIOS` only has `authSchemaBreaking` and `dbPoolExhaustion` (no `monolithMigration`)
+3. The `ControlPanel.tsx` already handles simulation + gate SSE wiring
+
+Let me now build both pages:
+
+> 🔧 **update_todo_list** — 
+[x] Explore existing codebase: read AGENTS.md, .bobrules, docs/architecture.md, and src/components/visualizer/
+[-] Scaffold src/app/analyze/page.tsx (Primary Workspace)
+[ ] Scaffold src/app/page.tsx (Hero Landing Page)
+[ ] Wire real-time API endpoints (check existing /api routes)
+[ ] Run pnpm tsc --noEmit and fix all type errors
+
+
+### 🤖 Assistant
+
+> 🔧 called: write_file
+
+
+
+> 🔧 **write_file** — src/app/analyze/page.tsx
+
+### 🤖 Assistant
+
+> 🔧 called: update_todo_list
+
+Now write the hero landing page:
+
+> 🔧 **update_todo_list** — 
+[x] Explore existing codebase: read AGENTS.md, .bobrules, docs/architecture.md, and src/components/visualizer/
+[x] Scaffold src/app/analyze/page.tsx (Primary Workspace)
+[-] Scaffold src/app/page.tsx (Hero Landing Page)
+[ ] Wire real-time API endpoints (check existing /api routes)
+[ ] Run pnpm tsc --noEmit and fix all type errors
+
+
+### 🤖 Assistant
+
+> 🔧 called: write_file
+
+
+
+> 🔧 **write_file** — /**
  * DryRun — / — Hero Landing Page (Server Component)
  *
  * Developer-first hero with three preset launch cards, architectural
@@ -437,3 +680,88 @@ export default function HomePage(): React.JSX.Element {
     </main>
   );
 }
+
+
+### 🤖 Assistant
+
+> 🔧 called: update_todo_list
+
+Now let's run the type check:
+
+> 🔧 **update_todo_list** — 
+[x] Explore existing codebase: read AGENTS.md, .bobrules, docs/architecture.md, and src/components/visualizer/
+[x] Scaffold src/app/analyze/page.tsx (Primary Workspace)
+[x] Scaffold src/app/page.tsx (Hero Landing Page)
+[x] Wire real-time API endpoints (check existing /api routes)
+[-] Run pnpm tsc --noEmit and fix all type errors
+
+
+### 🤖 Assistant
+
+> 🔧 called: execute_command
+
+
+
+> 🔧 **execute_command** — pnpm tsc --noEmit 2>&1
+
+### 🤖 Assistant
+
+> 🔧 called: execute_command
+
+Zero type errors. Let's also verify the build:
+
+> 🔧 **execute_command** — pnpm build 2>&1
+
+### 🤖 Assistant
+
+> 🔧 called: update_todo_list
+
+Clean build — zero errors, zero warnings. All 8 pages generated successfully.
+
+> 🔧 **update_todo_list** — 
+[x] Explore existing codebase: read AGENTS.md, .bobrules, docs/architecture.md, and src/components/visualizer/
+[x] Scaffold src/app/analyze/page.tsx (Primary Workspace)
+[x] Scaffold src/app/page.tsx (Hero Landing Page)
+[x] Wire real-time API endpoints (check existing /api routes)
+[x] Run pnpm tsc --noEmit and fix all type errors
+
+
+### 🤖 Assistant
+
+Both pages are assembled, type-safe, and the production build passes cleanly. Here's what was built:
+
+---
+
+## What was delivered
+
+### [`src/app/analyze/page.tsx`](src/app/analyze/page.tsx) — Primary Command Center
+
+**Layout:** `"use client"` shell wrapping `SimulationProvider`, with a top telemetry bar, a main canvas column, and a right sidebar — all sized via `h-screen / flex-1 / min-h-0` to fill the full viewport without overflow.
+
+| Zone | Contents |
+|---|---|
+| **Telemetry Bar** | DryRun branding + IBM Bob 2.0 badge · PR #142 chip (author, branch) · `PresetSwitcher` dropdown (all 3 presets including monolithMigration) · `HeaderBlastGauge` radial SVG · `GateStatusPill` (live PENDING → SIMULATING → EVALUATING → APPROVED/BLOCKED) |
+| **Canvas** | [`GraphCanvas`](src/components/visualizer/GraphCanvas.tsx) with live `EdgeLayer` overlay — `activeNodeIds` derived from `criticalFailureChain` slice at `currentStep` — empty-state placeholder when no graph loaded |
+| **Floating bar** | [`ImpactLegend`](src/components/visualizer/ImpactLegend.tsx) (pinned bottom-left) + [`ScenarioTimeline`](src/components/visualizer/ScenarioTimeline.tsx) scrubber (pinned bottom-right), `animOffset` clock wired via `useCallback` |
+| **Right sidebar** | [`ControlPanel`](src/components/visualizer/ControlPanel.tsx) (already contains "Run Simulation" → fixture load → `/api/simulate` and "Synthesize watsonx Gate" → SSE stream from `/api/gate`) · [`NodeDetailPanel`](src/components/visualizer/NodeDetailPanel.tsx) slides in when any node is selected |
+| **Slide-over** | [`GateReport`](src/components/visualizer/GateReport.tsx) auto-opens when `phase` transitions to `STREAMING` or `COMPLETE`; manually toggled via the gate status pill |
+
+### [`src/app/page.tsx`](src/app/page.tsx) — Hero Landing Page
+
+**Pure Server Component** (no `"use client"`). Static values derived from `ENTERPRISE_MESH` fixture at build time.
+
+- Sticky nav bar with DryRun branding, IBM Bob 2.0 badge, and a **Launch** CTA
+- Hero headline: *"Watch it break here. Not in production."* + subtitle naming IBM Bob 2.0 and watsonx Granite
+- **3 preset launch cards** with inline blast-score SVG gauges:
+  - Auth Token Schema Breaking Change (Score: 87 · CRITICAL) → `/analyze?preset=authSchemaBreaking`
+  - DB Connection Pool Exhaustion (Score: 72 · HIGH) → `/analyze?preset=dbPoolExhaustion`
+  - Custom Repository Analysis (Score: custom) → `/analyze`
+- System Readiness indicator grid (nodes / edges / services / scenarios)
+- 4-step architecture pipeline (AST Ingestion → Reverse BFS → Weighted Chaos Decay → watsonx SSE Gate)
+
+### Build results
+```
+✓ Compiled successfully
+/ (Static)      109 kB
+/analyze (Static) 123 kB
+```
