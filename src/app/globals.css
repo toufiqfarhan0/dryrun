@@ -1,39 +1,40 @@
 @import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800;900&family=Geist+Mono:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap');
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 /* ============================================================
    DRY RUN — Exact GitDiagram Design System
    With Full Dark Mode & Light Mode Support
    ============================================================ */
 
-/* === LIGHT MODE (Default GitDiagram Light) === */
+/* === LIGHT MODE (Clean Neutral Stone & Crisp White) === */
 :root {
-  --background: 269 100% 95%;
-  --foreground: 0 0% 3.9%;
+  --background: 40 8% 97%;
+  --foreground: 240 10% 4%;
   --popover: 0 0% 100%;
-  --popover-foreground: 0 0% 3.9%;
-  --primary: 0 0% 9%;
+  --popover-foreground: 240 10% 4%;
+  --primary: 240 10% 4%;
   --primary-foreground: 0 0% 98%;
-  --muted-foreground: 0 0% 45.1%;
-  --accent: 0 0% 96.1%;
-  --accent-foreground: 0 0% 9%;
-  --border: 0 0% 89.8%;
-  --input: 0 0% 89.8%;
-  --ring: 0 0% 3.9%;
+  --muted-foreground: 240 4% 46%;
+  --accent: 240 5% 96%;
+  --accent-foreground: 240 10% 4%;
+  --border: 0 0% 0%;
+  --input: 240 6% 90%;
+  --ring: 240 10% 4%;
   --radius: 0.5rem;
-  --neo-panel: 270 100% 92%;
-  --neo-panel-muted: 270 95% 88%;
-  --neo-button: 270 97% 75%;
-  --neo-button-hover: 271 90% 80%;
-  --neo-subtle: 0 0% 98%;
+  --neo-panel: 0 0% 100%;
+  --neo-panel-muted: 40 6% 93%;
+  --neo-button: 240 10% 8%;
+  --neo-button-hover: 240 10% 18%;
+  --neo-button-text: 0 0% 100%;
+  --neo-subtle: 0 0% 100%;
+  --neo-subtle-hover: 40 6% 92%;
+  --neo-subtle-text: 240 10% 8%;
   --neo-subtle-muted: 0 0% 93%;
-  --neo-link: 271 81% 55%;
-  --neo-link-hover: 271 70% 48%;
-  --neo-soft-text: 220 13% 30%;
-  --neo-input-bg: 270 92% 89%;
+  --neo-link: 217 91% 60%;
+  --neo-link-hover: 217 91% 50%;
+  --neo-soft-text: 240 4% 40%;
+  --neo-input-bg: 40 6% 95%;
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
 
@@ -50,35 +51,38 @@
   --critical: #b91c1c;
   --critical-dim: rgba(185, 28, 28, 0.2);
 
-  --topbar-bg: rgba(243, 232, 255, 0.85);
-  --topbar-border: rgba(0, 0, 0, 0.1);
+  --topbar-bg: rgba(255, 255, 255, 0.9);
+  --topbar-border: rgba(0, 0, 0, 1);
 }
 
-/* === DARK MODE (Exact GitDiagram Dark) === */
+/* === DARK MODE (Sleek Obsidian & Zinc) === */
 .dark,
 html[data-theme='dark'] {
-  --background: 264 22% 9%;
-  --foreground: 270 25% 93%;
-  --popover: 264 20% 13%;
-  --popover-foreground: 270 25% 93%;
-  --primary: 270 25% 93%;
-  --primary-foreground: 264 22% 9%;
-  --muted-foreground: 270 15% 65%;
-  --accent: 264 20% 22%;
-  --accent-foreground: 270 25% 93%;
-  --border: 264 28% 22%;
-  --input: 264 22% 17%;
-  --ring: 270 85% 68%;
-  --neo-panel: 264 20% 13%;
-  --neo-panel-muted: 264 18% 17%;
-  --neo-button: 270 85% 68%;
-  --neo-button-hover: 270 90% 75%;
-  --neo-subtle: 270 35% 72%;
-  --neo-subtle-muted: 270 28% 62%;
-  --neo-link: 280 80% 72%;
-  --neo-link-hover: 275 90% 80%;
-  --neo-soft-text: 270 18% 72%;
-  --neo-input-bg: 264 24% 11%;
+  --background: 240 10% 4%;
+  --foreground: 0 0% 98%;
+  --popover: 240 10% 6%;
+  --popover-foreground: 0 0% 98%;
+  --primary: 0 0% 98%;
+  --primary-foreground: 240 10% 4%;
+  --muted-foreground: 240 5% 65%;
+  --accent: 240 4% 16%;
+  --accent-foreground: 0 0% 98%;
+  --border: 0 0% 100%;
+  --input: 240 4% 16%;
+  --ring: 240 5% 65%;
+  --neo-panel: 240 6% 10%;
+  --neo-panel-muted: 240 5% 14%;
+  --neo-button: 0 0% 98%;
+  --neo-button-hover: 0 0% 90%;
+  --neo-button-text: 240 10% 4%;
+  --neo-subtle: 240 6% 14%;
+  --neo-subtle-hover: 240 6% 20%;
+  --neo-subtle-text: 0 0% 98%;
+  --neo-subtle-muted: 240 5% 45%;
+  --neo-link: 217 91% 60%;
+  --neo-link-hover: 217 91% 70%;
+  --neo-soft-text: 240 5% 65%;
+  --neo-input-bg: 240 6% 7%;
 
   /* Semantic status colors */
   --ok: #22c55e;
@@ -116,40 +120,21 @@ body {
   transition: background-color 200ms ease, color 200ms ease;
 }
 
-/* Light mode background */
-html[data-theme='light'] body {
-  background-color: hsl(var(--background));
-  background-image:
-    radial-gradient(
-      ellipse at 18% 5%,
-      hsl(270 90% 85% / 0.6) 0%,
-      transparent 52%
-    ),
-    radial-gradient(
-      ellipse at 85% 90%,
-      hsl(280 80% 88% / 0.5) 0%,
-      transparent 46%
-    ),
-    linear-gradient(135deg, hsl(269 100% 95%) 0%, hsl(270 95% 92%) 100%);
+/* Light mode background — Warm Neutral Stone with subtle micro-dots */
+html[data-theme='light'] body,
+body {
+  background-color: #f6f5f2;
+  background-image: radial-gradient(#dedad1 1.2px, transparent 1.2px);
+  background-size: 20px 20px;
   background-attachment: fixed;
 }
 
-/* Dark mode background gradient (exact GitDiagram) */
+/* Dark mode background — Deep Charcoal Obsidian with subtle micro-dots */
 .dark body,
 html[data-theme='dark'] body {
-  background-color: hsl(var(--background));
-  background-image:
-    radial-gradient(
-      ellipse at 18% 5%,
-      hsl(270 60% 20% / 0.4) 0%,
-      transparent 52%
-    ),
-    radial-gradient(
-      ellipse at 85% 90%,
-      hsl(280 50% 16% / 0.25) 0%,
-      transparent 46%
-    ),
-    linear-gradient(135deg, hsl(265 25% 10%) 0%, hsl(258 20% 8%) 100%);
+  background-color: #0e0e0d;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1.2px, transparent 1.2px);
+  background-size: 20px 20px;
   background-attachment: fixed;
 }
 
@@ -253,12 +238,12 @@ html[data-theme='dark'] .neo-panel {
   box-shadow: 6px 6px 0 0 #000 !important;
 }
 
-/* Neo Button (exact GitDiagram purple button) */
+/* Neo Button (exact GitDiagram style) */
 .neo-button {
-  border: 3px solid #000 !important;
+  border: 2px solid #000 !important;
   background: hsl(var(--neo-button)) !important;
-  color: #000 !important;
-  box-shadow: 4px 4px 0 0 #000 !important;
+  color: hsl(var(--neo-button-text)) !important;
+  box-shadow: 3px 3px 0 0 #000 !important;
   font-family: var(--font-sans);
   font-weight: 700;
   display: inline-flex;
@@ -269,18 +254,31 @@ html[data-theme='dark'] .neo-panel {
   transition:
     transform 160ms var(--ease-out),
     background-color 160ms ease,
-    box-shadow 160ms ease;
+    box-shadow 160ms ease,
+    color 160ms ease;
   border-radius: 8px;
   text-decoration: none;
 }
 .neo-button:hover {
   background: hsl(var(--neo-button-hover)) !important;
+  color: hsl(var(--neo-button-text)) !important;
   transform: translate(-1px, -1px);
-  box-shadow: 5px 5px 0 0 #000 !important;
+  box-shadow: 4px 4px 0 0 #000 !important;
 }
 .neo-button:active {
   transform: translate(2px, 2px);
-  box-shadow: 2px 2px 0 0 #000 !important;
+  box-shadow: 1px 1px 0 0 #000 !important;
+}
+
+.neo-button.neo-button-secondary,
+.neo-button-secondary {
+  background: hsl(var(--neo-subtle)) !important;
+  color: hsl(var(--neo-subtle-text)) !important;
+}
+.neo-button.neo-button-secondary:hover,
+.neo-button-secondary:hover {
+  background: hsl(var(--neo-subtle-hover)) !important;
+  color: hsl(var(--neo-subtle-text)) !important;
 }
 
 .dark .neo-button,
@@ -323,12 +321,13 @@ html[data-theme='dark'] .neo-button {
   transition:
     transform 140ms var(--ease-out),
     background-color 140ms ease,
-    box-shadow 140ms ease;
+    box-shadow 140ms ease,
+    color 140ms ease;
   white-space: nowrap;
 }
 .neo-chip:hover {
   background: hsl(var(--neo-button)) !important;
-  color: #000 !important;
+  color: hsl(var(--neo-button-text)) !important;
   transform: translate(-1px, -1px);
   box-shadow: 2px 2px 0 0 #000 !important;
 }
@@ -500,15 +499,16 @@ html[data-theme='dark'] .neo-button {
   flex: 1;
   min-height: 0;
   display: flex;
-  padding: 16px;
+  padding: 8px 16px 16px;
   overflow: hidden;
   height: 100%;
   width: 100%;
+  box-sizing: border-box;
 }
 
 .dashboard-grid {
   display: grid;
-  grid-template-columns: 320px 1fr 380px;
+  grid-template-columns: 300px 1fr 410px;
   gap: 16px;
   width: 100%;
   max-width: 1920px;
@@ -579,30 +579,55 @@ html[data-theme='dark'] .neo-button {
   padding: 0 12px;
   border: 2px solid #000 !important;
   border-radius: 6px;
-  background: hsl(var(--neo-panel-muted)) !important;
-  color: hsl(var(--foreground)) !important;
+  background: #ffffff !important;
+  color: #141413 !important;
   font-family: var(--font-sans);
   font-size: 12px;
   font-weight: 700;
   cursor: pointer;
   box-shadow: 2px 2px 0 0 #000;
-  transition: transform 140ms var(--ease-out), background-color 140ms ease, box-shadow 140ms ease;
+  transition: transform 140ms var(--ease-out), background-color 140ms ease, box-shadow 140ms ease, color 140ms ease;
   white-space: nowrap;
   user-select: none;
 }
 .pb-btn:hover {
-  background: hsl(var(--neo-button)) !important;
-  color: #000 !important;
+  background: #eae7df !important;
+  color: #141413 !important;
   transform: translate(-1px, -1px);
   box-shadow: 3px 3px 0 0 #000;
 }
 .pb-btn:active {
   transform: translate(1px, 1px);
   box-shadow: 1px 1px 0 0 #000;
+  background: #eae7df !important;
+  color: #141413 !important;
 }
 .pb-btn.active {
-  background: hsl(var(--neo-button)) !important;
-  color: #000 !important;
+  background: #ffffff !important;
+  color: #141413 !important;
+  box-shadow: 2px 2px 0 0 #000 !important;
+}
+
+.dark .pb-btn,
+html[data-theme='dark'] .pb-btn {
+  background: #1a1918 !important;
+  color: #ffffff !important;
+  border: 2px solid #000 !important;
+}
+.dark .pb-btn:hover,
+html[data-theme='dark'] .pb-btn:hover {
+  background: #2a2927 !important;
+  color: #ffffff !important;
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 0 #000;
+}
+.dark .pb-btn:active,
+.dark .pb-btn.active,
+html[data-theme='dark'] .pb-btn:active,
+html[data-theme='dark'] .pb-btn.active {
+  background: #2a2927 !important;
+  color: #ffffff !important;
+  box-shadow: 1.5px 1.5px 0 0 #000 !important;
 }
 
 .pb-counter-pill {
@@ -621,6 +646,23 @@ html[data-theme='dark'] .neo-button {
   letter-spacing: 0.04em;
   box-shadow: 1.5px 1.5px 0 0 #000;
   user-select: none;
+}
+
+/* Export Dropdown Items */
+.export-dropdown-item {
+  color: hsl(var(--foreground)) !important;
+}
+.export-dropdown-item:hover {
+  background: hsl(var(--neo-subtle)) !important;
+  border-color: #000 !important;
+  transform: translate(-1px, -1px);
+  box-shadow: 2px 2px 0 0 #000;
+}
+.dark .export-dropdown-item:hover,
+html[data-theme='dark'] .export-dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  box-shadow: 2px 2px 0 0 #000;
 }
 
 @media (max-width: 1200px) {
@@ -834,5 +876,143 @@ html[data-theme='light'] .supported-tech-dot {
   }
 }
 
+/* === Floating TopBar Navigation === */
+.topbar-nav-link {
+  text-decoration: none;
+  color: #66645e;
+  font-weight: 500;
+  font-size: 13px;
+  transition: color 140ms ease;
+  display: inline-flex;
+  align-items: center;
+}
 
+.topbar-nav-link:hover {
+  color: #141413;
+}
 
+.dark .topbar-nav-link,
+html[data-theme='dark'] .topbar-nav-link {
+  color: #a1a1aa;
+}
+
+.dark .topbar-nav-link:hover,
+html[data-theme='dark'] .topbar-nav-link:hover {
+  color: #ffffff;
+}
+
+.topbar-theme-toggle {
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #52525b;
+  width: 32px;
+  height: 32px;
+  border-radius: 9999px;
+  transition: all 140ms cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.topbar-theme-toggle:hover {
+  background: rgba(0, 0, 0, 0.09);
+  color: #18181b;
+  transform: scale(1.04);
+}
+
+.dark .topbar-theme-toggle,
+html[data-theme='dark'] .topbar-theme-toggle {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #fbbf24;
+}
+
+.dark .topbar-theme-toggle:hover,
+html[data-theme='dark'] .topbar-theme-toggle:hover {
+  background: rgba(255, 255, 255, 0.16);
+  color: #fef08a;
+  transform: scale(1.04);
+}
+
+/* === How It Works Pipeline Animations === */
+@keyframes pipelinePulse {
+  0% { transform: scale(1); opacity: 0.85; }
+  50% { transform: scale(1.08); opacity: 1; }
+  100% { transform: scale(1); opacity: 0.85; }
+}
+
+@keyframes pipelineFlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes scannerLine {
+  0% { transform: translateY(-100%); opacity: 0; }
+  50% { opacity: 0.6; }
+  100% { transform: translateY(220%); opacity: 0; }
+}
+
+@keyframes neuralGlow {
+  0%, 100% { box-shadow: 0 0 10px rgba(16, 185, 129, 0.2); }
+  50% { box-shadow: 0 0 22px rgba(16, 185, 129, 0.45); }
+}
+
+@keyframes decayWave {
+  0% { width: 15%; opacity: 0.4; }
+  50% { width: 90%; opacity: 1; }
+  100% { width: 15%; opacity: 0.4; }
+}
+
+.pipeline-card {
+  position: relative;
+  overflow: hidden;
+  transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 220ms cubic-bezier(0.16, 1, 0.3, 1), border-color 220ms ease;
+}
+
+.pipeline-card:hover {
+  transform: translateY(-4px);
+}
+
+.dark .pipeline-card:hover,
+html[data-theme='dark'] .pipeline-card:hover {
+  border-color: rgba(255, 255, 255, 0.24) !important;
+  box-shadow: 0 12px 30px -4px rgba(0, 0, 0, 0.7) !important;
+}
+
+html[data-theme='light'] .pipeline-card:hover {
+  border-color: #000000 !important;
+  box-shadow: 0 12px 24px -4px rgba(0, 0, 0, 0.08) !important;
+}
+
+.pipeline-badge-pulse {
+  animation: pipelinePulse 2.4s infinite ease-in-out;
+}
+
+.pipeline-connector-line {
+  background: linear-gradient(90deg, #10b981, #3b82f6, #8b5cf6, #10b981);
+  background-size: 300% 300%;
+  animation: pipelineFlow 4s infinite linear;
+}
+
+.scanner-beam {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #38bdf8, transparent);
+  animation: scannerLine 2.5s infinite ease-in-out;
+  pointer-events: none;
+}
+
+.neural-glow {
+  animation: neuralGlow 2.8s infinite ease-in-out;
+}
+
+.decay-bar {
+  animation: decayWave 3s infinite ease-in-out;
+}
