@@ -3,40 +3,57 @@
 @tailwind utilities;
 
 /* ---------------------------------------------------------------------------
- * DryRun — Global Design Tokens
- * Dark-first developer telemetry aesthetic per .bobrules
+ * DryRun — Global Design System
+ * Retro-brutalist / De Stijl dark telemetry aesthetic per .bobrules
  * --------------------------------------------------------------------------- */
 
+/* ── CSS Custom Properties ── */
 :root {
+  /* HSL design tokens (Tailwind-compatible) */
+  --background: 240 10% 3.9%;         /* slate-950 equiv */
+  --foreground: 0 0% 98%;
+
+  /* Neo-button accent */
+  --neo-button: 262 83% 58%;          /* violet-ish */
+  --neo-button-hover: 262 83% 65%;
+
+  /* Border */
+  --border: 240 3.7% 15.9%;
+
+  /* Status tokens */
+  --status-ok:     142 71% 45%;       /* emerald */
+  --status-warn:    38 92% 50%;       /* amber */
+  --status-danger:   0 84% 60%;       /* red */
+
   /* Background layers */
-  --color-bg-base:    #020617; /* slate-950 */
-  --color-bg-surface: #0f172a; /* slate-900 */
-  --color-bg-card:    #1e293b; /* slate-800 */
+  --color-bg-base:        #020617;    /* slate-950 */
+  --color-bg-surface:     #0f172a;    /* slate-900 */
+  --color-bg-card:        #1e293b;    /* slate-800 */
 
   /* Borders */
-  --color-border:     #334155; /* slate-700 */
-  --color-border-subtle: #1e293b; /* slate-800 */
+  --color-border:         #334155;    /* slate-700 */
+  --color-border-subtle:  #1e293b;    /* slate-800 */
 
   /* Typography */
-  --color-text-primary: #f1f5f9; /* slate-100 */
-  --color-text-muted:   #94a3b8; /* slate-400 */
-  --color-text-faint:   #475569; /* slate-600 */
+  --color-text-primary:   #f1f5f9;    /* slate-100 */
+  --color-text-muted:     #94a3b8;    /* slate-400 */
+  --color-text-faint:     #475569;    /* slate-600 */
 
   /* Telemetry severity spectrum */
-  --color-critical: #ef4444; /* red-500 */
-  --color-high:     #f97316; /* orange-500 */
-  --color-medium:   #facc15; /* yellow-400 */
-  --color-low:      #10b981; /* emerald-500 */
-  --color-info:     #38bdf8; /* sky-400 */
+  --color-critical:       #ef4444;    /* red-500 */
+  --color-high:           #f97316;    /* orange-500 */
+  --color-medium:         #facc15;    /* yellow-400 */
+  --color-low:            #10b981;    /* emerald-500 */
+  --color-info:           #38bdf8;    /* sky-400 */
 
   /* Interactive accent */
-  --color-accent:   #8b5cf6; /* violet-500 */
+  --color-accent:         #8b5cf6;    /* violet-500 */
 
-  /* Monospace stack for graph labels and code references */
+  /* Monospace stack */
   --font-mono: "JetBrains Mono", "Fira Code", ui-monospace, monospace;
 }
 
-/* Force dark background — no light-mode override */
+/* ── Base reset ── */
 html,
 body {
   background-color: var(--color-bg-base);
@@ -46,18 +63,274 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Monospace utility */
+/* ── Monospace utility ── */
 .font-telemetry {
   font-family: var(--font-mono);
 }
 
-/* Severity badge utilities */
-.badge-critical { color: var(--color-critical); border-color: var(--color-critical); }
-.badge-high     { color: var(--color-high);     border-color: var(--color-high); }
-.badge-medium   { color: var(--color-medium);   border-color: var(--color-medium); }
-.badge-low      { color: var(--color-low);      border-color: var(--color-low); }
+/* ===========================================================================
+ * Micro-grid background
+ * =========================================================================== */
 
-/* Scrollbar — dark themed */
+.bg-micro-grid {
+  background-image:
+    linear-gradient(rgba(51, 65, 85, 0.25) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(51, 65, 85, 0.25) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.bg-micro-grid-dense {
+  background-image:
+    linear-gradient(rgba(51, 65, 85, 0.18) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(51, 65, 85, 0.18) 1px, transparent 1px);
+  background-size: 12px 12px;
+}
+
+/* ===========================================================================
+ * Scanline overlay effect
+ * =========================================================================== */
+
+.scanlines::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.15) 2px,
+    rgba(0, 0, 0, 0.15) 4px
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ===========================================================================
+ * Glassmorphic panels
+ * =========================================================================== */
+
+.glass-panel {
+  background: rgba(15, 23, 42, 0.72);      /* slate-900 at 72% */
+  backdrop-filter: blur(12px) saturate(1.4);
+  -webkit-backdrop-filter: blur(12px) saturate(1.4);
+  border: 1px solid rgba(51, 65, 85, 0.55);
+}
+
+.glass-panel-dark {
+  background: rgba(2, 6, 23, 0.85);        /* slate-950 at 85% */
+  backdrop-filter: blur(16px) saturate(1.2);
+  -webkit-backdrop-filter: blur(16px) saturate(1.2);
+  border: 1px solid rgba(51, 65, 85, 0.4);
+}
+
+/* ===========================================================================
+ * Retro-brutalist / De Stijl geometric borders
+ * =========================================================================== */
+
+.border-brutalist {
+  border: 2px solid var(--color-border);
+  box-shadow: 3px 3px 0 0 var(--color-border);
+}
+
+.border-brutalist-accent {
+  border: 2px solid var(--color-accent);
+  box-shadow: 3px 3px 0 0 var(--color-accent);
+}
+
+.border-brutalist-danger {
+  border: 2px solid var(--color-critical);
+  box-shadow: 3px 3px 0 0 rgba(239, 68, 68, 0.4);
+}
+
+/* Corner-cut card shape (De Stijl diagonal notch) */
+.corner-cut {
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%);
+}
+
+/* ===========================================================================
+ * Severity badge utilities
+ * =========================================================================== */
+
+.badge-critical {
+  color: var(--color-critical);
+  border-color: var(--color-critical);
+  background-color: rgba(239, 68, 68, 0.12);
+}
+.badge-high {
+  color: var(--color-high);
+  border-color: var(--color-high);
+  background-color: rgba(249, 115, 22, 0.12);
+}
+.badge-medium {
+  color: var(--color-medium);
+  border-color: var(--color-medium);
+  background-color: rgba(250, 204, 21, 0.12);
+}
+.badge-low {
+  color: var(--color-low);
+  border-color: var(--color-low);
+  background-color: rgba(16, 185, 129, 0.12);
+}
+
+/* ===========================================================================
+ * Glowing status pills
+ * =========================================================================== */
+
+.status-pill-ok {
+  color: hsl(var(--status-ok));
+  border-color: hsl(var(--status-ok) / 0.45);
+  background-color: hsl(var(--status-ok) / 0.12);
+  box-shadow: 0 0 6px 0 hsl(var(--status-ok) / 0.25);
+}
+
+.status-pill-warn {
+  color: hsl(var(--status-warn));
+  border-color: hsl(var(--status-warn) / 0.45);
+  background-color: hsl(var(--status-warn) / 0.12);
+  box-shadow: 0 0 6px 0 hsl(var(--status-warn) / 0.25);
+}
+
+.status-pill-danger {
+  color: hsl(var(--status-danger));
+  border-color: hsl(var(--status-danger) / 0.45);
+  background-color: hsl(var(--status-danger) / 0.12);
+  box-shadow: 0 0 8px 0 hsl(var(--status-danger) / 0.35);
+}
+
+/* ===========================================================================
+ * Neo-button
+ * =========================================================================== */
+
+.neo-btn {
+  background-color: hsl(var(--neo-button));
+  color: #fff;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+  box-shadow: 0 0 14px 0 hsl(var(--neo-button) / 0.35);
+}
+
+.neo-btn:hover {
+  background-color: hsl(var(--neo-button-hover));
+  box-shadow: 0 0 22px 0 hsl(var(--neo-button-hover) / 0.5);
+}
+
+.neo-btn:active {
+  transform: translateY(1px);
+}
+
+/* ===========================================================================
+ * Animations
+ * =========================================================================== */
+
+/* Pulse dot (live status indicator) */
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.5; transform: scale(1.35); }
+}
+.animate-pulse-dot {
+  animation: pulse-dot 1.4s ease-in-out infinite;
+}
+
+/* Slow spin (dual-ring loader) */
+@keyframes spin-slow {
+  to { transform: rotate(360deg); }
+}
+.animate-spin-slow {
+  animation: spin-slow 2.4s linear infinite;
+}
+
+/* Counter-spin */
+@keyframes spin-reverse {
+  to { transform: rotate(-360deg); }
+}
+.animate-spin-reverse {
+  animation: spin-reverse 1.8s linear infinite;
+}
+
+/* Shimmer / scan sweep */
+@keyframes shimmer {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+.animate-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.animate-shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(139, 92, 246, 0.12) 50%,
+    transparent 100%
+  );
+  animation: shimmer 2s ease-in-out infinite;
+}
+
+/* Fade-up entrance */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-up {
+  animation: fade-up 0.4s ease-out both;
+}
+
+/* Blink cursor (terminal) */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+.animate-blink {
+  animation: blink 1s step-start infinite;
+}
+
+/* Progress bar fill */
+@keyframes progress-fill {
+  from { width: 0%; }
+  to   { width: var(--progress-width, 100%); }
+}
+
+/* Particle float (upload zone hover) */
+@keyframes particle-float {
+  0%   { transform: translateY(0) scale(1);    opacity: 0.6; }
+  50%  { transform: translateY(-8px) scale(1.1); opacity: 1; }
+  100% { transform: translateY(0) scale(1);    opacity: 0.6; }
+}
+.animate-particle {
+  animation: particle-float 2.2s ease-in-out infinite;
+}
+
+/* ===========================================================================
+ * Card utilities
+ * =========================================================================== */
+
+.card-surface {
+  background-color: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+}
+
+.card-surface-hover {
+  transition: border-color 0.15s ease, background-color 0.15s ease, transform 0.15s ease;
+}
+
+.card-surface-hover:hover {
+  border-color: rgba(139, 92, 246, 0.4);
+  background-color: rgba(30, 41, 59, 0.85);
+  transform: translateY(-2px);
+}
+
+/* ===========================================================================
+ * Scrollbar — dark themed
+ * =========================================================================== */
+
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -73,14 +346,56 @@ body {
   background: #475569; /* slate-600 */
 }
 
-/* Focus ring — violet accent */
+/* ===========================================================================
+ * Focus & selection
+ * =========================================================================== */
+
 *:focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
 }
 
-/* Selection highlight */
 ::selection {
-  background-color: rgba(139, 92, 246, 0.35); /* violet-500 at 35% */
+  background-color: rgba(139, 92, 246, 0.35);
   color: var(--color-text-primary);
+}
+
+/* ===========================================================================
+ * Terminal / log pane
+ * =========================================================================== */
+
+.terminal-pane {
+  background-color: #020617;           /* slate-950 */
+  border: 1px solid #1e293b;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1.6;
+}
+
+/* ===========================================================================
+ * Upload drop-zone
+ * =========================================================================== */
+
+.drop-zone {
+  border: 2px dashed var(--color-border);
+  background-color: rgba(15, 23, 42, 0.5);
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.drop-zone:hover,
+.drop-zone.drag-active {
+  border-color: var(--color-accent);
+  background-color: rgba(139, 92, 246, 0.06);
+}
+
+/* ===========================================================================
+ * Overrides to remove forced light-mode (no light-mode in this app)
+ * =========================================================================== */
+
+@media (prefers-color-scheme: light) {
+  html,
+  body {
+    background-color: var(--color-bg-base);
+    color: var(--color-text-primary);
+  }
 }
