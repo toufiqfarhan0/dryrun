@@ -81,7 +81,7 @@ describe('POST /api/analyze - no credentials', () => {
     const body = await res.json()
 
     expect(res.status).toBe(400)
-    expect(body.error).toContain('Uploaded zip could not be parsed')
+    expect(body.error).toContain('Uploaded repository could not be parsed')
   })
 })
 

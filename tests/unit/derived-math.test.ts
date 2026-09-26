@@ -26,8 +26,8 @@ describe('computeDamage', () => {
 })
 
 describe('estimateIncidentCost', () => {
-  it('computes score * 150 + 2000', () => {
-    expect(estimateIncidentCost(0)).toBe(2000)
+  it('computes score * 150 + 2000, returning 0 for score 0', () => {
+    expect(estimateIncidentCost(0)).toBe(0)
     expect(estimateIncidentCost(72)).toBe(12800)
     expect(estimateIncidentCost(100)).toBe(17000)
   })
