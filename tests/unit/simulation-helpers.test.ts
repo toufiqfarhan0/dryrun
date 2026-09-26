@@ -1,7 +1,7 @@
 // Tests for the risk badge, score colour, and file-size helpers.
 
 import { describe, it, expect } from 'vitest'
-import { getRiskBadgeClass, getScoreColor, formatFileSize } from '@/lib/utils'
+import { getRiskBadgeClass, getScoreColor, formatFileSize } from '@/lib/simulation-helpers'
 
 describe('getRiskBadgeClass', () => {
   it('maps scores to badges at the exact thresholds', () => {
