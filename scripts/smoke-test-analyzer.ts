@@ -9,7 +9,7 @@ import { resolve } from 'node:path'
 import {
   buildSystemSnapshot,
   generateDeterministicAnalysis,
-} from '../src/lib/analysis'
+} from '../src/lib/codebase-analyzer'
 
 const zipPath = process.argv[2]
 if (!zipPath) {
