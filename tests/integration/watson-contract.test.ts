@@ -1,7 +1,7 @@
 // Checks that recorded watsonx responses have the right shape and values.
 
 import { describe, it, expect } from 'vitest'
-import { extractFirstJsonObject } from '@/lib/analysis'
+import { extractFirstJsonObject } from '@/lib/codebase-analyzer'
 import { loadWatsonResponse } from '../helpers/load-fixture'
 import { validateAIResult, SIMULATION_EVENT_RANGE } from '../helpers/ai-result-schema'
 

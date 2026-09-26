@@ -1,7 +1,7 @@
 // Tests for the report math: computeDamage, estimateIncidentCost, getRecommendation.
 
 import { describe, it, expect } from 'vitest'
-import { computeDamage, estimateIncidentCost, getRecommendation } from '@/lib/utils'
+import { computeDamage, estimateIncidentCost, getRecommendation } from '@/lib/simulation-helpers'
 import type { SimulationEvent } from '@/types'
 
 const ev = (type: SimulationEvent['type']): SimulationEvent => ({ time: 'T+0s', event: 'e', type })

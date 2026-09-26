@@ -6,7 +6,7 @@ import {
   generateDeterministicAnalysis,
   type RiskFinding,
   type SystemSnapshot,
-} from '@/lib/analysis'
+} from '@/lib/codebase-analyzer'
 
 function makeFinding(
   category: RiskFinding['category'],

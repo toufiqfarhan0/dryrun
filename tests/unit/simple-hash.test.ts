@@ -1,7 +1,7 @@
 // Tests for simpleHash — should be a stable, non-negative integer.
 
 import { describe, it, expect } from 'vitest'
-import { simpleHash } from '@/lib/analysis'
+import { simpleHash } from '@/lib/codebase-analyzer'
 
 describe('simpleHash (D1)', () => {
   it('matches golden values', () => {

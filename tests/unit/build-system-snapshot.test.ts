@@ -2,7 +2,7 @@
 // (file counts, stack, entry points, findings).
 
 import { describe, it, expect } from 'vitest'
-import { buildSystemSnapshot } from '@/lib/analysis'
+import { buildSystemSnapshot } from '@/lib/codebase-analyzer'
 import {
   loadFixtureZip,
   loadExpectedSnapshot,

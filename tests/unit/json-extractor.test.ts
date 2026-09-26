@@ -1,7 +1,7 @@
 // Tests for extractFirstJsonObject — getting JSON out of the model's text.
 
 import { describe, it, expect } from 'vitest'
-import { extractFirstJsonObject } from '@/lib/analysis'
+import { extractFirstJsonObject } from '@/lib/codebase-analyzer'
 import { loadWatsonResponse } from '../helpers/load-fixture'
 
 describe('extractFirstJsonObject', () => {

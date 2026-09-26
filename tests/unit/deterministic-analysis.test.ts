@@ -8,7 +8,7 @@ import {
   generateDeterministicAnalysis,
   type RiskFinding,
   type SystemSnapshot,
-} from '@/lib/analysis'
+} from '@/lib/codebase-analyzer'
 import { validateAIResult } from '../helpers/ai-result-schema'
 
 function makeFinding(
