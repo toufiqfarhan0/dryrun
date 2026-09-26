@@ -7,8 +7,8 @@
 
 - **Language:** TypeScript 5+ · strict mode always on (`"strict": true` in tsconfig).
 - **Runtime target:** Node 20 LTS for server code; ES2022 for client bundles.
-- **Framework:** Next.js 14+ App Router exclusively. No `pages/` directory.
-- **Package manager:** pnpm. Never use npm or yarn commands.
+- **Framework:** Next.js 15 App Router exclusively. No `pages/` directory.
+- **Package manager:** npm. Standard npm commands (`npm run dev`, `npm test`, `npm run build`).
 
 ---
 
@@ -73,24 +73,24 @@
     - LOW / SAFE: `emerald-500` (`#10b981`)
     - Info / neutral: `sky-400` (`#38bdf8`)
   - Accent: `violet-500` (`#8b5cf6`) for interactive controls
-- **No light mode** — this is a developer operations tool; dark only.
+- **Theme Support:** Full Dark Mode and Light Mode support with seamless localStorage persistence.
 - High contrast ratios required: text on background ≥ 7:1 (WCAG AAA for critical telemetry).
-- Monospace font for all graph labels, impact scores, and code references: `"JetBrains Mono", "Fira Code", monospace`.
+- Monospace font for all graph labels, impact scores, and code references: `"Geist Mono", monospace`.
 
 ---
 
 ## Testing
 
-- Unit tests: Vitest. Test files colocated: `*.test.ts` alongside source.
-- Integration tests for API routes: `supertest` against the Next.js server.
-- Graph algorithm tests must cover: empty graph, single-node graph, cyclic dependency, and deep fan-out (≥ 10 levels).
-- Minimum coverage targets: 80 % line coverage on `src/lib/`.
+- Unit & integration tests: Vitest (`npm test`).
+- Golden snapshots for deterministic regression safety (`tests/regression/`).
+- Minimum coverage targets: high reliability on `src/lib/`.
 
 ---
 
-## Agent Collaboration
+## Architecture Boundaries
 
-- Each agent owns a clearly bounded directory (`src/lib/ingester/`, `src/lib/blast-radius/`, `src/lib/chaos/`, `src/components/visualizer/`).
-- Cross-agent communication happens **only through the typed interfaces** in `src/types/`.
-- Never import directly from another agent's internal implementation — import from its public `index.ts` barrel.
+- Components live in `src/components/` and are imported into `src/app/page.tsx`.
+- Core analysis pipeline and Watsonx fallback live in `src/lib/analysis.ts`.
+- API endpoints live in `src/app/api/analyze/route.ts`.
+- Type contracts are defined in `src/types/index.ts`.
 - When in doubt: keep it simple, keep it typed, keep it testable.

@@ -22,38 +22,42 @@
 
 ## 1. System Overview
 
-DryRun is a Next.js 14 (App Router) full-stack application with a server-side analysis pipeline and a rich interactive client. It operates on a target codebase supplied by the user (via GitHub URL, uploaded archive, or pasted code snippet) and produces a release-gate decision before any deployment is made.
+DryRun is a Next.js 15 (App Router) full-stack application with a unified server-side analysis pipeline and a rich interactive client. It operates on a target codebase supplied by the user (via public GitHub URL, uploaded `.zip` archive, or pre-configured scenarios) and simulates release failure modes before code touches production.
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                        Browser Client                        │
-│  GraphCanvas · ControlPanel · NodeDetailPanel · GateReport  │
+│     SystemMap (ReactFlow) · Timeline · RiskReport (Gates)   │
 └────────────────────────┬────────────────────────────────────┘
-                         │  HTTP / Server-Sent Events
+                         │  HTTP POST / JSON
 ┌────────────────────────▼────────────────────────────────────┐
-│                     Next.js App Router                       │
-│  /api/analyze      /api/simulate      /api/gate             │
-└──────┬─────────────────┬──────────────────┬─────────────────┘
-       │                 │                  │
-  ┌────▼────┐      ┌─────▼─────┐     ┌─────▼──────┐
-  │Ingester │      │  Chaos    │     │  watsonx   │
-  │ (AST)  │      │  Engine   │     │  Granite   │
-  └────┬────┘      └─────┬─────┘     └─────┬──────┘
-       │                 │                  │
-  ┌────▼─────────────────▼──────────────────▼──────┐
-  │              Blast-Radius Evaluator             │
-  └─────────────────────────────────────────────────┘
+│              Next.js 15 App Router (/api/analyze)           │
+│        Multipart ZIP Extractor · GitHub Tarball Streamer    │
+└──────┬──────────────────────────────────────────────┬───────┘
+       │                                              │
+  ┌────▼───────────────────────┐            ┌─────────▼──────────────┐
+  │  watsonx.ai Granite 3.3 8B │            │  Deterministic Static  │
+  │    (Live AI Synthesis)     │            │    Analysis Engine     │
+  └────┬───────────────────────┘            └─────────┬──────────────┘
+       │                                              │
+       └───────────────────────┬──────────────────────┘
+                               │  Normalized AIResult Payload
+                               ▼
+┌─────────────────────────────────────────────────────────────┐
+│                 Command Center Dashboard State               │
+│    Microservice Topology · Cascade Timeline · Risk Dossier  │
+└─────────────────────────────────────────────────────────────┘
 ```
 
 ### Key Design Decisions
 
 | Decision | Choice | Rationale |
 |----------|--------|-----------|
-| Rendering strategy | Server Components + selective `"use client"` | Graph data computed server-side; only canvas needs client state |
-| Graph representation | Adjacency list with typed node/edge records | O(1) node lookup; easy JSON serialisation |
-| Fault propagation model | Weighted BFS with decay function | Predictable, tunable, unit-testable |
-| LLM integration | Streaming SSE from watsonx Granite | Progressive UX; avoids timeout on long syntheses |
-| No persistent database (v1) | In-memory + `sessionStorage` | Reduces infrastructure complexity for hackathon; designed for easy Postgres/Drizzle addition |
+| Framework | Next.js 15 + React 19 App Router | Modern streaming capabilities, server routes, zero legacy baggage |
+| Topology Graph | `@xyflow/react` v12 with custom nodes | Smooth hardware-accelerated interactive service topology |
+| Dual-Engine Execution | watsonx.ai Granite 3.3 + Deterministic Fallback | Live AI synthesis when configured; zero-fail offline guarantee |
+| Design System | Neo-brutalist GitDiagram-inspired UI | High-contrast readability, 2px borders, dark & light mode |
+| Package Manager | Standard `npm` | Broad compatibility, predictable lockfile resolution |
 
 ---
 
