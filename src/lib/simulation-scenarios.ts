@@ -82,42 +82,42 @@ export const DEMO_SCENARIOS: DemoScenario[] = [
         simulation: [
           {
             time: 'T+0s',
-            event: '🟢 SYSTEM NOMINAL — Settlement pipeline active. 4,200 tx/sec throughput.',
+            event: 'SYSTEM NOMINAL — Settlement pipeline active. 4,200 tx/sec throughput.',
             type: 'normal',
           },
           {
             time: 'T+6m',
-            event: '📈 TRANSACTION SURGE — Flash payout event triggers 450% traffic spike.',
+            event: 'TRANSACTION SURGE — Flash payout event triggers 450% traffic spike.',
             type: 'normal',
           },
           {
             time: 'T+10m',
-            event: '⚠️ IDEMPOTENCY LOCK SATURATION — Concurrent duplicate requests bypass lock window.',
+            event: 'IDEMPOTENCY LOCK SATURATION — Concurrent duplicate requests bypass lock window.',
             type: 'warn',
           },
           {
             time: 'T+13m',
-            event: '⚠️ KAFKA CONSUMER LAG — Offset lag crosses 65,000 unread settlement messages.',
+            event: 'KAFKA CONSUMER LAG — Offset lag crosses 65,000 unread settlement messages.',
             type: 'warn',
           },
           {
             time: 'T+16m',
-            event: '🔴 UPSTREAM LATENCY — Partner API latency spikes to 14.8s. Goroutine pool saturated.',
+            event: 'UPSTREAM LATENCY — Partner API latency spikes to 14.8s. Goroutine pool saturated.',
             type: 'danger',
           },
           {
             time: 'T+18m',
-            event: '🔴 SPLIT-BRAIN CONFLICT — Duplicate ledger write detected: $34,200 in phantom debits.',
+            event: 'SPLIT-BRAIN CONFLICT — Duplicate ledger write detected: $34,200 in phantom debits.',
             type: 'danger',
           },
           {
             time: 'T+22m',
-            event: '💥 LEDGER RECONCILIATION HALT — Automated deadlock halts all outbound disbursements.',
+            event: 'LEDGER RECONCILIATION HALT — Automated deadlock halts all outbound disbursements.',
             type: 'danger',
           },
           {
             time: 'T+27m',
-            event: '🚨 TOTAL SETTLEMENT OUTAGE — Payout pipeline disabled. Gateway returning 503.',
+            event: 'TOTAL SETTLEMENT OUTAGE — Payout pipeline disabled. Gateway returning 503.',
             type: 'danger',
           },
         ],
@@ -233,47 +233,47 @@ export const DEMO_SCENARIOS: DemoScenario[] = [
         simulation: [
           {
             time: 'T+0s',
-            event: '🟢 SYSTEM NOMINAL — All services healthy. 200 concurrent users.',
+            event: 'SYSTEM NOMINAL — All services healthy. 200 concurrent users.',
             type: 'normal',
           },
           {
             time: 'T+12m',
-            event: '📈 TRAFFIC SPIKE — Flash sale promotion triggers 3,400% user surge.',
+            event: 'TRAFFIC SPIKE — Flash sale promotion triggers 3,400% user surge.',
             type: 'normal',
           },
           {
             time: 'T+14m',
-            event: '⚠️ DB DEGRADATION — N+1 queries create query queue. P95 latency: 2.4s.',
+            event: 'DB DEGRADATION — N+1 queries create query queue. P95 latency: 2.4s.',
             type: 'warn',
           },
           {
             time: 'T+17m',
-            event: '⚠️ CACHE THRASH — Redis memory spikes. TTL-less keys filling capacity.',
+            event: 'CACHE THRASH — Redis memory spikes. TTL-less keys filling capacity.',
             type: 'warn',
           },
           {
             time: 'T+19m',
-            event: '🔴 AUTH OVERLOAD — Login endpoint rate-limit absent. Bot traffic joins spike.',
+            event: 'AUTH OVERLOAD — Login endpoint rate-limit absent. Bot traffic joins spike.',
             type: 'danger',
           },
           {
             time: 'T+21m',
-            event: '🔴 PAYMENT TIMEOUT — Stripe latency triggers 30s request loops.',
+            event: 'PAYMENT TIMEOUT — Stripe latency triggers 30s request loops.',
             type: 'danger',
           },
           {
             time: 'T+23m',
-            event: '💥 CASCADE FAILURE — DB connections maxed. New requests rejected. Checkout: 0% success.',
+            event: 'CASCADE FAILURE — DB connections maxed. New requests rejected. Checkout: 0% success.',
             type: 'danger',
           },
           {
             time: 'T+25m',
-            event: '💥 REDIS OOM — Cache server out of memory. Auth sessions lost.',
+            event: 'REDIS OOM — Cache server out of memory. Auth sessions lost.',
             type: 'danger',
           },
           {
             time: 'T+31m',
-            event: '🚨 TOTAL OUTAGE — Frontend returns 503. Revenue loss: $4,800/minute.',
+            event: 'TOTAL OUTAGE — Frontend returns 503. Revenue loss: $4,800/minute.',
             type: 'danger',
           },
         ],
@@ -339,42 +339,42 @@ export const DEMO_SCENARIOS: DemoScenario[] = [
         simulation: [
           {
             time: 'T+0s',
-            event: '🟢 CANARY INITIATED — Progressive rollout starts at 5% traffic split.',
+            event: 'CANARY INITIATED — Progressive rollout starts at 5% traffic split.',
             type: 'normal',
           },
           {
             time: 'T+4m',
-            event: '🟢 HEALTH GATES NOMINAL — Error budget 100%, P99 latency: 14ms. Autoscaling ready.',
+            event: 'HEALTH GATES NOMINAL — Error budget 100%, P99 latency: 14ms. Autoscaling ready.',
             type: 'normal',
           },
           {
             time: 'T+8m',
-            event: '📈 STEP TRAFFIC UP — 25% traffic routed to v3.0.0. Zero error rate observed.',
+            event: 'STEP TRAFFIC UP — 25% traffic routed to v3.0.0. Zero error rate observed.',
             type: 'normal',
           },
           {
             time: 'T+12m',
-            event: '🟢 SYNTHETIC SUITE PASSED — 1,200 end-to-end integration tests validated.',
+            event: 'SYNTHETIC SUITE PASSED — 1,200 end-to-end integration tests validated.',
             type: 'normal',
           },
           {
             time: 'T+17m',
-            event: '📈 STEP TRAFFIC UP — 75% traffic routed. Database connection pool healthy.',
+            event: 'STEP TRAFFIC UP — 75% traffic routed. Database connection pool healthy.',
             type: 'normal',
           },
           {
             time: 'T+22m',
-            event: '🟢 PEAK STRESS NOMINAL — Burst load test handled with zero dropped connections.',
+            event: 'PEAK STRESS NOMINAL — Burst load test handled with zero dropped connections.',
             type: 'normal',
           },
           {
             time: 'T+26m',
-            event: '✅ PROMOTION COMPLETE — 100% traffic shifted to v3.0.0. Previous revision cleanly drained.',
+            event: 'PROMOTION COMPLETE — 100% traffic shifted to v3.0.0. Previous revision cleanly drained.',
             type: 'normal',
           },
           {
             time: 'T+30m',
-            event: '🟢 PRODUCTION CERTIFIED — Release candidate stable in production. SLO: 99.99%.',
+            event: 'PRODUCTION CERTIFIED — Release candidate stable in production. SLO: 99.99%.',
             type: 'normal',
           },
         ],
