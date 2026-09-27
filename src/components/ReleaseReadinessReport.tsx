@@ -121,7 +121,7 @@ export default function RiskReport({ aiResult, stack, projectName, modules }: Ri
           <div style={{
             width: '7px',
             height: '7px',
-            borderRadius: '50%',
+            borderRadius: '2px',
             background: 'hsl(var(--neo-button))',
             boxShadow: '0 0 6px hsl(var(--neo-button))',
             flexShrink: 0,

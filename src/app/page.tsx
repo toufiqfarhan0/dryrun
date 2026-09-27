@@ -9,36 +9,17 @@ import SimulatorLoadingSkeleton from '@/components/SimulatorLoadingSkeleton'
 export default function LandingPage() {
   const router = useRouter()
   const [mounted, setMounted] = useState(false)
-  const [theme, setTheme] = useState<'dark' | 'light'>('light')
-  const [activeTelemetryTab, setActiveTelemetryTab] = useState<'map' | 'timeline' | 'dossier'>('map')
+  const theme: 'dark' | 'light' = 'light'
+  const isDark = false
+  const [activeTelemetryTab, setActiveTelemetryTab] = useState<'city' | 'map' | 'timeline' | 'dossier'>('city')
   const [navigatingToDemo, setNavigatingToDemo] = useState(false)
 
   useEffect(() => {
     setMounted(true)
-    const saved =
-      (localStorage.getItem('dryrun-theme') as 'dark' | 'light') ||
-      (localStorage.getItem('breakwater-theme') as 'dark' | 'light') ||
-      'light'
-    setTheme(saved)
-    document.documentElement.setAttribute('data-theme', saved)
-    if (saved === 'dark') {
-      document.documentElement.classList.add('dark')
-    } else {
-      document.documentElement.classList.remove('dark')
-    }
+    localStorage.setItem('dryrun-theme', 'light')
+    document.documentElement.setAttribute('data-theme', 'light')
+    document.documentElement.classList.remove('dark')
   }, [])
-
-  const toggleTheme = () => {
-    const next = theme === 'dark' ? 'light' : 'dark'
-    setTheme(next)
-    localStorage.setItem('dryrun-theme', next)
-    document.documentElement.setAttribute('data-theme', next)
-    if (next === 'dark') {
-      document.documentElement.classList.add('dark')
-    } else {
-      document.documentElement.classList.remove('dark')
-    }
-  }
 
   const navigateToDemo = (url: string = '/simulator') => {
     setNavigatingToDemo(true)
@@ -49,7 +30,6 @@ export default function LandingPage() {
     return <SimulatorLoadingSkeleton theme={theme} />
   }
 
-  const isDark = theme === 'dark'
 
   return (
     <div
@@ -70,8 +50,7 @@ export default function LandingPage() {
       {/* ── Unified Floating Pill Navigation ── */}
       <Navbar
         currentPage="landing"
-        theme={theme}
-        onToggleTheme={toggleTheme}
+        theme="light"
         onNavigateDemo={() => navigateToDemo('/simulator')}
       />
 
@@ -211,15 +190,15 @@ export default function LandingPage() {
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <span style={{ color: '#16a34a', fontWeight: 700 }}>✓</span>
-                <span>In-Memory Ingestion (adm-zip)</span>
+                <span>Interactive 3D Codebase City &amp; Real-Time Blast Radius</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <span style={{ color: '#16a34a', fontWeight: 700 }}>✓</span>
-                <span>watsonx Granite 3.3 + Offline Fallback</span>
+                <span>watsonx Granite 3.3 8B + Offline Deterministic Engine</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <span style={{ color: '#16a34a', fontWeight: 700 }}>✓</span>
-                <span>Interactive System Map & Failure Timeline</span>
+                <span>Zero-Disk In-Memory Ingestion (adm-zip)</span>
               </div>
             </div>
 
@@ -344,11 +323,12 @@ export default function LandingPage() {
                   border: isDark ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid #e5e3dc',
                 }}
               >
-                {(['map', 'timeline', 'dossier'] as const).map((tab) => {
+                {(['city', 'map', 'timeline', 'dossier'] as const).map((tab) => {
                   const labels = {
-                    map: '1. System Map & Blast Radius',
-                    timeline: '2. Failure Timeline (T+0s → T+18m)',
-                    dossier: '3. watsonx.ai Release Notes',
+                    city: '1. 3D Codebase City',
+                    map: '2. System Topology',
+                    timeline: '3. Chaos Timeline',
+                    dossier: '4. watsonx Release Notes',
                   }
                   const isActive = activeTelemetryTab === tab
                   return (
@@ -393,6 +373,137 @@ export default function LandingPage() {
                   fontSize: '12px',
                 }}
               >
+                {activeTelemetryTab === 'city' && (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{ fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <span
+                          style={{
+                            width: '7px',
+                            height: '7px',
+                            borderRadius: '2px',
+                            background: '#10b981',
+                            display: 'inline-block',
+                            boxShadow: '0 0 6px #10b981',
+                          }}
+                        />
+                        3D Codebase City · Isometric Architectural Skyline
+                      </span>
+                      <span
+                        style={{
+                          fontFamily: 'var(--font-mono)',
+                          fontSize: '11px',
+                          color: isDark ? '#a1a1aa' : '#66645e',
+                          fontWeight: 700,
+                        }}
+                      >
+                        60 FPS Canvas Engine
+                      </span>
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
+                      <div
+                        style={{
+                          padding: '10px 12px',
+                          borderRadius: '8px',
+                          background: isDark ? '#141413' : '#ffffff',
+                          borderTop: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1.5px solid #000',
+                          borderRight: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1.5px solid #000',
+                          borderBottom: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1.5px solid #000',
+                          borderLeft: '3px solid #3b82f6',
+                          boxShadow: isDark ? 'none' : '2px 2px 0 0 #000',
+                        }}
+                      >
+                        <div style={{ fontWeight: 700, fontSize: '11.5px', color: isDark ? '#ffffff' : '#141413' }}>
+                          LOC Extrusions
+                        </div>
+                        <div style={{ fontSize: '10px', fontFamily: 'var(--font-mono)', color: isDark ? '#a1a1aa' : '#66645e', marginTop: '3px' }}>
+                          Towers scale with lines of code and fan-in dependencies
+                        </div>
+                      </div>
+
+                      <div
+                        style={{
+                          padding: '10px 12px',
+                          borderRadius: '8px',
+                          background: isDark ? '#141413' : '#ffffff',
+                          borderTop: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1.5px solid #000',
+                          borderRight: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1.5px solid #000',
+                          borderBottom: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1.5px solid #000',
+                          borderLeft: '3px solid #ef4444',
+                          boxShadow: isDark ? 'none' : '2px 2px 0 0 #000',
+                        }}
+                      >
+                        <div style={{ fontWeight: 700, fontSize: '11.5px', color: isDark ? '#ffffff' : '#141413' }}>
+                          Chaos Coupling
+                        </div>
+                        <div style={{ fontSize: '10px', fontFamily: 'var(--font-mono)', color: isDark ? '#a1a1aa' : '#66645e', marginTop: '3px' }}>
+                          Real-time building decay, shaking &amp; particle fallout
+                        </div>
+                      </div>
+
+                      <div
+                        style={{
+                          padding: '10px 12px',
+                          borderRadius: '8px',
+                          background: isDark ? '#141413' : '#ffffff',
+                          borderTop: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1.5px solid #000',
+                          borderRight: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1.5px solid #000',
+                          borderBottom: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1.5px solid #000',
+                          borderLeft: '3px solid #10b981',
+                          boxShadow: isDark ? 'none' : '2px 2px 0 0 #000',
+                        }}
+                      >
+                        <div style={{ fontWeight: 700, fontSize: '11.5px', color: isDark ? '#ffffff' : '#141413' }}>
+                          Flight Arcs
+                        </div>
+                        <div style={{ fontSize: '10px', fontFamily: 'var(--font-mono)', color: isDark ? '#a1a1aa' : '#66645e', marginTop: '3px' }}>
+                          Animated energy pulses tracing live service traffic
+                        </div>
+                      </div>
+                    </div>
+
+                    <div
+                      style={{
+                        fontSize: '11px',
+                        color: isDark ? '#a1a1aa' : '#66645e',
+                        borderTop: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #e5e3dc',
+                        paddingTop: '8px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        gap: '12px',
+                        flexWrap: 'wrap',
+                      }}
+                    >
+                      <span style={{ minWidth: 0 }}>Controls: <strong>LOC vs Fan-In • Hatching • Orbit • Guided Tour • PNG Export</strong></span>
+                      <button
+                        type="button"
+                        onClick={() => navigateToDemo('/simulator')}
+                        style={{
+                          background: '#18181b',
+                          color: '#ffffff',
+                          border: 'none',
+                          padding: '4px 12px',
+                          borderRadius: '6px',
+                          fontSize: '11px',
+                          fontFamily: 'var(--font-mono)',
+                          fontWeight: 700,
+                          cursor: 'pointer',
+                          whiteSpace: 'nowrap',
+                          flexShrink: 0,
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                          boxShadow: '1.5px 1.5px 0 0 #000',
+                        }}
+                      >
+                        Launch 3D City →
+                      </button>
+                    </div>
+                  </div>
+                )}
+
                 {activeTelemetryTab === 'map' && (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -920,6 +1031,72 @@ export default function LandingPage() {
             </h3>
             <p style={{ fontSize: '12.5px', lineHeight: 1.55, color: isDark ? '#a1a1aa' : '#66645e' }}>
               Generates an objective 0–100 risk score, an APPROVED or BLOCKED gate decision, and a one-click downloadable Markdown release report for pull request audits.
+            </p>
+          </div>
+
+          {/* Capability 7: 3D Codebase City */}
+          <div
+            style={{
+              background: isDark ? '#141413' : '#ffffff',
+              border: isDark ? '1px solid rgba(255, 255, 255, 0.12)' : '1.5px solid #000',
+              borderRadius: '16px',
+              padding: '22px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '12px',
+              gridColumn: '1 / -1',
+              boxShadow: isDark ? 'none' : '3px 3px 0 0 #000',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span
+                  style={{
+                    fontSize: '11px',
+                    fontFamily: 'var(--font-mono)',
+                    fontWeight: 700,
+                    color: '#16a34a',
+                    background: '#dcfce7',
+                    border: '1px solid #16a34a',
+                    padding: '2px 8px',
+                    borderRadius: '6px',
+                  }}
+                >
+                  SPATIAL 3D ENGINE
+                </span>
+                <span style={{ fontSize: '12px', fontWeight: 700, color: isDark ? '#a1a1aa' : '#66645e' }}>
+                  Isometric HTML5 Canvas Engine
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={() => navigateToDemo('/simulator')}
+                style={{
+                  background: '#18181b',
+                  color: '#ffffff',
+                  border: '1.5px solid #000',
+                  borderRadius: '6px',
+                  padding: '4px 12px',
+                  fontSize: '11px',
+                  fontFamily: 'var(--font-mono)',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  boxShadow: '1.5px 1.5px 0 0 #000',
+                  whiteSpace: 'nowrap',
+                  flexShrink: 0,
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                }}
+              >
+                Explore 3D City Simulator →
+              </button>
+            </div>
+            <h3 style={{ fontSize: '17px', fontWeight: 800, color: isDark ? '#ffffff' : '#141413' }}>
+              Interactive 3D Codebase City &amp; Real-Time Chaos Physics
+            </h3>
+            <p style={{ fontSize: '13.5px', lineHeight: 1.6, color: isDark ? '#a1a1aa' : '#52525b', margin: 0 }}>
+              Deconstructs your repository into an interactive 3D metropolis. Tower heights scale proportionally to Lines of Code (LOC) and Fan-in architectural gravity. When failure steps trigger, affected microservice buildings physically shake, decay structurally, and emit particle smoke. Features cross-module animated energy flight paths, single-point-of-failure beacons, and high-res architectural blueprint PNG export.
             </p>
           </div>
         </div>
