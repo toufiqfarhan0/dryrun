@@ -26,6 +26,18 @@ export interface SimulationEvent {
   type: EventType
 }
 
+export interface CodeFile {
+  path: string
+  name: string
+  folder: string
+  lines: number
+  dependents: number
+  risk?: RiskLevel
+  spof?: boolean
+  description?: string
+  dependencies?: string[]
+}
+
 export interface AIResult {
   projectName?: string
   stack?: string[]
@@ -34,6 +46,7 @@ export interface AIResult {
   summary: string
   issues: Issue[]
   simulation: SimulationEvent[]
+  files?: CodeFile[]
 }
 
 export interface ProjectData {
@@ -41,6 +54,7 @@ export interface ProjectData {
   modules: Module[]
   stack: string[]
   aiResult: AIResult
+  files?: CodeFile[]
 }
 
 export interface StatusConfig {

@@ -2,6 +2,7 @@
 
 exports[`generateDeterministicAnalysis snapshots > clean is unchanged 1`] = `
 {
+  "files": undefined,
   "issues": [],
   "modules": [
     {
@@ -39,6 +40,7 @@ exports[`generateDeterministicAnalysis snapshots > clean is unchanged 1`] = `
 
 exports[`generateDeterministicAnalysis snapshots > many-secrets-critical is unchanged 1`] = `
 {
+  "files": undefined,
   "issues": [
     {
       "description": "Hardcoded credentials detected in 4 locations: golden-project/a.js:1, golden-project/b.js:1, golden-project/c.js:1, ....",
@@ -88,6 +90,7 @@ exports[`generateDeterministicAnalysis snapshots > many-secrets-critical is unch
 
 exports[`generateDeterministicAnalysis snapshots > mixed-three-categories is unchanged 1`] = `
 {
+  "files": undefined,
   "issues": [
     {
       "description": "Hardcoded credential detected in 1 location: golden-project/auth/config.js:12.",
@@ -154,6 +157,7 @@ exports[`generateDeterministicAnalysis snapshots > mixed-three-categories is unc
 
 exports[`generateDeterministicAnalysis snapshots > one-secret is unchanged 1`] = `
 {
+  "files": undefined,
   "issues": [
     {
       "description": "Hardcoded credential detected in 1 location: golden-project/config.js:4.",

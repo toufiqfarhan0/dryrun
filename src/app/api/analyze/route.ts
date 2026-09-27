@@ -111,6 +111,11 @@ export async function POST(request: NextRequest) {
       result.modules = generateDeterministicAnalysis(snapshot).modules
     }
 
+    // Ensure real parsed files from the repository snapshot are always returned
+    if (!result.files || !Array.isArray(result.files) || result.files.length === 0) {
+      result.files = snapshot.files || []
+    }
+
     result._meta = {
       usedWatson,
       timestamp: new Date().toISOString(),

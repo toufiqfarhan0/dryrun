@@ -1,11 +1,18 @@
 {
   "project_name": "minimal-node",
   "project_summary": "Frontend JavaScript application with 1 code files",
-  "stack": ["JavaScript", "Node.js"],
-  "entry_points": ["minimal-node/index.js"],
+  "stack": [
+    "JavaScript",
+    "Node.js"
+  ],
+  "entry_points": [
+    "index.js"
+  ],
   "folder_structure": {
-    "folders": ["minimal-node"],
-    "key_files": ["minimal-node/package.json"]
+    "folders": [],
+    "key_files": [
+      "package.json"
+    ]
   },
   "dependency_graph": {
     "nodes": [],
@@ -17,5 +24,27 @@
     "code_files": 1,
     "config_files": 1,
     "size_kb": "12.5"
-  }
+  },
+  "files": [
+    {
+      "path": "index.js",
+      "name": "index.js",
+      "folder": "src/",
+      "lines": 2,
+      "dependents": 0,
+      "dependencies": [],
+      "risk": "ok",
+      "description": "index.js in src/ (2 lines)"
+    },
+    {
+      "path": "package.json",
+      "name": "package.json",
+      "folder": "src/",
+      "lines": 5,
+      "dependents": 0,
+      "dependencies": [],
+      "risk": "ok",
+      "description": "package.json in src/ (5 lines)"
+    }
+  ]
 }

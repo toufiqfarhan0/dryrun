@@ -156,6 +156,14 @@ export const DEMO_SCENARIOS: DemoScenario[] = [
           { text: 'Risk assessment & readiness report generated', type: 'ok' as const },
         ],
       },
+      {
+        msg: '🏙️ ANALYZING CODE INTO 3D CITY...',
+        logs: [
+          { text: 'Projecting microservice modules into 3D isometric districts...', type: 'info' as const },
+          { text: 'Extruding skyscraper towers from Lines of Code (11,330 LOC)...', type: 'ok' as const },
+          { text: 'Constructing 3D Codebase City & architectural fault lines...', type: 'ok' as const },
+        ],
+      },
     ],
   },
   {
@@ -312,6 +320,14 @@ export const DEMO_SCENARIOS: DemoScenario[] = [
           { text: 'Readiness evaluation completed', type: 'ok' as const },
         ],
       },
+      {
+        msg: '🏙️ ANALYZING CODE INTO 3D CITY...',
+        logs: [
+          { text: 'Mapping storefront & API modules to 3D urban grid...', type: 'info' as const },
+          { text: 'Extruding building heights from Lines of Code & dependencies...', type: 'ok' as const },
+          { text: 'Constructing 3D Codebase City skyscraper mesh...', type: 'ok' as const },
+        ],
+      },
     ],
   },
   {
@@ -413,6 +429,14 @@ export const DEMO_SCENARIOS: DemoScenario[] = [
           { text: 'Readiness check: 100% DEPLOYMENT READY', type: 'ok' as const },
         ],
       },
+      {
+        msg: '🏙️ ANALYZING CODE INTO 3D CITY...',
+        logs: [
+          { text: 'Projecting verified service mesh into pristine 3D urban districts...', type: 'info' as const },
+          { text: 'Extruding 39 skyscraper towers with architectural hatching...', type: 'ok' as const },
+          { text: 'Constructing 3D Codebase City visualization...', type: 'ok' as const },
+        ],
+      },
     ],
   },
 ]
@@ -453,6 +477,14 @@ export const PROCESSING_STAGES_UPLOAD = [
       { text: 'Preparing architecture summary...', type: 'info' as const },
       { text: 'Sending to IBM WatsonX AI...', type: 'info' as const },
       { text: 'Awaiting risk report...', type: 'warn' as const },
+    ],
+  },
+  {
+    msg: '🏙️ ANALYZING CODE INTO 3D CITY...',
+    logs: [
+      { text: 'Projecting parsed codebase into 3D isometric districts...', type: 'info' as const },
+      { text: 'Constructing building skyscrapers from file sizes & LOC...', type: 'ok' as const },
+      { text: 'Generating interactive 3D Codebase City...', type: 'ok' as const },
     ],
   },
 ]

@@ -46,6 +46,16 @@ export interface SystemSnapshot {
     config_files: number
     size_kb: string
   }
+  files?: Array<{
+    path: string
+    name: string
+    folder: string
+    lines: number
+    dependents: number
+    dependencies: string[]
+    risk?: 'ok' | 'warn' | 'danger'
+    description?: string
+  }>
 }
 
 const SKIP_CONTENT_EXTENSIONS = new Set([
@@ -259,9 +269,36 @@ export function buildSystemSnapshot(buffer: Buffer, fileSize: string): SystemSna
   const filesByType: Record<string, string[]> = {}
   const folders = new Set<string>()
   const imports: Record<string, string[]> = {}
+  const filesList: Array<{
+    path: string
+    name: string
+    folder: string
+    lines: number
+    dependents: number
+    dependencies: string[]
+    risk?: 'ok' | 'warn' | 'danger'
+    description?: string
+  }> = []
+
+  // Detect if all valid entries share a common top-level root folder (standard for GitHub zipballs, e.g. "owner-repo-sha/")
+  const nonNoiseEntries = entries.filter(e => !hasNoiseSegment(e.entryName) && !e.isDirectory)
+  let commonPrefix = ''
+  if (nonNoiseEntries.length > 0) {
+    const firstSlash = nonNoiseEntries[0].entryName.indexOf('/')
+    if (firstSlash > 0) {
+      const candidate = nonNoiseEntries[0].entryName.slice(0, firstSlash + 1)
+      if (nonNoiseEntries.every(e => e.entryName.startsWith(candidate))) {
+        commonPrefix = candidate
+      }
+    }
+  }
 
   entries.forEach(entry => {
-    const path = entry.entryName
+    let path = entry.entryName
+    if (commonPrefix && path.startsWith(commonPrefix)) {
+      path = path.slice(commonPrefix.length)
+    }
+    if (!path) return
 
     if (hasNoiseSegment(path)) return
 
@@ -295,8 +332,12 @@ export function buildSystemSnapshot(buffer: Buffer, fileSize: string): SystemSna
       snapshot.file_stats.code_files++
     }
 
+    let lineCount = 25
+    let fileFindings: RiskFinding[] = []
+
     try {
       const content = entry.getData().toString('utf8')
+      lineCount = Math.max(1, content.split('\n').length)
 
       const importMatches = content.match(/import .+ from ['"](.+)['"]/g) || []
       const requireMatches = content.match(/require\(['"](.+)['"]\)/g) || []
@@ -304,13 +345,55 @@ export function buildSystemSnapshot(buffer: Buffer, fileSize: string): SystemSna
         imports[path] = [...importMatches, ...requireMatches]
       }
 
-      for (const finding of detectRisks(content, path)) {
+      fileFindings = detectRisks(content, path)
+      for (const finding of fileFindings) {
         snapshot.findings.push(finding)
       }
     } catch {
       // Skip files we can't decode as UTF-8 (binary).
     }
+
+    const folderName = parts.length > 1 ? parts.slice(0, -1).join('/') + '/' : 'src/'
+    const fileNameLower = parts[parts.length - 1].toLowerCase()
+    // Skip lockfiles and licenses from becoming buildings in the code city
+    if (
+      fileNameLower === 'yarn.lock' ||
+      fileNameLower === 'package-lock.json' ||
+      fileNameLower === 'pnpm-lock.yaml' ||
+      fileNameLower.endsWith('.lock') ||
+      fileNameLower.endsWith('.lockb') ||
+      fileNameLower === 'license' ||
+      fileNameLower === 'license.md'
+    ) {
+      return
+    }
+
+    const hasDanger = fileFindings.some(f => f.severity === 'high' || f.severity === 'critical')
+    const hasWarn = fileFindings.some(f => f.severity === 'medium')
+    filesList.push({
+      path,
+      name: parts[parts.length - 1],
+      folder: folderName,
+      lines: lineCount,
+      dependents: 0,
+      dependencies: (imports[path] || []).slice(0, 3),
+      risk: hasDanger ? 'danger' : hasWarn ? 'warn' : 'ok',
+      description: `${parts[parts.length - 1]} in ${folderName} (${lineCount} lines)`,
+    })
   })
+
+  // Compute reference/dependents count from imports graph
+  filesList.forEach(file => {
+    let count = 0
+    const baseName = file.name.replace(/\.[^/.]+$/, '')
+    Object.entries(imports).forEach(([srcPath, impList]) => {
+      if (srcPath !== file.path && impList.some(imp => imp.includes(baseName))) {
+        count++
+      }
+    })
+    file.dependents = count
+  })
+  snapshot.files = filesList.slice(0, 80)
 
   if (entries.length > 0) {
     snapshot.project_name = entries[0].entryName.split('/')[0] || 'uploaded-project'
@@ -564,6 +647,7 @@ export function generateDeterministicAnalysis(snapshot: SystemSnapshot): {
   summary: string
   issues: DeterministicIssue[]
   simulation: DeterministicSimulationEvent[]
+  files?: any[]
 } {
   const findings = snapshot.findings
   const risk_score = generateDeterministicRiskScore(findings)
@@ -580,6 +664,7 @@ export function generateDeterministicAnalysis(snapshot: SystemSnapshot): {
     summary,
     issues,
     simulation,
+    files: snapshot.files,
   }
 }
 
