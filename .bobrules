@@ -60,22 +60,19 @@
 
 ## Visual & Aesthetic Standards
 
-- **Palette — dark developer-first aesthetic:**
-  - Background: `slate-950` (`#020617`) / `slate-900` (`#0f172a`)
-  - Surface cards: `slate-800` (`#1e293b`)
-  - Borders: `slate-700` (`#334155`)
-  - Primary text: `slate-100` (`#f1f5f9`)
-  - Muted text: `slate-400` (`#94a3b8`)
-  - **Telemetry colours (danger/warning system):**
-    - CRITICAL: `red-500` (`#ef4444`) — node fill, gate badge
-    - HIGH: `orange-500` (`#f97316`)
-    - MEDIUM: `yellow-400` (`#facc15`)
-    - LOW / SAFE: `emerald-500` (`#10b981`)
-    - Info / neutral: `sky-400` (`#38bdf8`)
-  - Accent: `violet-500` (`#8b5cf6`) for interactive controls
-- **Theme Support:** Full Dark Mode and Light Mode support with seamless localStorage persistence.
-- High contrast ratios required: text on background ≥ 7:1 (WCAG AAA for critical telemetry).
-- Monospace font for all graph labels, impact scores, and code references: `"Geist Mono", monospace`.
+- **Pure Neo-Brutalist Light Mode — no dark mode:**
+  - Canvas base: `#f6f5f2` (warm neutral stone — page background)
+  - Panel / card surfaces: `#ffffff`
+  - Borders: crisp `#000000` at 1.5 px–2 px
+  - Drop shadows: hard solid offset (`box-shadow: 3px 3px 0 0 #000`, `6px 6px 0 0 #000`)
+  - Primary text: `#000000`
+  - Muted / secondary text: `#555555`
+  - **Status badge colours (telemetry system):**
+    - PASSED / LOW RISK: `#16a34a` on `#dcfce7`
+    - NEEDS REVIEW / WARN: `#d97706` on `#fef3c7`
+    - BLOCKED / CRITICAL: `#dc2626` on `#fee2e2`
+- **Typography:** Geist Sans for UI prose; Geist Mono for telemetry values, metrics, and code references.
+- High contrast ratios required: text on background ≥ 7:1 (WCAG AAA for critical telemetry displays).
 
 ---
 
