@@ -1,9 +1,11 @@
+<!-- IBM Bob 2.0 Hackathon -->
+
 # 🤖 Building DryRun with IBM Bob 2.0 — Development Journey
 
 > **IBM Bob 2.0 Hackathon Submission**  
 > **Theme:** Build with purpose using IBM Bob 2.0  
 > **Repository:** [toufiqfarhan0/dryrun](https://github.com/toufiqfarhan0/dryrun)  
-> **Evidence Dossier:** [`bob_sessions/`](./bob_sessions/) (23 autonomous agent sessions with prompts, task logs, summaries, and screenshots)
+> **Evidence Dossier:** [`bob_sessions/`](./bob_sessions/) (24 autonomous agent sessions with prompts, task logs, summaries, and screenshots)
 
 ---
 
@@ -31,7 +33,7 @@ Traditional CI/CD pipelines tell developers if their code *compiles*. **They can
 | Metric | With IBM Bob 2.0 | Traditional Manual Development | Productivity Gain |
 |---|---|---|---|
 | **Total Build Time** | ~14 hours | 50–60 hours | **~75% Time Saved** |
-| **Agent Sessions** | 23 focused sessions | Multiple manual sprints | Systematic progression |
+| **Agent Sessions** | 24 focused sessions | Multiple manual sprints | Systematic progression |
 | **Components Built** | 8 complex React components | Manual drafting & debugging | Zero boilerplate fatigue |
 | **Test Coverage** | 11 Vitest test suites (78 tests) | Often skipped or deferred | Comprehensive test coverage |
 | **Bobcoins Budget** | 40 Bobcoins | N/A | High-leverage token efficiency |
@@ -157,6 +159,11 @@ bob_sessions/
 - **Session 18–19:** Standardized open-source MIT licensing, added robust schema boundaries, and created defensive empty/corrupt archive error states.
 - **Session 20–21:** Realignment of the landing page hero, stats ribbon, CrowdStrike lesson comparison section, and verification of zero-disk in-memory fallback guarantees.
 - **Session 22–23:** Resolved UI popover opacity bugs, polished Light/Dark contrast, and conducted comprehensive read-only pre-flight verification across all 74 automated tests with zero defects.
+
+#### Milestone 24: 3D Codebase City, Real-Time Chaos Physics & Pure Light Mode
+- Built the interactive 3D Codebase City isometric canvas engine (`src/components/CodebaseCity.tsx`), procedurally extruding buildings from LOC and fan-in depth with 2:1 axonometric projection.
+- Coupled the 3D skyline directly to the simulation timeline, animating real-time structural decay, service blackout indicators, and failure propagation.
+- Enforced clean neo-brutalist light mode across all views (`#f6f5f2` warm neutral stone background, `#ffffff` panels, solid `#000` borders, and hard drop shadows).
 
 ---
 

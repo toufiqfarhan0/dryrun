@@ -1,3 +1,5 @@
+<!-- IBM Bob 2.0 Hackathon -->
+
 <div align="center">
 
 # DryRun — Pre-Flight Release Readiness & Deployment Gate Engine
@@ -13,7 +15,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-0f62fe?style=flat-square)](./LICENSE)
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-dryrun--ten.vercel.app-00f0ff?style=for-the-badge&logo=vercel)](https://dryrun-ten.vercel.app/)
 
-> **Track: Release readiness and deployment assistant** (Code Analysis · Dependency Review · Risk Summary · Release Notes · Deployment Validation)
+> **Track: Release readiness and deployment assistant** (Code Analysis · Dependency Review · Risk Summary · Release Notes · Deployment Validation · 3D Spatial Blast Radius)
 
 🌐 **Live Application:** [https://dryrun-ten.vercel.app/](https://dryrun-ten.vercel.app/) • **Simulator Cockpit:** [https://dryrun-ten.vercel.app/simulator](https://dryrun-ten.vercel.app/simulator)
 
@@ -41,8 +43,9 @@ DryRun answers the one question every on-call engineer dreads before a merge: _"
 | :--- | :--- | :--- |
 | **Analyze Code Changes** | In-memory zero-disk AST & package deconstruction via `adm-zip` | `src/lib/codebase-analyzer.ts` |
 | **Review Dependencies** | Interactive Architecture & System Map isolating single points of failure | `src/components/ArchitectureMap.tsx` |
+| **3D Spatial Codebase City** | Isometric 3D skyline extruded from LOC & fan-in with district color grading | `src/components/CodebaseCity.tsx` |
 | **Summarize Risks** | watsonx.ai Granite 3.3 failure mode reasoning + offline deterministic engine | `src/app/api/analyze/route.ts` |
-| **Simulate Failure Modes** | Chronological chaos timeline (`T+0s` to `T+18m`) tracing cascading collapses | `src/components/SimulationTimeline.tsx` |
+| **Simulate Failure Modes** | Chronological chaos timeline (`T+0s` → `T+18m`) coupled with 3D structural decay | `src/components/SimulationTimeline.tsx` |
 | **Generate Release Notes** | Multi-format **Release Flight Manifest** exported to Markdown & compliance PDF | `src/components/ReleaseReadinessReport.tsx` |
 | **Validate Deployment** | Automated Deployment Gate verdict (`PASSED: CLEARED` vs `BLOCKED: HIGH RISK`) | `src/lib/simulation-helpers.ts` |
 
@@ -69,13 +72,17 @@ Bob is not just the development tool for DryRun — Bob **is** DryRun's release 
 
 | Bob Role | Implementation |
 | :--- | :--- |
-| **Release Gatekeeper Agent** | Custom persona configured with DORA change-risk policies and EU compliance mandates |
-| **Pre-Flight Skills** | `audit-dependencies`, `simulate-blast-radius`, `generate-manifest` — executed before every deployment decision |
-| **Zero Mock Data Guarantee** | Real ZIP buffer analysis, real dependency graphs, real watsonx API routes — no hardcoded fixture data in the analysis pipeline |
-| **Structured Agent Sessions** | 23 autonomous Bob sessions built every phase: spec → scanners → 3-column command center → Vitest suite → pre-flight release audit |
+| **Release Gatekeeper Agent** | Custom persona configured with DORA change-risk policies and EU compliance mandates (`.bob/modes/`) |
+| **Custom Rules & Guardrails** | Strict TypeScript and architecture policies enforced via `.bobrules` and `.bob/rules/` |
+| **Pre-Flight Skills** | `preflight-release-audit`, `audit-dependencies`, `simulate-blast-radius` (`.bob/skills/`) |
+| **Scope Control** | Boundary access strictly controlled via `.bobignore` |
+| **Zero Mock Data Guarantee** | Real ZIP buffer analysis, real dependency graphs, real watsonx API routes — no hardcoded fixture data |
+| **Structured Agent Sessions** | 24 autonomous Bob sessions built every phase: spec → scanners → 3D Codebase City → Vitest suite → pre-flight release audit |
 
-All prompt records, execution logs, and session summaries are preserved in the [`bob_sessions/`](./bob_sessions/) directory.  
+All prompt records, execution logs, and session summaries are preserved in the [`bob_sessions/`](./bob_sessions/) directory (see [Index](./bob_sessions/README.md)).  
 Complete development story: [BUILDING_WITH_BOB.md](./BUILDING_WITH_BOB.md).
+
+---
 
 ---
 
@@ -85,12 +92,37 @@ DryRun produces a synchronized 3-panel **Release Flight Manifest** for every cod
 
 | Signal / Panel | Meaning |
 |---|---|
+| **3D Codebase City** | Interactive 60fps isometric 3D skyline with towers extruded from LOC, dynamic district zones, and real-time chaos decay |
 | **System Topology Map** | Interactive React Flow service graph showing modules, dependencies, and service connections with risk halos (`ok` · `warn` · `danger`) |
 | **Failure Cascade Timeline** | Chronological playback (`T+0s` → `T+18m`) simulating how network timeouts, errors, and contention propagate |
 | **Blast Radius** | Percentage and visual map of downstream modules degraded or crashed by the release |
 | **Deployment Risk Score** | Objective 0–100 risk rating (Low, Medium, High, Critical) with integrity damage tracking |
 | **Identified Failure Modes** | Categorized vulnerability cards with affected endpoints, impact severity, and remediation advice |
 | **Release Flight Manifest** | Auto-synthesized Markdown & compliance PDF dossier and deployment checklist generated by watsonx.ai Granite 3.3 |
+
+---
+
+## 🏙️ Interactive 3D Codebase City Engine
+
+DryRun introduces **Spatial Code Intelligence**: an interactive 60fps HTML5 isometric canvas that transforms abstract dependency graphs into an explorable 3D metropolis.
+
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│                      CODEBASE CITY ENGINE                              │
+├──────────────────────────┬─────────────────────────────────────────────┤
+│ 🏢 Skyscraper Extrusion │ Tower height extruded from LOC & fan-in     │
+│ 🎨 District Zoning       │ Microservices grouped into colored zones    │
+│ ⚡ Energy Flight Arcs    │ Live animated pulses showing cross-calls   │
+│ 💥 Real-Time Decay       │ Buildings shake, decay & smoke on failure   │
+│ 🧭 Guided Walkthrough    │ Onboarding camera tour across key hubs     │
+│ 📸 Blueprint PNG Export  │ Instant high-resolution snapshot download   │
+└──────────────────────────┴─────────────────────────────────────────────┘
+```
+
+- **LOC vs Fan-In Modes:** Toggle between tower heights scaled by physical lines of code or architectural dependency centrality.
+- **Single Point of Failure (SPOF) Spire:** Critical hub modules (e.g., `store.ts` or services with max downstream callers) are highlighted with an architectural rooftop mast and glowing warning beacon.
+- **Bidirectional Chaos Physics:** As failure events trigger in the chaos timeline, affected services physically shake, decay structurally from 100% to critical, and project particle smoke into the isometric canvas.
+- **Floating Neo-Brutalist Cockpit:** The canvas spans 100% of the viewport, with a floating operations deck on the right and an instant toggle (`[ Hide Overlay Cards ]`) for complete spatial immersion.
 
 ---
 
@@ -199,6 +231,7 @@ flowchart TD
 | Layer | Technologies |
 |---|---|
 | **Framework & Engine** | Next.js 15.5 App Router, React 19, TypeScript 5 (Strict Mode) |
+| **Spatial 3D Engine** | Custom 60fps HTML5 Isometric Canvas with procedural building extrusion, decay math, and dynamic energy pulse flight arcs |
 | **AI Foundation Model** | IBM watsonx.ai SDK (`@ibm-cloud/watsonx-ai`) with `ibm/granite-3-8b-instruct` |
 | **Visual Architecture Map** | `@xyflow/react` v12 with custom node rendering and bidirectional hover sync |
 | **Chaos Playback & Motion** | Framer Motion with spring physics and timeline controls |
