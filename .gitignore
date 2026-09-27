@@ -33,3 +33,10 @@ next-env.d.ts
 # accuracy test suite artifacts
 accuracy-report.json
 accuracy-report.raw.json
+
+# IBM Bob
+.bob/
+.bobignore
+.bobrules
+bobrules
+
