@@ -129,7 +129,7 @@ export default function UploadScreen({
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '36px 28px 48px',
+        padding: '10px 20px 14px',
         position: 'relative',
         maxWidth: '780px',
         margin: 'auto',
@@ -149,8 +149,8 @@ export default function UploadScreen({
           style={{
             display: 'flex',
             flexDirection: 'column',
-            gap: '22px',
-            padding: '36px 36px 32px',
+            gap: '12px',
+            padding: '20px 24px 16px',
             borderRadius: '16px',
           }}
         >
@@ -280,8 +280,8 @@ export default function UploadScreen({
             style={{
               position: 'relative',
               width: '100%',
-              minHeight: '100px',
-              padding: '16px',
+              minHeight: '66px',
+              padding: '10px 16px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -422,7 +422,7 @@ export default function UploadScreen({
           </div>
 
           {/* Selectable Demo Scenarios (FinTech, E-Commerce, Risk 0) */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '4px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginTop: '2px' }}>
             <span style={{
               fontSize: '12px',
               fontWeight: 700,
@@ -484,8 +484,19 @@ export default function UploadScreen({
 
           {/* Analysis Scope Banner */}
           <div className="supported-tech-banner">
-            <div className="supported-tech-sub">
-              <strong>Audits:</strong> Architecture Breakage <span className="supported-tech-dot">·</span> Cascading Faults <span className="supported-tech-dot">·</span> Dependency Drifts <span className="supported-tech-dot">·</span> Security CVEs
+            <div className="supported-tech-row">
+              <span className="supported-tech-label">Audits:</span>
+              <span>Architectural Breakage</span>
+              <span className="supported-tech-dot">·</span>
+              <span>Cascading Faults</span>
+              <span className="supported-tech-dot">·</span>
+              <span>Missing Circuit Breakers</span>
+              <span className="supported-tech-dot">·</span>
+              <span>EU DORA Change Resilience</span>
+            </div>
+            <div className="supported-tech-row supported-tech-gate-row">
+              <span className="supported-tech-label">Deployment Gate:</span>
+              <span>watsonx.ai Granite 3.3 automated release clearance</span>
             </div>
           </div>
 

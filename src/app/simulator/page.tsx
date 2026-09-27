@@ -407,7 +407,7 @@ function SimulatorContent() {
           minHeight: 0,
           overflowY: screen === 'dashboard' ? 'hidden' : 'auto',
           position: 'relative',
-          justifyContent: screen === 'dashboard' ? 'flex-start' : 'center',
+          justifyContent: 'flex-start',
           alignItems: screen === 'dashboard' ? 'stretch' : 'center',
         }}
       >

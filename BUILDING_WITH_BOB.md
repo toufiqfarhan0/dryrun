@@ -3,7 +3,7 @@
 > **IBM Bob 2.0 Hackathon Submission**  
 > **Theme:** Build with purpose using IBM Bob 2.0  
 > **Repository:** [toufiqfarhan0/dryrun](https://github.com/toufiqfarhan0/dryrun)  
-> **Evidence Dossier:** [`bob_sessions/`](./bob_sessions/) (17 autonomous agent sessions with prompts, task logs, summaries, and screenshots)
+> **Evidence Dossier:** [`bob_sessions/`](./bob_sessions/) (23 autonomous agent sessions with prompts, task logs, summaries, and screenshots)
 
 ---
 
@@ -31,7 +31,7 @@ Traditional CI/CD pipelines tell developers if their code *compiles*. **They can
 | Metric | With IBM Bob 2.0 | Traditional Manual Development | Productivity Gain |
 |---|---|---|---|
 | **Total Build Time** | ~14 hours | 50–60 hours | **~75% Time Saved** |
-| **Agent Sessions** | 16 focused sessions | Multiple manual sprints | Systematic progression |
+| **Agent Sessions** | 23 focused sessions | Multiple manual sprints | Systematic progression |
 | **Components Built** | 8 complex React components | Manual drafting & debugging | Zero boilerplate fatigue |
 | **Test Coverage** | 11 Vitest test suites (78 tests) | Often skipped or deferred | Comprehensive test coverage |
 | **Bobcoins Budget** | 40 Bobcoins | N/A | High-leverage token efficiency |
@@ -84,7 +84,7 @@ With auto-approve rules configured for safe read and test operations, Bob rapidl
 
 ---
 
-## 🗺️ Step-by-Step Bob Milestones (01 to 16)
+## 🗺️ Step-by-Step Bob Milestones (01 to 23)
 
 Every phase of development is memorialized with genuine task logs, execution prompts, summaries, and screenshots in the [`bob_sessions/`](./bob_sessions/) directory:
 
@@ -106,7 +106,13 @@ bob_sessions/
 ├── 14-core-analysis-and-engine/       # Unified engine, zip extraction & fallback
 ├── 15-test-suite-and-verification/    # 11 Vitest suites, golden snapshots, CLI smoke
 ├── 16-final-submission-and-docs/      # README, architecture dossier, build verification
-└── 17-rubric-alignment-and-live-deployment/ # Rubric alignment, live Vercel deployment, Milestone 17 dossier
+├── 17-rubric-alignment-and-live-deployment/ # Rubric alignment, live Vercel deployment
+├── 18-mit-license-and-governance/     # Open-source MIT license & governance docs
+├── 19-input-validation-and-error-states/# Robust upload schema validation & boundary protection
+├── 20-landing-page-architecture-realignment/ # Landing page realignment, gate stats, hero section
+├── 21-pipeline-verification-and-engine-fallback/ # In-memory dual-engine fallback & pipeline review
+├── 22-fix-bugs/                       # Popover transparency fix, styling, theme polish
+└── 23-system-verification/            # End-to-end verification, pre-flight gate clearance & audit
 ```
 
 ### Detailed Milestone Highlights
@@ -142,9 +148,15 @@ bob_sessions/
   - Route contract validation (`analyze-route.test.ts`).
 - Created CLI smoke tools (`scripts/smoke-analyze.ts`, `test-api.js`).
 
-#### Milestone 16: Submission Readiness & Verification
+#### Milestone 16–17: Submission Readiness & Live Deployment
 - Synthesized full user documentation, architecture specifications, and setup instructions.
 - Confirmed zero build errors via `npm run build` and verified clean working tree state.
+- Deployed live to Vercel at [dryrun-ten.vercel.app](https://dryrun-ten.vercel.app/).
+
+#### Milestone 18–23: Production Hardening, DORA Compliance & Pre-Flight Gating
+- **Session 18–19:** Standardized open-source MIT licensing, added robust schema boundaries, and created defensive empty/corrupt archive error states.
+- **Session 20–21:** Realignment of the landing page hero, stats ribbon, CrowdStrike lesson comparison section, and verification of zero-disk in-memory fallback guarantees.
+- **Session 22–23:** Resolved UI popover opacity bugs, polished Light/Dark contrast, and conducted comprehensive read-only pre-flight verification across all 74 automated tests with zero defects.
 
 ---
 

@@ -121,7 +121,7 @@ export default function LandingPage() {
               />
               <span style={{ fontWeight: 600 }}>IBM Bob 2.0 Hackathon</span>
               <span style={{ opacity: 0.3 }}>•</span>
-              <span style={{ color: isDark ? '#a1a1aa' : '#66645e' }}>Release Gate Engine</span>
+              <span style={{ color: isDark ? '#a1a1aa' : '#66645e' }}>Release Readiness &amp; Deployment Assistant</span>
             </div>
 
             <h1
@@ -133,10 +133,10 @@ export default function LandingPage() {
                 color: isDark ? '#ffffff' : '#141413',
               }}
             >
-              Watch your code break here.{' '}
+              What breaks if you deploy right now?{' '}
               <br />
               <span style={{ color: isDark ? '#a1a1aa' : '#66645e' }}>
-                Not in production.
+                Audit deployment risk before code touches users.
               </span>
             </h1>
 
@@ -148,22 +148,10 @@ export default function LandingPage() {
                 maxWidth: '540px',
               }}
             >
-              DryRun simulates architectural failure modes, isolates blast radius, and audits deployment risk before your code ever touches users. Powered by <strong>IBM Bob 2.0 &amp; watsonx.ai</strong>.
+              82% of enterprise outages stem from release failures. DryRun deconstructs your architecture, isolates blast radius, and compiles verifiable Release Flight Manifests before your code reaches production. Powered by <strong>IBM Bob 2.0 &amp; watsonx.ai Granite 3.3</strong>.
             </p>
 
-            <p
-              style={{
-                fontSize: '13.5px',
-                lineHeight: 1.5,
-                color: isDark ? '#a1a1aa' : '#78756d',
-                maxWidth: '540px',
-                margin: '-4px 0 4px 0',
-              }}
-            >
-              Built with purpose for the IBM Bob 2.0 Hackathon · Enter any repo or drop an archive below
-            </p>
-
-            <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '12px', paddingTop: '4px' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '12px', paddingTop: '6px' }}>
               <button
                 type="button"
                 onClick={() => navigateToDemo('/simulator')}
@@ -171,7 +159,7 @@ export default function LandingPage() {
                   background: isDark ? '#ffffff' : '#141413',
                   color: isDark ? '#141413' : '#ffffff',
                   fontWeight: 600,
-                  fontSize: '13px',
+                  fontSize: '13.5px',
                   padding: '12px 24px',
                   borderRadius: '12px',
                   border: 'none',
@@ -186,6 +174,28 @@ export default function LandingPage() {
                 <span>See a live demo</span>
                 <span style={{ fontFamily: 'var(--font-mono)', opacity: 0.6 }}>→</span>
               </button>
+
+              <a
+                href="#why-preflight"
+                style={{
+                  fontSize: '13px',
+                  fontWeight: 600,
+                  color: isDark ? '#d4d4d8' : '#3f3f46',
+                  textDecoration: 'none',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  padding: '11px 18px',
+                  borderRadius: '12px',
+                  background: isDark ? '#141413' : '#ffffff',
+                  border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1.5px solid #000',
+                  boxShadow: isDark ? 'none' : '2px 2px 0 0 #000',
+                  transition: 'all 140ms ease',
+                }}
+              >
+                <span>Why Pre-Flight Gating?</span>
+                <span style={{ fontFamily: 'var(--font-mono)', opacity: 0.7 }}>↓</span>
+              </a>
             </div>
 
             <div
@@ -212,9 +222,56 @@ export default function LandingPage() {
                 <span>Interactive System Map & Failure Timeline</span>
               </div>
             </div>
+
+            {/* 3-Stat Industry Authority Ribbon */}
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
+                gap: '10px',
+                paddingTop: '8px',
+              }}
+            >
+              {[
+                { stat: '82%', label: 'Outages from release & config changes', sub: 'Gartner / DORA 2024–2025' },
+                { stat: '$5.4B', label: 'Loss from CrowdStrike July 2024 deploy crash', sub: 'Configuration change, no blast-radius gate' },
+                { stat: 'Jan 17, 2025', label: 'EU DORA ICT release-risk compliance mandatory', sub: 'Regulation 2022/2554 enforcement' },
+              ].map((item) => (
+                <div
+                  key={item.stat}
+                  style={{
+                    padding: '12px 14px',
+                    background: isDark ? '#141413' : '#ffffff',
+                    border: isDark ? '1px solid rgba(255, 255, 255, 0.12)' : '1.5px solid #000',
+                    borderRadius: '10px',
+                    boxShadow: isDark ? '0 1px 3px rgba(0,0,0,0.4)' : '2px 2px 0 0 #000',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '4px',
+                  }}
+                >
+                  <span style={{
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: '18px',
+                    fontWeight: 800,
+                    color: 'hsl(21 89% 48%)',
+                    letterSpacing: '-0.02em',
+                    lineHeight: 1.1,
+                  }}>
+                    {item.stat}
+                  </span>
+                  <span style={{ fontSize: '11px', fontWeight: 600, color: isDark ? '#e4e4e7' : '#141413', lineHeight: 1.3 }}>
+                    {item.label}
+                  </span>
+                  <span style={{ fontSize: '10px', color: isDark ? '#71717a' : '#a19e95', fontFamily: 'var(--font-mono)' }}>
+                    {item.sub}
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
 
-          {/* Right Column: Hero Live Telemetry Preview Card (Grounded in Real Codebase Data) */}
+          {/* Right Column: Release Flight Manifest Preview Card */}
           <div id="telemetry">
             <div
               style={{
@@ -240,19 +297,25 @@ export default function LandingPage() {
                   paddingBottom: '12px',
                 }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span
-                    style={{
-                      width: '8px',
-                      height: '8px',
-                      borderRadius: '9999px',
-                      background: '#ef4444',
-                      display: 'inline-block',
-                    }}
-                  />
-                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', fontWeight: 700 }}>
-                    paystream-gateway@v2.4.0-rc1
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', color: isDark ? '#a1a1aa' : '#66645e' }}>
+                    RELEASE FLIGHT MANIFEST · PRE-FLIGHT DOSSIER
                   </span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span
+                      style={{
+                        width: '8px',
+                        height: '8px',
+                        borderRadius: '9999px',
+                        background: '#ef4444',
+                        display: 'inline-block',
+                        animation: 'pulse 1.5s infinite',
+                      }}
+                    />
+                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', fontWeight: 700 }}>
+                      paystream-gateway@v2.4.0-rc1
+                    </span>
+                  </div>
                 </div>
                 <span
                   style={{
@@ -266,7 +329,7 @@ export default function LandingPage() {
                     border: isDark ? '1px solid rgba(239, 68, 68, 0.3)' : '1px solid #fecaca',
                   }}
                 >
-                  GATE: BLOCKED • RISK 86
+                  GATE: BLOCKED • RISK 86/100
                 </span>
               </div>
 
@@ -283,9 +346,9 @@ export default function LandingPage() {
               >
                 {(['map', 'timeline', 'dossier'] as const).map((tab) => {
                   const labels = {
-                    map: '1. System Map',
-                    timeline: '2. Failure Timeline',
-                    dossier: '3. watsonx.ai Report',
+                    map: '1. System Map & Blast Radius',
+                    timeline: '2. Failure Timeline (T+0s → T+18m)',
+                    dossier: '3. watsonx.ai Release Notes',
                   }
                   const isActive = activeTelemetryTab === tab
                   return (
@@ -359,14 +422,18 @@ export default function LandingPage() {
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px' }}>
                       <div
                         style={{
-                          padding: '8px 10px',
+                          padding: '10px 12px',
                           borderRadius: '8px',
                           background: isDark ? '#141413' : '#ffffff',
-                          border: isDark ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid #e5e3dc',
+                          borderTop: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1.5px solid #000',
+                          borderRight: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1.5px solid #000',
+                          borderBottom: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1.5px solid #000',
+                          borderLeft: '3px solid #dc2626',
+                          boxShadow: isDark ? 'none' : '2px 2px 0 0 #000',
                         }}
                       >
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                          <span style={{ fontWeight: 700, fontSize: '11.5px' }}>Ledger Engine</span>
+                          <span style={{ fontWeight: 700, fontSize: '11.5px', color: isDark ? '#ffffff' : '#141413' }}>Ledger Engine</span>
                           <span
                             style={{
                               fontSize: '9px',
@@ -376,26 +443,31 @@ export default function LandingPage() {
                               background: isDark ? 'rgba(220,38,38,0.2)' : 'rgba(220,38,38,0.08)',
                               padding: '1px 5px',
                               borderRadius: '4px',
+                              border: '1px solid rgba(220,38,38,0.25)',
                             }}
                           >
                             DANGER
                           </span>
                         </div>
-                        <div style={{ fontSize: '10.5px', color: isDark ? '#a1a1aa' : '#66645e', marginTop: '2px' }}>
+                        <div style={{ fontSize: '10px', fontFamily: 'var(--font-mono)', color: isDark ? '#a1a1aa' : '#66645e', marginTop: '3px' }}>
                           28 files • Deadlock risk
                         </div>
                       </div>
 
                       <div
                         style={{
-                          padding: '8px 10px',
+                          padding: '10px 12px',
                           borderRadius: '8px',
                           background: isDark ? '#141413' : '#ffffff',
-                          border: isDark ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid #e5e3dc',
+                          borderTop: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1.5px solid #000',
+                          borderRight: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1.5px solid #000',
+                          borderBottom: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1.5px solid #000',
+                          borderLeft: '3px solid #dc2626',
+                          boxShadow: isDark ? 'none' : '2px 2px 0 0 #000',
                         }}
                       >
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                          <span style={{ fontWeight: 700, fontSize: '11.5px' }}>Redis Idempotency</span>
+                          <span style={{ fontWeight: 700, fontSize: '11.5px', color: isDark ? '#ffffff' : '#141413' }}>Redis Idempotency</span>
                           <span
                             style={{
                               fontSize: '9px',
@@ -405,26 +477,31 @@ export default function LandingPage() {
                               background: isDark ? 'rgba(220,38,38,0.2)' : 'rgba(220,38,38,0.08)',
                               padding: '1px 5px',
                               borderRadius: '4px',
+                              border: '1px solid rgba(220,38,38,0.25)',
                             }}
                           >
                             DANGER
                           </span>
                         </div>
-                        <div style={{ fontSize: '10.5px', color: isDark ? '#a1a1aa' : '#66645e', marginTop: '2px' }}>
+                        <div style={{ fontSize: '10px', fontFamily: 'var(--font-mono)', color: isDark ? '#a1a1aa' : '#66645e', marginTop: '3px' }}>
                           7 files • Missing lock lease
                         </div>
                       </div>
 
                       <div
                         style={{
-                          padding: '8px 10px',
+                          padding: '10px 12px',
                           borderRadius: '8px',
                           background: isDark ? '#141413' : '#ffffff',
-                          border: isDark ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid #e5e3dc',
+                          borderTop: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1.5px solid #000',
+                          borderRight: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1.5px solid #000',
+                          borderBottom: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1.5px solid #000',
+                          borderLeft: '3px solid #d97706',
+                          boxShadow: isDark ? 'none' : '2px 2px 0 0 #000',
                         }}
                       >
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                          <span style={{ fontWeight: 700, fontSize: '11.5px' }}>API Gateway</span>
+                          <span style={{ fontWeight: 700, fontSize: '11.5px', color: isDark ? '#ffffff' : '#141413' }}>API Gateway</span>
                           <span
                             style={{
                               fontSize: '9px',
@@ -434,26 +511,31 @@ export default function LandingPage() {
                               background: isDark ? 'rgba(217,119,6,0.2)' : 'rgba(217,119,6,0.08)',
                               padding: '1px 5px',
                               borderRadius: '4px',
+                              border: '1px solid rgba(217,119,6,0.25)',
                             }}
                           >
                             WARN
                           </span>
                         </div>
-                        <div style={{ fontSize: '10.5px', color: isDark ? '#a1a1aa' : '#66645e', marginTop: '2px' }}>
+                        <div style={{ fontSize: '10px', fontFamily: 'var(--font-mono)', color: isDark ? '#a1a1aa' : '#66645e', marginTop: '3px' }}>
                           34 files • Upstream timeout
                         </div>
                       </div>
 
                       <div
                         style={{
-                          padding: '8px 10px',
+                          padding: '10px 12px',
                           borderRadius: '8px',
                           background: isDark ? '#141413' : '#ffffff',
-                          border: isDark ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid #e5e3dc',
+                          borderTop: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1.5px solid #000',
+                          borderRight: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1.5px solid #000',
+                          borderBottom: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1.5px solid #000',
+                          borderLeft: '3px solid #16a34a',
+                          boxShadow: isDark ? 'none' : '2px 2px 0 0 #000',
                         }}
                       >
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                          <span style={{ fontWeight: 700, fontSize: '11.5px' }}>Audit Vault</span>
+                          <span style={{ fontWeight: 700, fontSize: '11.5px', color: isDark ? '#ffffff' : '#141413' }}>Audit Vault</span>
                           <span
                             style={{
                               fontSize: '9px',
@@ -463,12 +545,13 @@ export default function LandingPage() {
                               background: isDark ? 'rgba(22,163,74,0.2)' : 'rgba(22,163,74,0.08)',
                               padding: '1px 5px',
                               borderRadius: '4px',
+                              border: '1px solid rgba(22,163,74,0.25)',
                             }}
                           >
                             OK
                           </span>
                         </div>
-                        <div style={{ fontSize: '10.5px', color: isDark ? '#a1a1aa' : '#66645e', marginTop: '2px' }}>
+                        <div style={{ fontSize: '10px', fontFamily: 'var(--font-mono)', color: isDark ? '#a1a1aa' : '#66645e', marginTop: '3px' }}>
                           11 files • Cold storage compliant
                         </div>
                       </div>
@@ -579,29 +662,51 @@ export default function LandingPage() {
                   alignItems: 'center',
                   justifyContent: 'space-between',
                   borderTop: isDark ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid #f1efea',
-                  paddingTop: '10px',
+                  paddingTop: '12px',
                   fontSize: '11px',
                   fontFamily: 'var(--font-mono)',
                   color: isDark ? '#a1a1aa' : '#66645e',
+                  gap: '8px',
                 }}
               >
-                <span>Interactive ReactFlow topology + scrubber</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', minWidth: 0 }}>
+                  <span
+                    style={{
+                      width: '6px',
+                      height: '6px',
+                      borderRadius: '9999px',
+                      background: '#10b981',
+                      display: 'inline-block',
+                      flexShrink: 0,
+                    }}
+                  />
+                  <span style={{ fontSize: '10.5px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    Audited by <strong>IBM Bob 2.0</strong> · <strong>watsonx Granite 3.3 8B</strong>
+                  </span>
+                </div>
+
                 <button
                   type="button"
                   onClick={() => navigateToDemo('/simulator?scenario=fintech')}
                   style={{
-                    background: 'none',
-                    border: 'none',
-                    padding: 0,
+                    background: isDark ? 'rgba(255,255,255,0.06)' : '#f0eee6',
+                    border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1.5px solid #000',
+                    padding: '3px 9px',
+                    borderRadius: '6px',
+                    boxShadow: isDark ? 'none' : '1px 1px 0 0 #000',
                     cursor: 'pointer',
                     color: isDark ? '#ffffff' : '#141413',
-                    fontWeight: 700,
-                    display: 'flex',
+                    display: 'inline-flex',
                     alignItems: 'center',
                     gap: '4px',
+                    fontSize: '10.5px',
+                    fontWeight: 700,
+                    fontFamily: 'var(--font-mono)',
+                    whiteSpace: 'nowrap',
+                    flexShrink: 0,
                   }}
                 >
-                  <span>See live demo</span>
+                  <span>Replay Flow</span>
                   <span>→</span>
                 </button>
               </div>
@@ -1195,8 +1300,11 @@ export default function LandingPage() {
             <h3 style={{ fontSize: '16px', fontWeight: 700, color: isDark ? '#ffffff' : '#141413' }}>
               PayStream Gateway
             </h3>
+            <p style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'hsl(21 89% 48%)', fontWeight: 700, marginBottom: '-4px' }}>
+              The Concurrency &amp; Idempotency Split-Brain (FinTech)
+            </p>
             <p style={{ fontSize: '12.5px', lineHeight: 1.55, color: isDark ? '#a1a1aa' : '#66645e' }}>
-              High-throughput Go &amp; Kafka payment orchestration. Idempotency lock exhaustion and split-brain double-billing under burst transaction spikes.
+              Split-brain ledger double-billing during payment network blips. Idempotency lock exhaustion under burst concurrency causes duplicate settlement.
             </p>
             <div
               style={{
@@ -1246,10 +1354,13 @@ export default function LandingPage() {
               <span style={{ fontSize: '12px', fontWeight: 600, fontFamily: 'var(--font-mono)' }}>Run Demo →</span>
             </div>
             <h3 style={{ fontSize: '16px', fontWeight: 700, color: isDark ? '#ffffff' : '#141413' }}>
-              Cloud Commerce Platform
+              CloudCommerce Platform
             </h3>
+            <p style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: '#d97706', fontWeight: 700, marginBottom: '-4px' }}>
+              The Black Friday N+1 Query Cascade (E-Commerce)
+            </p>
             <p style={{ fontSize: '12.5px', lineHeight: 1.55, color: isDark ? '#a1a1aa' : '#66645e' }}>
-              Next.js &amp; Node.js multi-tier storefront. Unindexed N+1 queries, unrotated JWT session keys, and unbounded Redis cache memory exhaustion.
+              Product catalog database lockup at 800+ concurrent users. N+1 query patterns under burst load trigger full PostgreSQL table scans and connection pool exhaustion.
             </p>
             <div
               style={{
@@ -1301,8 +1412,11 @@ export default function LandingPage() {
             <h3 style={{ fontSize: '16px', fontWeight: 700, color: isDark ? '#ffffff' : '#141413' }}>
               Sentinel Mesh Gateway
             </h3>
+            <p style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: '#16a34a', fontWeight: 700, marginBottom: '-4px' }}>
+              The Hardened Canary Rollout (100% Release Ready)
+            </p>
             <p style={{ fontSize: '12.5px', lineHeight: 1.55, color: isDark ? '#a1a1aa' : '#66645e' }}>
-              Hardened Go &amp; Envoy ingress mesh. Active circuit breakers, mTLS auth vault, canary routing, and zero critical vulnerabilities. Passes all gates.
+              Automated progressive delivery passing all compliance gates. Active circuit breakers, mTLS auth vault, and zero critical vulnerabilities cleared.
             </p>
             <div
               style={{
@@ -1315,6 +1429,123 @@ export default function LandingPage() {
               Stack: Go • Kubernetes • Envoy • Redis • Vault
             </div>
           </button>
+        </div>
+      </section>
+
+      {/* ── Section: The CrowdStrike Lesson ── */}
+      <section
+        id="why-preflight"
+        style={{
+          padding: '64px 24px',
+          maxWidth: '1200px',
+          margin: '0 auto',
+          width: '100%',
+          boxSizing: 'border-box',
+          borderTop: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #e6e4df',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '32px',
+          scrollMarginTop: '80px',
+        }}
+      >
+        <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <span style={{ fontSize: '11px', fontWeight: 700, fontFamily: 'var(--font-mono)', textTransform: 'uppercase', letterSpacing: '0.08em', color: isDark ? '#a1a1aa' : '#66645e' }}>
+            Why Pre-Flight Gating Matters
+          </span>
+          <h2 style={{ fontSize: 'clamp(24px, 4vw, 34px)', fontWeight: 800, letterSpacing: '-0.03em', color: isDark ? '#ffffff' : '#141413' }}>
+            The CrowdStrike Lesson: Why Pre-Flight Gating Matters
+          </h2>
+          <p style={{ fontSize: '14.5px', color: isDark ? '#a1a1aa' : '#66645e', maxWidth: '640px', margin: '0 auto' }}>
+            On July 19, 2024, a configuration file update passed all of CrowdStrike&apos;s internal validators and crashed 8.5 million Windows devices. The missing safeguard was runtime blast-radius simulation.
+          </p>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
+          {/* Standard CI/CD */}
+          <div style={{
+            padding: '24px',
+            background: isDark ? '#141413' : '#ffffff',
+            border: isDark ? '1px solid rgba(255, 255, 255, 0.12)' : '1.5px solid #000',
+            borderRadius: '12px',
+            boxShadow: isDark ? '0 4px 20px rgba(0,0,0,0.4)' : '3px 3px 0 0 #000',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '14px',
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <span style={{
+                fontFamily: 'var(--font-mono)',
+                fontSize: '10px',
+                fontWeight: 700,
+                padding: '2px 8px',
+                borderRadius: '5px',
+                background: isDark ? 'rgba(239,68,68,0.15)' : '#fef2f2',
+                color: '#ef4444',
+                border: '1px solid rgba(239,68,68,0.3)',
+                textTransform: 'uppercase',
+              }}>Insufficient</span>
+              <span style={{ fontSize: '14px', fontWeight: 700, color: isDark ? '#ffffff' : '#141413' }}>Standard CI/CD (Tests &amp; Linters)</span>
+            </div>
+            <p style={{ fontSize: '13px', lineHeight: 1.6, color: isDark ? '#a1a1aa' : '#66645e' }}>
+              Tells you if code <strong>compiles in isolation</strong>. Runs unit tests against mocked dependencies. Passes linting and static type checks.
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', paddingTop: '4px', borderTop: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #e5e3dc' }}>
+              {[
+                'Blind to cascading runtime deadlocks',
+                'Cannot simulate cross-service fault propagation',
+                'No blast-radius awareness before merge',
+                'CrowdStrike passed every internal CI gate',
+              ].map((item) => (
+                <div key={item} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', fontSize: '12.5px', color: isDark ? '#a1a1aa' : '#66645e' }}>
+                  <span style={{ color: '#ef4444', fontWeight: 700, flexShrink: 0, marginTop: '1px' }}>✗</span>
+                  <span>{item}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* DryRun Pre-Flight */}
+          <div style={{
+            padding: '24px',
+            background: isDark ? '#141413' : '#ffffff',
+            border: isDark ? '1px solid rgba(255, 255, 255, 0.12)' : '1.5px solid #000',
+            borderRadius: '12px',
+            boxShadow: isDark ? '0 4px 20px rgba(0,0,0,0.4)' : '3px 3px 0 0 #000',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '14px',
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <span style={{
+                fontFamily: 'var(--font-mono)',
+                fontSize: '10px',
+                fontWeight: 700,
+                padding: '2px 8px',
+                borderRadius: '5px',
+                background: isDark ? 'rgba(16,185,129,0.15)' : '#dcfce7',
+                color: '#10b981',
+                border: '1px solid rgba(16,185,129,0.3)',
+                textTransform: 'uppercase',
+              }}>DryRun</span>
+              <span style={{ fontSize: '14px', fontWeight: 700, color: isDark ? '#ffffff' : '#141413' }}>Pre-Flight Gating</span>
+            </div>
+            <p style={{ fontSize: '13px', lineHeight: 1.6, color: isDark ? '#a1a1aa' : '#66645e' }}>
+              Deconstructs your <strong>entire dependency graph</strong>. Simulates cross-service fault cascades. Gates production deployment with a signed Release Flight Manifest.
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', paddingTop: '4px', borderTop: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #e5e3dc' }}>
+              {[
+                'In-memory AST dependency audit via adm-zip',
+                'Chronological fault cascade simulation (T+0s → T+18m)',
+                'watsonx.ai Granite 3.3 blast-radius synthesis',
+                'Signed APPROVED / BLOCKED gate decision',
+              ].map((item) => (
+                <div key={item} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', fontSize: '12.5px', color: isDark ? '#a1a1aa' : '#66645e' }}>
+                  <span style={{ color: '#10b981', fontWeight: 700, flexShrink: 0, marginTop: '1px' }}>✓</span>
+                  <span>{item}</span>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 

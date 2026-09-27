@@ -38,7 +38,7 @@ export default function TopBar({
         zIndex: 100,
         padding: '0 20px',
         maxWidth: '1080px',
-        margin: '14px auto 16px',
+        margin: currentPage === 'simulator' ? '8px auto 8px' : '14px auto 16px',
         width: '100%',
         boxSizing: 'border-box',
       }}
@@ -84,12 +84,12 @@ export default function TopBar({
           </Link>
         </div>
 
-        {/* Right: Home · Demo · How it works · GitHub · Sun/Moon Toggle */}
+        {/* Right: Home · Demo · Why Pre-Flight · How it works · GitHub · Sun/Moon Toggle */}
         <nav
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '20px',
+            gap: 'clamp(12px, 2vw, 20px)',
           }}
         >
           <Link href="/" className="topbar-nav-link">
@@ -109,6 +109,21 @@ export default function TopBar({
               Demo
             </Link>
           )}
+          <a
+            href={currentPage === 'landing' ? '#why-preflight' : '/#why-preflight'}
+            onClick={(e) => {
+              if (currentPage === 'landing') {
+                e.preventDefault()
+                const el = document.getElementById('why-preflight')
+                if (el) {
+                  el.scrollIntoView({ behavior: 'smooth' })
+                }
+              }
+            }}
+            className="topbar-nav-link"
+          >
+            Why Pre-Flight
+          </a>
           <a
             href={currentPage === 'landing' ? '#how-it-works' : '/#how-it-works'}
             className="topbar-nav-link"
