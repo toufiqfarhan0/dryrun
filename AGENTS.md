@@ -9,7 +9,7 @@
 
 ---
 
-## 🎯 Project Vision
+## Project Vision
 
 **DryRun** is a pre-flight blast-radius and chaos simulation engine for software releases.  
 Before any line of code ships to production, DryRun answers the one question every on-call engineer dreads:  
@@ -17,7 +17,7 @@ Before any line of code ships to production, DryRun answers the one question eve
 
 ---
 
-## ⚡ The Core Problem
+## The Core Problem
 
 Modern release pipelines are fast, but risk awareness is not. Engineering teams merge pull requests without clear visibility into:
 1. **Hidden Dependency Coupling:** Which upstream and downstream microservices depend on changed modules.
@@ -29,7 +29,7 @@ Post-mortems are written after outages occur. **DryRun moves the post-mortem to 
 
 ---
 
-## 🏗️ The 4-Stage Pre-Flight Pipeline
+## The 4-Stage Pre-Flight Pipeline
 
 ```
 [Repository Archive / Git Diff]
@@ -68,7 +68,7 @@ Post-mortems are written after outages occur. **DryRun moves the post-mortem to 
 
 ---
 
-## 🤖 IBM Bob 2.0 Agent Roles & Subagents
+## IBM Bob 2.0 Agent Roles & Subagents
 
 DryRun was architected and built using IBM Bob 2.0's **Agent Mode**, leveraging specialized subagents with isolated context boundaries:
 
@@ -107,7 +107,7 @@ DryRun was architected and built using IBM Bob 2.0's **Agent Mode**, leveraging 
 
 ---
 
-## 📁 Repository Structure
+## Repository Structure
 
 ```
 dryrun/
@@ -161,7 +161,7 @@ dryrun/
 
 ---
 
-## 🎨 Visual Design System: Pure Light Mode
+## Visual Design System: Pure Light Mode
 
 DryRun exclusively adheres to a **Neo-Brutalist Light Mode Design System**:
 - **Canvas Base:** `#f6f5f2` (Warm Neutral Stone with subtle micro-dots)

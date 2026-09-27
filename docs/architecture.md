@@ -579,13 +579,13 @@ The dependency graph built by the AST ingester models **deterministic, staticall
 
 | Relationship Type | Modeled? | Mechanism |
 |---|---|---|
-| ES module `import` / `require()` | ✅ Yes | TypeScript Compiler API / Babel visitor: `ImportDeclaration`, `CallExpression` |
-| Re-exports and barrel files | ✅ Yes | `ExportNamedDeclaration` with source, `ExportAllDeclaration` |
-| `fetch` / `axios` / `got` HTTP call sites | ✅ Yes | Call expression pattern matching on known HTTP client identifiers |
-| `process.env` reads | ✅ Yes | `MemberExpression` chain matching |
-| Dynamic runtime reflection (e.g., `eval`, `new Function`, Proxy traps) | ⚠️ Simulated | Conservative: all `eval` / `Function` calls emit a synthetic `DYNAMIC_IMPORT` edge to `__DYNAMIC_TARGET__` sentinel node |
-| Message bus topics (Kafka, RabbitMQ, NATS subjects) | ⚠️ Simulated Topology | Producer/consumer pairs are modeled via configurable simulated topology manifests; actual message routing is not introspected at static analysis time |
-| Service mesh sidecar injection (Istio, Linkerd) | ⚠️ Not modeled | Sidecar proxy relationships are outside the AST graph scope; they appear as direct node-to-node edges in the simulated topology |
+| ES module `import` / `require()` | Yes | TypeScript Compiler API / Babel visitor: `ImportDeclaration`, `CallExpression` |
+| Re-exports and barrel files | Yes | `ExportNamedDeclaration` with source, `ExportAllDeclaration` |
+| `fetch` / `axios` / `got` HTTP call sites | Yes | Call expression pattern matching on known HTTP client identifiers |
+| `process.env` reads | Yes | `MemberExpression` chain matching |
+| Dynamic runtime reflection (e.g., `eval`, `new Function`, Proxy traps) | Simulated | Conservative: all `eval` / `Function` calls emit a synthetic `DYNAMIC_IMPORT` edge to `__DYNAMIC_TARGET__` sentinel node |
+| Message bus topics (Kafka, RabbitMQ, NATS subjects) | Simulated Topology | Producer/consumer pairs are modeled via configurable simulated topology manifests; actual message routing is not introspected at static analysis time |
+| Service mesh sidecar injection (Istio, Linkerd) | Not modeled | Sidecar proxy relationships are outside the AST graph scope; they appear as direct node-to-node edges in the simulated topology |
 
 **Design rationale:** Restricting the graph to statically-verifiable links ensures that `DependencyGraph` results are **deterministic and reproducible** across identical codebases—a requirement for audit-ready release gating. Simulated topologies for dynamic constructs allow the chaos engine to still propagate failure probabilities through realistically-shaped service meshes.
 

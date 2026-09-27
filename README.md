@@ -17,13 +17,13 @@
 
 > **Track: Release readiness and deployment assistant** (Code Analysis · Dependency Review · Risk Summary · Release Notes · Deployment Validation · 3D Spatial Blast Radius)
 
-🌐 **Live Application:** [https://dryrun-ten.vercel.app/](https://dryrun-ten.vercel.app/) • **Simulator Cockpit:** [https://dryrun-ten.vercel.app/simulator](https://dryrun-ten.vercel.app/simulator)
+**Live Application:** [https://dryrun-ten.vercel.app/](https://dryrun-ten.vercel.app/) • **Simulator Cockpit:** [https://dryrun-ten.vercel.app/simulator](https://dryrun-ten.vercel.app/simulator)
 
 </div>
 
 ---
 
-## ⚠️ Why Pre-Flight Gating Matters Now
+## Why Pre-Flight Gating Matters Now
 
 > The cost of deploying without blast-radius analysis is no longer theoretical — it is measured in billions and mandated by law.
 
@@ -37,7 +37,7 @@ DryRun answers the one question every on-call engineer dreads before a merge: _"
 
 ---
 
-## 🗺️ Track Requirement Matrix
+## Track Requirement Matrix
 
 | Track Requirement | DryRun Implementation | Source File |
 | :--- | :--- | :--- |
@@ -51,7 +51,7 @@ DryRun answers the one question every on-call engineer dreads before a merge: _"
 
 ---
 
-## 💡 The Problem
+## The Problem
 
 In modern software delivery, deployment failure is rarely caused by a single unit-level defect. Instead, production outages happen at the seams:
 - **Cascading Microservice Degradation:** A slow downstream query or timeout triggers thread pool exhaustion across upstream gateways.
@@ -66,7 +66,7 @@ Traditional CI/CD pipelines tell you if code *compiles* and passes isolated unit
 
 ---
 
-## 🤖 Deep IBM Bob 2.0 Integration
+## Deep IBM Bob 2.0 Integration
 
 Bob is not just the development tool for DryRun — Bob **is** DryRun's release gatekeeper agent:
 
@@ -86,7 +86,7 @@ Complete development story: [BUILDING_WITH_BOB.md](./BUILDING_WITH_BOB.md).
 
 ---
 
-## 🖥️ How to Read a Release Flight Manifest
+## How to Read a Release Flight Manifest
 
 DryRun produces a synchronized 3-panel **Release Flight Manifest** for every codebase:
 
@@ -102,7 +102,7 @@ DryRun produces a synchronized 3-panel **Release Flight Manifest** for every cod
 
 ---
 
-## 🏙️ Interactive 3D Codebase City Engine
+## Interactive 3D Codebase City Engine
 
 DryRun introduces **Spatial Code Intelligence**: an interactive 60fps HTML5 isometric canvas that transforms abstract dependency graphs into an explorable 3D metropolis.
 
@@ -110,12 +110,12 @@ DryRun introduces **Spatial Code Intelligence**: an interactive 60fps HTML5 isom
 ┌────────────────────────────────────────────────────────────────────────┐
 │                      CODEBASE CITY ENGINE                              │
 ├──────────────────────────┬─────────────────────────────────────────────┤
-│ 🏢 Skyscraper Extrusion │ Tower height extruded from LOC & fan-in     │
-│ 🎨 District Zoning       │ Microservices grouped into colored zones    │
-│ ⚡ Energy Flight Arcs    │ Live animated pulses showing cross-calls   │
-│ 💥 Real-Time Decay       │ Buildings shake, decay & smoke on failure   │
-│ 🧭 Guided Walkthrough    │ Onboarding camera tour across key hubs     │
-│ 📸 Blueprint PNG Export  │ Instant high-resolution snapshot download   │
+│ Skyscraper Extrusion     │ Tower height extruded from LOC & fan-in     │
+│ District Zoning          │ Microservices grouped into colored zones    │
+│ Energy Flight Arcs       │ Live animated pulses showing cross-calls   │
+│ Real-Time Decay          │ Buildings shake, decay & smoke on failure   │
+│ Guided Walkthrough       │ Onboarding camera tour across key hubs     │
+│ Blueprint PNG Export     │ Instant high-resolution snapshot download   │
 └──────────────────────────┴─────────────────────────────────────────────┘
 ```
 
@@ -126,7 +126,7 @@ DryRun introduces **Spatial Code Intelligence**: an interactive 60fps HTML5 isom
 
 ---
 
-## ⚡ Live AI Synthesis vs. Offline Zero-Credential Mode
+## Live AI Synthesis vs. Offline Zero-Credential Mode
 
 DryRun provides a resilient **dual-engine architecture**:
 
@@ -135,7 +135,7 @@ DryRun provides a resilient **dual-engine architecture**:
 
 ---
 
-## 🚀 Quickstart
+## Quickstart
 
 ### Prerequisites
 - **Node.js**: v18.17.0+ or v20.x LTS
@@ -171,7 +171,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ---
 
-## 🔬 Pre-Configured Enterprise Scenarios
+## Pre-Configured Enterprise Scenarios
 
 On the home upload screen, evaluate live candidates immediately:
 
@@ -183,12 +183,12 @@ On the home upload screen, evaluate live candidates immediately:
 
 ---
 
-## 🏗️ Architecture & Technology Stack
+## Architecture & Technology Stack
 
 ```mermaid
 flowchart TD
     subgraph Ingestion ["1. In-Memory Archive Ingestion"]
-        A["Codebase ZIP Archive"] -->|Buffer Read (adm-zip)| B["In-Memory Buffer (0 Disk Writes)"]
+        A["Codebase ZIP Archive"] -->|Buffer Read via adm-zip| B["In-Memory Buffer (0 Disk Writes)"]
         C["Public GitHub URL"] -->|API Stream| B
     end
 
@@ -201,21 +201,21 @@ flowchart TD
 
     subgraph DualEngine ["3. Dual-Engine AI Synthesis"]
         D --> E{"IBM Cloud Credentials Configured?"}
-        E -->|Yes (Live Mode)| F["IBM watsonx.ai Granite 3.3 8B Instruct\n(Contextual Risk Reasoning)"]
-        E -->|No / Timeout / Error| G["Deterministic Offline Fallback Engine\n(Air-Gapped Zero-Credential Mode)"]
+        E -->|Configured: Live Mode| F["IBM watsonx.ai Granite 3.3 8B Instruct (Contextual Risk Reasoning)"]
+        E -->|Fallback: Offline Mode| G["Deterministic Offline Fallback Engine (Zero-Credential Mode)"]
     end
 
     subgraph Simulation ["4. Chaos Simulation Pipeline"]
         F --> H["Chaos Decay Propagation Engine"]
         G --> H
-        H --> H1["Timeline Generation (T+0s → T+18m)"]
+        H --> H1["Timeline Generation (T+0s to T+18m)"]
         H --> H2["Integrity Damage & Cascade Modeling"]
     end
 
     subgraph Gating ["5. Pre-Flight Release Gatekeeper"]
         H --> I["Deployment Gate Verdict Box"]
-        I -->|Risk Score >= 40| I1["🛑 VERDICT: BLOCKED (High Risk)"]
-        I -->|Risk Score < 40| I2["🟢 VERDICT: CLEARED (Nominal)"]
+        I -->|Risk Score 40 or Higher| I1["VERDICT: BLOCKED (High Risk)"]
+        I -->|Risk Score Under 40| I2["VERDICT: CLEARED (Nominal)"]
         I --> J["4-Point CAB Audit Checklist"]
     end
 
@@ -224,7 +224,7 @@ flowchart TD
         I2 --> K
         H1 --> L["Failure Cascade Timeline Scrubber"]
         J --> M["Pre-Flight Release Flight Manifest"]
-        M --> N["Export Manifest (.MD & Compliance .PDF)"]
+        M --> N["Export Manifest (MD & Compliance PDF)"]
     end
 ```
 
@@ -237,12 +237,12 @@ flowchart TD
 | **Chaos Playback & Motion** | Framer Motion with spring physics and timeline controls |
 | **Document Synthesis** | jsPDF for client-side compliance PDF dossiers and Markdown export |
 | **Archive Processing** | JSZip, AdmZip, server-side buffer streaming |
-| **Design System** | Neo-brutalist styling, 2px borders, solid ink drop shadows, Geist typography, Dark/Light modes |
+| **Design System** | Neo-brutalist styling, 2px borders, solid ink drop shadows, Geist typography, Pure Light Mode |
 | **Automated Testing** | Vitest 4 with golden regression snapshots, unit math models, and route contract suites |
 
 ---
 
-## 🧪 Verification & Test Suite
+## Verification & Test Suite
 
 ```bash
 # Run all unit, integration, and regression golden snapshot tests
@@ -254,6 +254,6 @@ npx tsc --noEmit
 
 ---
 
-## 📄 License
+## License
 
 MIT © [toufiqfarhan0](https://github.com/toufiqfarhan0)

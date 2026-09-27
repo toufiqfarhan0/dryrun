@@ -1,6 +1,6 @@
 <!-- IBM Bob 2.0 Hackathon -->
 
-# 🤖 Building DryRun with IBM Bob 2.0 — Development Journey
+# Building DryRun with IBM Bob 2.0 — Development Journey
 
 > **IBM Bob 2.0 Hackathon Submission**  
 > **Theme:** Build with purpose using IBM Bob 2.0  
@@ -9,13 +9,13 @@
 
 ---
 
-## 📌 Executive Summary
+## Executive Summary
 
 **DryRun** was conceived, architected, and built in end-to-end partnership with **IBM Bob 2.0**. Using Bob IDE's **Agent Mode**, autonomous code generation, terminal execution, and context-aware file management, we built a production-grade, pre-flight release simulation engine in approximately 14 hours—a project that would otherwise require 50+ hours of full-stack engineering effort.
 
 ---
 
-## 🎯 The Purpose & Workflow Challenge
+## The Purpose & Workflow Challenge
 
 In software delivery, deployment failure is rarely caused by a single compile error or unit test failure. Disastrous outages happen at the seams:
 - **Cascading Microservice Degradation:** A slow downstream microservice query exhausts connection pools across upstream gateways.
@@ -28,7 +28,7 @@ Traditional CI/CD pipelines tell developers if their code *compiles*. **They can
 
 ---
 
-## 📊 Development Impact & Bobcoins Budget
+## Development Impact & Bobcoins Budget
 
 | Metric | With IBM Bob 2.0 | Traditional Manual Development | Productivity Gain |
 |---|---|---|---|
@@ -41,7 +41,7 @@ Traditional CI/CD pipelines tell developers if their code *compiles*. **They can
 
 ---
 
-## 🛠️ How IBM Bob 2.0 Features Were Leveraged
+## How IBM Bob 2.0 Features Were Leveraged
 
 ### 1. Agent Mode (Autonomous Multi-File Orchestration)
 Bob's Agent Mode acted as a lead system architect and software engineer. In each milestone, Bob autonomously:
@@ -49,7 +49,7 @@ Bob's Agent Mode acted as a lead system architect and software engineer. In each
 - Created and modified multiple interdependent TypeScript files in parallel.
 - Ran terminal diagnostics (`npm test`, `npm run build`, `tsc --noEmit`) to verify correctness before completing tasks.
 
-### 2. Subagents (Isolated Context Execution) ✦ *Hackathon Rubric Core Capability*
+### 2. Subagents (Isolated Context Execution) - *Hackathon Rubric Core Capability*
 Bob dispatched **independent subagents** for tasks that required strict context isolation—preventing unrelated implementation details from polluting the main conversation's working memory. Concrete examples:
 
 - **AST Syntax Parser Isolation:** The TypeScript/Babel AST visitor logic (`src/lib/ingester/ast-parser.ts`) was built in an isolated subagent context, receiving only the `DependencyGraph` type contract and file-walker interface. This kept the intricate visitor pattern code completely separate from the risk-scoring logic being authored in parallel.
@@ -58,14 +58,14 @@ Bob dispatched **independent subagents** for tasks that required strict context 
 
 Each subagent returned a concise summary of its deliverable back to the orchestrating session, enabling clean integration with zero context bleed.
 
-### 3. Parallel Tasks & Concurrency ✦ *Hackathon Rubric Core Capability*
+### 3. Parallel Tasks & Concurrency - *Hackathon Rubric Core Capability*
 Bob's parallel task execution enabled decoupled engine components to be developed **concurrently** rather than sequentially, compressing a 50+ hour build timeline into approximately 14 hours:
 
 - **AST Dependency Graph Generator alongside Chaos Decay Math Models:** While one task thread explored `@babel/parser` visitor patterns for extracting `STATIC_IMPORT` and `HTTP_CALL` edges from TypeScript source files, a parallel task was independently developing the exponential/linear/step decay propagation functions in `src/lib/chaos/decay-functions.ts`. Neither thread blocked the other because both consumed only the frozen `GraphNode`/`GraphEdge` contracts from `src/types/`.
 - **React Component Architecture alongside API Route Handlers:** The `SystemMap`, `Timeline`, and `RiskReport` React components were scaffolded in parallel with the Next.js `/api/analyze`, `/api/simulate`, and `/api/gate` route handlers. The shared `AIResult` payload type acted as the synchronization contract.
 - **Vitest Test Suite alongside Final Documentation:** Milestone 15's 78-test QA suite and Milestone 16's architecture documentation were authored in parallel tasks—neither depending on the other's output, both referencing only the finalized type contracts.
 
-### 4. Document Understanding & Deep Context ✦ *Hackathon Rubric Core Capability*
+### 4. Document Understanding & Deep Context - *Hackathon Rubric Core Capability*
 Bob's document-understanding capability was the architectural backbone that maintained 100% contract adherence across all 17 milestones:
 
 - **`@docs/architecture.md` Ingestion:** Every agent session opened by referencing `docs/architecture.md`. Bob parsed the component hierarchy, API surface definitions, data flow diagrams, and simulation pipeline stages to ensure that each new file was scaffolded in precisely the right layer of the system—never placing server logic in client components or vice versa.
@@ -86,7 +86,7 @@ With auto-approve rules configured for safe read and test operations, Bob rapidl
 
 ---
 
-## 🗺️ Step-by-Step Bob Milestones (01 to 23)
+## Step-by-Step Bob Milestones (01 to 24)
 
 Every phase of development is memorialized with genuine task logs, execution prompts, summaries, and screenshots in the [`bob_sessions/`](./bob_sessions/) directory:
 
@@ -167,7 +167,7 @@ bob_sessions/
 
 ---
 
-## 💡 Key Architectural Takeaways
+## Key Architectural Takeaways
 
 1. **Dual-Engine Resilience:** By pairing **IBM watsonx.ai Granite 3.3** with a local deterministic static analysis engine, DryRun guarantees that developers can simulate releases anywhere—even in air-gapped or zero-credential environments.
 2. **Visual Blast Radius over Raw Logs:** Instead of wading through hundreds of lines of stack traces, developers instantly visualize failure propagation across microservice boundaries on an interactive topology graph.
@@ -175,6 +175,6 @@ bob_sessions/
 
 ---
 
-## 🏆 Conclusion
+## Conclusion
 
 IBM Bob 2.0 was not simply an auto-complete assistant; it was an active pair programmer, system architect, and reliability engineer throughout the creation of DryRun. The speed, accuracy, and structural consistency of this codebase stand as a testament to the power of agentic AI development.
