@@ -153,11 +153,47 @@ On the home upload screen, evaluate live candidates immediately:
 
 ## 🏗️ Architecture & Technology Stack
 
-```
-┌─────────────────┐      ┌───────────────────────────────┐      ┌────────────────────────┐
-│  Codebase .ZIP  │ ───► │      Next.js 15 App Router    │ ───► │  Release Flight        │
-│  or GitHub URL  │      │  (watsonx.ai + Static Engine) │      │  Manifest Dashboard    │
-└─────────────────┘      └───────────────────────────────┘      └────────────────────────┘
+```mermaid
+flowchart TD
+    subgraph Ingestion ["1. In-Memory Archive Ingestion"]
+        A["Codebase ZIP Archive"] -->|Buffer Read (adm-zip)| B["In-Memory Buffer (0 Disk Writes)"]
+        C["Public GitHub URL"] -->|API Stream| B
+    end
+
+    subgraph Scanner ["2. Static AST & Security Scanner"]
+        B --> D["AST Dependency Deconstruction"]
+        D --> D1["Circular Dependency Detection"]
+        D --> D2["Hardcoded Secret & SQLi Pattern Audit"]
+        D --> D3["Single Point of Failure (SPOF) Isolation"]
+    end
+
+    subgraph DualEngine ["3. Dual-Engine AI Synthesis"]
+        D --> E{"IBM Cloud Credentials Configured?"}
+        E -->|Yes (Live Mode)| F["IBM watsonx.ai Granite 3.3 8B Instruct\n(Contextual Risk Reasoning)"]
+        E -->|No / Timeout / Error| G["Deterministic Offline Fallback Engine\n(Air-Gapped Zero-Credential Mode)"]
+    end
+
+    subgraph Simulation ["4. Chaos Simulation Pipeline"]
+        F --> H["Chaos Decay Propagation Engine"]
+        G --> H
+        H --> H1["Timeline Generation (T+0s → T+18m)"]
+        H --> H2["Integrity Damage & Cascade Modeling"]
+    end
+
+    subgraph Gating ["5. Pre-Flight Release Gatekeeper"]
+        H --> I["Deployment Gate Verdict Box"]
+        I -->|Risk Score >= 40| I1["🛑 VERDICT: BLOCKED (High Risk)"]
+        I -->|Risk Score < 40| I2["🟢 VERDICT: CLEARED (Nominal)"]
+        I --> J["4-Point CAB Audit Checklist"]
+    end
+
+    subgraph Dashboard ["6. 3-Column Command Center & Export"]
+        I1 --> K["System Topology Map (@xyflow/react)"]
+        I2 --> K
+        H1 --> L["Failure Cascade Timeline Scrubber"]
+        J --> M["Pre-Flight Release Flight Manifest"]
+        M --> N["Export Manifest (.MD & Compliance .PDF)"]
+    end
 ```
 
 | Layer | Technologies |

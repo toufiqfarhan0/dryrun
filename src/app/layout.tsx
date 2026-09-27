@@ -27,10 +27,10 @@ export default function RootLayout({
               (function() {
                 try {
                   const saved = localStorage.getItem('dryrun-theme') || localStorage.getItem('breakwater-theme');
-                  const theme = saved === 'light' ? 'light' : 'dark';
+                  const theme = saved === 'dark' ? 'dark' : 'light';
                   document.documentElement.setAttribute('data-theme', theme);
                 } catch (e) {
-                  document.documentElement.setAttribute('data-theme', 'dark');
+                  document.documentElement.setAttribute('data-theme', 'light');
                 }
               })();
             `,

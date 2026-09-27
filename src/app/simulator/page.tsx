@@ -23,7 +23,7 @@ function SimulatorContent() {
   const scenarioParam = searchParams.get('scenario')
 
   const [mounted, setMounted] = useState(false)
-  const [theme, setTheme] = useState<'dark' | 'light'>('dark')
+  const [theme, setTheme] = useState<'dark' | 'light'>('light')
   const [screen, setScreen] = useState<Screen>('upload')
   const [status, setStatus] = useState<StatusType>('IDLE')
   const [projectName, setProjectName] = useState('no project loaded')
@@ -34,7 +34,7 @@ function SimulatorContent() {
     const saved =
       (localStorage.getItem('dryrun-theme') as 'dark' | 'light') ||
       (localStorage.getItem('breakwater-theme') as 'dark' | 'light') ||
-      'dark'
+      'light'
     setTheme(saved)
     document.documentElement.setAttribute('data-theme', saved)
     if (saved === 'dark') {
