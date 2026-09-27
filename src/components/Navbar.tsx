@@ -1,7 +1,6 @@
 'use client'
 
 import Link from 'next/link'
-import { Sun, Moon } from 'lucide-react'
 import type { StatusType } from '@/types'
 
 interface TopBarProps {
@@ -10,8 +9,7 @@ interface TopBarProps {
   statusColor?: string
   projectName?: string
   riskScore?: number | null
-  theme?: 'dark' | 'light'
-  onToggleTheme?: () => void
+  theme?: 'light'
   onOpenPrivateRepoHelp?: () => void
   onSelectDemo?: () => void
   onNavigateDemo?: () => void
@@ -24,13 +22,10 @@ export default function TopBar({
   projectName = 'no project loaded',
   riskScore = null,
   theme = 'light',
-  onToggleTheme,
   onOpenPrivateRepoHelp,
   onSelectDemo,
   onNavigateDemo,
 }: TopBarProps) {
-  const isDark = theme === 'dark'
-
   return (
     <header
       style={{
@@ -45,15 +40,13 @@ export default function TopBar({
     >
       <div
         style={{
-          background: isDark ? 'rgba(20, 20, 19, 0.92)' : 'rgba(255, 255, 255, 0.92)',
+          background: 'rgba(255, 255, 255, 0.92)',
           backdropFilter: 'blur(16px)',
           WebkitBackdropFilter: 'blur(16px)',
-          border: isDark ? '1px solid rgba(255, 255, 255, 0.12)' : '1px solid #e2e0d8',
+          border: '1px solid #e2e0d8',
           borderRadius: '9999px',
           padding: '8px 18px',
-          boxShadow: isDark
-            ? '0 8px 32px -4px rgba(0, 0, 0, 0.5), 0 1px 2px rgba(255, 255, 255, 0.05)'
-            : '0 4px 20px -4px rgba(20, 20, 20, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04)',
+          boxShadow: '0 4px 20px -4px rgba(20, 20, 20, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
@@ -76,7 +69,7 @@ export default function TopBar({
                 fontWeight: 800,
                 fontSize: '14px',
                 letterSpacing: '-0.02em',
-                color: isDark ? '#ffffff' : '#141413',
+                color: '#141413',
               }}
             >
               dryrun
@@ -138,18 +131,6 @@ export default function TopBar({
           >
             GitHub
           </a>
-
-          {onToggleTheme && (
-            <button
-              type="button"
-              onClick={onToggleTheme}
-              className="topbar-theme-toggle"
-              aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-              title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-            >
-              {isDark ? <Sun size={15} strokeWidth={2} /> : <Moon size={15} strokeWidth={2} />}
-            </button>
-          )}
         </nav>
       </div>
     </header>

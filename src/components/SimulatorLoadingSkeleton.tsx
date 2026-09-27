@@ -3,18 +3,14 @@
 import React from 'react'
 
 interface SimulatorSkeletonProps {
-  theme?: 'dark' | 'light'
+  theme?: 'light'
 }
 
-export default function SimulatorSkeleton({ theme = 'dark' }: SimulatorSkeletonProps) {
-  const isDark = theme === 'dark'
-
-  const bgBase = isDark ? '#141413' : '#ffffff'
-  const bgCard = isDark ? '#1a1918' : '#f6f5f2'
-  const shimmerBg = isDark
-    ? 'linear-gradient(90deg, #1c1c1b 0%, #282826 50%, #1c1c1b 100%)'
-    : 'linear-gradient(90deg, #eae8e1 0%, #f6f5f2 50%, #eae8e1 100%)'
-  const borderSubtle = isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #e2e0d8'
+export default function SimulatorSkeleton({ theme = 'light' }: SimulatorSkeletonProps) {
+  const bgBase = '#ffffff'
+  const bgCard = '#f6f5f2'
+  const shimmerBg = 'linear-gradient(90deg, #eae8e1 0%, #f6f5f2 50%, #eae8e1 100%)'
+  const borderSubtle = '1px solid #e2e0d8'
 
   return (
     <div
@@ -22,8 +18,8 @@ export default function SimulatorSkeleton({ theme = 'dark' }: SimulatorSkeletonP
         minHeight: '100vh',
         display: 'flex',
         flexDirection: 'column',
-        background: isDark ? '#0e0e0d' : '#f6f5f2',
-        color: isDark ? '#f4f4f5' : '#141413',
+        background: '#f6f5f2',
+        color: '#141413',
         fontFamily: "var(--font-sans), 'Geist', sans-serif",
         padding: '0 20px',
         boxSizing: 'border-box',
@@ -62,9 +58,7 @@ export default function SimulatorSkeleton({ theme = 'dark' }: SimulatorSkeletonP
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            boxShadow: isDark
-              ? '0 8px 32px -4px rgba(0, 0, 0, 0.5)'
-              : '0 4px 20px -4px rgba(20, 20, 20, 0.06)',
+            boxShadow: '0 4px 20px -4px rgba(20, 20, 20, 0.06)',
           }}
         >
           {/* Logo skeleton */}
@@ -129,9 +123,7 @@ export default function SimulatorSkeleton({ theme = 'dark' }: SimulatorSkeletonP
             display: 'flex',
             flexDirection: 'column',
             gap: '22px',
-            boxShadow: isDark
-              ? '0 12px 32px rgba(0,0,0,0.45)'
-              : '0 4px 24px rgba(0,0,0,0.06)',
+            boxShadow: '0 4px 24px rgba(0,0,0,0.06)',
           }}
         >
           {/* Input & Button Skeleton */}
@@ -187,7 +179,7 @@ export default function SimulatorSkeleton({ theme = 'dark' }: SimulatorSkeletonP
           <div
             style={{
               height: '1px',
-              background: isDark ? 'rgba(255, 255, 255, 0.08)' : '#e5e3dc',
+              background: '#e5e3dc',
               margin: '4px 0',
             }}
           />
@@ -196,7 +188,7 @@ export default function SimulatorSkeleton({ theme = 'dark' }: SimulatorSkeletonP
           <div
             style={{
               height: '150px',
-              border: isDark ? '2px dashed rgba(255, 255, 255, 0.12)' : '2px dashed #dedad1',
+              border: '2px dashed #dedad1',
               borderRadius: '12px',
               display: 'flex',
               flexDirection: 'column',

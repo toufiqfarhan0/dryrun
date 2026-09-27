@@ -23,7 +23,7 @@ function SimulatorContent() {
   const scenarioParam = searchParams.get('scenario')
 
   const [mounted, setMounted] = useState(false)
-  const [theme, setTheme] = useState<'dark' | 'light'>('light')
+  const theme: 'light' = 'light'
   const [screen, setScreen] = useState<Screen>('upload')
   const [status, setStatus] = useState<StatusType>('IDLE')
   const [projectName, setProjectName] = useState('no project loaded')
@@ -31,31 +31,9 @@ function SimulatorContent() {
 
   useEffect(() => {
     setMounted(true)
-    const saved =
-      (localStorage.getItem('dryrun-theme') as 'dark' | 'light') ||
-      (localStorage.getItem('breakwater-theme') as 'dark' | 'light') ||
-      'light'
-    setTheme(saved)
-    document.documentElement.setAttribute('data-theme', saved)
-    if (saved === 'dark') {
-      document.documentElement.classList.add('dark')
-    } else {
-      document.documentElement.classList.remove('dark')
-    }
-  }, [])
-
-  const toggleTheme = useCallback(() => {
-    setTheme((prev) => {
-      const next = prev === 'dark' ? 'light' : 'dark'
-      localStorage.setItem('dryrun-theme', next)
-      document.documentElement.setAttribute('data-theme', next)
-      if (next === 'dark') {
-        document.documentElement.classList.add('dark')
-      } else {
-        document.documentElement.classList.remove('dark')
-      }
-      return next
-    })
+    localStorage.setItem('dryrun-theme', 'light')
+    document.documentElement.setAttribute('data-theme', 'light')
+    document.documentElement.classList.remove('dark')
   }, [])
 
   const [procStage, setProcStage] = useState('')
@@ -234,6 +212,7 @@ function SimulatorContent() {
         modules: detectedModules,
         stack: detectedStack,
         aiResult,
+        files: aiResult.files,
       }
 
       setRiskScore(aiResult.risk_score)
@@ -339,6 +318,7 @@ function SimulatorContent() {
         modules: detectedModules,
         stack: detectedStack,
         aiResult,
+        files: aiResult.files,
       }
 
       setRiskScore(aiResult.risk_score)
@@ -378,8 +358,8 @@ function SimulatorContent() {
         display: 'flex',
         flexDirection: 'column',
         overflow: 'hidden',
-        background: theme === 'dark' ? '#0e0e0d' : '#f6f5f2',
-        color: theme === 'dark' ? '#f4f4f5' : '#141413',
+        background: '#f6f5f2',
+        color: '#141413',
         fontFamily: "var(--font-sans), 'Geist', sans-serif",
       }}
     >
@@ -389,8 +369,7 @@ function SimulatorContent() {
         statusColor={statusColor}
         projectName={projectName}
         riskScore={riskScore}
-        theme={theme}
-        onToggleTheme={toggleTheme}
+        theme="light"
         onOpenPrivateRepoHelp={() => setPrivateRepoNotice({ isOpen: true })}
         onSelectDemo={() => {
           if (screen !== 'upload') setScreen('upload')
@@ -447,7 +426,7 @@ function SimulatorContent() {
 
 export default function SimulatorPage() {
   return (
-    <Suspense fallback={<SimulatorLoadingSkeleton theme="dark" />}>
+    <Suspense fallback={<SimulatorLoadingSkeleton theme="light" />}>
       <SimulatorContent />
     </Suspense>
   )

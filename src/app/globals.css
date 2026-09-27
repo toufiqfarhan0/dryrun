@@ -4,7 +4,7 @@
 
 /* ============================================================
    DRY RUN — Exact GitDiagram Design System
-   With Full Dark Mode & Light Mode Support
+   Pure Neo-Brutalist Light Mode
    ============================================================ */
 
 /* === LIGHT MODE (Clean Neutral Stone & Crisp White) === */
@@ -55,48 +55,6 @@
   --topbar-border: rgba(0, 0, 0, 1);
 }
 
-/* === DARK MODE (Sleek Obsidian & Zinc) === */
-.dark,
-html[data-theme='dark'] {
-  --background: 240 10% 4%;
-  --foreground: 0 0% 98%;
-  --popover: 240 10% 6%;
-  --popover-foreground: 0 0% 98%;
-  --primary: 0 0% 98%;
-  --primary-foreground: 240 10% 4%;
-  --muted-foreground: 240 5% 65%;
-  --accent: 240 4% 16%;
-  --accent-foreground: 0 0% 98%;
-  --border: 0 0% 100%;
-  --input: 240 4% 16%;
-  --ring: 240 5% 65%;
-  --neo-panel: 240 6% 10%;
-  --neo-panel-muted: 240 5% 14%;
-  --neo-button: 0 0% 98%;
-  --neo-button-hover: 0 0% 90%;
-  --neo-button-text: 240 10% 4%;
-  --neo-subtle: 240 6% 14%;
-  --neo-subtle-hover: 240 6% 20%;
-  --neo-subtle-text: 0 0% 98%;
-  --neo-subtle-muted: 240 5% 45%;
-  --neo-link: 217 91% 60%;
-  --neo-link-hover: 217 91% 70%;
-  --neo-soft-text: 240 5% 65%;
-  --neo-input-bg: 240 6% 7%;
-
-  /* Semantic status colors */
-  --ok: #22c55e;
-  --ok-dim: rgba(34, 197, 94, 0.15);
-  --warn: #f59e0b;
-  --warn-dim: rgba(245, 158, 11, 0.15);
-  --danger: #ef4444;
-  --danger-dim: rgba(239, 68, 68, 0.15);
-  --critical: #dc2626;
-  --critical-dim: rgba(220, 38, 38, 0.2);
-
-  --topbar-bg: rgba(19, 17, 28, 0.85);
-  --topbar-border: rgba(255, 255, 255, 0.08);
-}
 
 /* ---- Reset ---- */
 *, *::before, *::after {
@@ -121,19 +79,9 @@ body {
 }
 
 /* Light mode background — Warm Neutral Stone with subtle micro-dots */
-html[data-theme='light'] body,
 body {
   background-color: #f6f5f2;
   background-image: radial-gradient(#dedad1 1.2px, transparent 1.2px);
-  background-size: 20px 20px;
-  background-attachment: fixed;
-}
-
-/* Dark mode background — Deep Charcoal Obsidian with subtle micro-dots */
-.dark body,
-html[data-theme='dark'] body {
-  background-color: #0e0e0d;
-  background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1.2px, transparent 1.2px);
   background-size: 20px 20px;
   background-attachment: fixed;
 }
@@ -200,25 +148,6 @@ html {
   background: hsl(var(--muted-foreground) / 0.12);
 }
 
-.theme-toggle-btn {
-  background: transparent;
-  border: none;
-  color: hsl(var(--foreground));
-  font-family: var(--font-sans);
-  font-size: 13px;
-  font-weight: 600;
-  padding: 6px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  transition: all 160ms var(--ease-out);
-}
-.theme-toggle-btn:hover {
-  background: hsl(var(--muted-foreground) / 0.12);
-}
-
 /* ============================================================
    EXACT GITDIAGRAM NEO BRUTALIST COMPONENTS
    ============================================================ */
@@ -234,12 +163,6 @@ html {
   box-shadow: 8px 8px 0 0 #000 !important;
   color: hsl(var(--foreground));
   border-radius: 12px;
-}
-
-.dark .neo-panel,
-html[data-theme='dark'] .neo-panel {
-  border: 2px solid #000 !important;
-  box-shadow: 6px 6px 0 0 #000 !important;
 }
 
 /* Neo Button (exact GitDiagram style) */
@@ -283,12 +206,6 @@ html[data-theme='dark'] .neo-panel {
 .neo-button-secondary:hover {
   background: hsl(var(--neo-subtle-hover)) !important;
   color: hsl(var(--neo-subtle-text)) !important;
-}
-
-.dark .neo-button,
-html[data-theme='dark'] .neo-button {
-  border: 2px solid #000 !important;
-  box-shadow: 3px 3px 0 0 #000 !important;
 }
 
 /* Neo Input (exact GitDiagram input box) */
@@ -613,28 +530,6 @@ html[data-theme='dark'] .neo-button {
   box-shadow: 2px 2px 0 0 #000 !important;
 }
 
-.dark .pb-btn,
-html[data-theme='dark'] .pb-btn {
-  background: #1a1918 !important;
-  color: #ffffff !important;
-  border: 2px solid #000 !important;
-}
-.dark .pb-btn:hover,
-html[data-theme='dark'] .pb-btn:hover {
-  background: #2a2927 !important;
-  color: #ffffff !important;
-  transform: translate(-1px, -1px);
-  box-shadow: 3px 3px 0 0 #000;
-}
-.dark .pb-btn:active,
-.dark .pb-btn.active,
-html[data-theme='dark'] .pb-btn:active,
-html[data-theme='dark'] .pb-btn.active {
-  background: #2a2927 !important;
-  color: #ffffff !important;
-  box-shadow: 1.5px 1.5px 0 0 #000 !important;
-}
-
 .pb-counter-pill {
   display: inline-flex;
   align-items: center;
@@ -651,6 +546,9 @@ html[data-theme='dark'] .pb-btn.active {
   letter-spacing: 0.04em;
   box-shadow: 1.5px 1.5px 0 0 #000;
   user-select: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+  min-width: 44px;
 }
 
 /* Export Dropdown Items */
@@ -661,12 +559,6 @@ html[data-theme='dark'] .pb-btn.active {
   background: hsl(var(--neo-subtle)) !important;
   border-color: #000 !important;
   transform: translate(-1px, -1px);
-  box-shadow: 2px 2px 0 0 #000;
-}
-.dark .export-dropdown-item:hover,
-html[data-theme='dark'] .export-dropdown-item:hover {
-  background: rgba(255, 255, 255, 0.08) !important;
-  border-color: rgba(255, 255, 255, 0.2) !important;
   box-shadow: 2px 2px 0 0 #000;
 }
 
@@ -862,7 +754,7 @@ html[data-theme='dark'] .export-dropdown-item:hover {
   margin: 0 4px;
 }
 
-html[data-theme='light'] .supported-tech-dot {
+.supported-tech-dot {
   color: hsl(var(--neo-link));
 }
 
@@ -923,52 +815,6 @@ html[data-theme='light'] .supported-tech-dot {
   color: #141413;
 }
 
-.dark .topbar-nav-link,
-html[data-theme='dark'] .topbar-nav-link {
-  color: #a1a1aa;
-}
-
-.dark .topbar-nav-link:hover,
-html[data-theme='dark'] .topbar-nav-link:hover {
-  color: #ffffff;
-}
-
-.topbar-theme-toggle {
-  background: rgba(0, 0, 0, 0.05);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: #52525b;
-  width: 32px;
-  height: 32px;
-  border-radius: 9999px;
-  transition: all 140ms cubic-bezier(0.16, 1, 0.3, 1);
-  padding: 0;
-  flex-shrink: 0;
-}
-
-.topbar-theme-toggle:hover {
-  background: rgba(0, 0, 0, 0.09);
-  color: #18181b;
-  transform: scale(1.04);
-}
-
-.dark .topbar-theme-toggle,
-html[data-theme='dark'] .topbar-theme-toggle {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  color: #fbbf24;
-}
-
-.dark .topbar-theme-toggle:hover,
-html[data-theme='dark'] .topbar-theme-toggle:hover {
-  background: rgba(255, 255, 255, 0.16);
-  color: #fef08a;
-  transform: scale(1.04);
-}
-
 /* === How It Works Pipeline Animations === */
 @keyframes pipelinePulse {
   0% { transform: scale(1); opacity: 0.85; }
@@ -1007,15 +853,6 @@ html[data-theme='dark'] .topbar-theme-toggle:hover {
 
 .pipeline-card:hover {
   transform: translateY(-4px);
-}
-
-.dark .pipeline-card:hover,
-html[data-theme='dark'] .pipeline-card:hover {
-  border-color: rgba(255, 255, 255, 0.24) !important;
-  box-shadow: 0 12px 30px -4px rgba(0, 0, 0, 0.7) !important;
-}
-
-html[data-theme='light'] .pipeline-card:hover {
   border-color: #000000 !important;
   box-shadow: 0 12px 24px -4px rgba(0, 0, 0, 0.08) !important;
 }

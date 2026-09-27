@@ -26,9 +26,9 @@ export default function RootLayout({
             __html: `
               (function() {
                 try {
-                  const saved = localStorage.getItem('dryrun-theme') || localStorage.getItem('breakwater-theme');
-                  const theme = saved === 'dark' ? 'dark' : 'light';
-                  document.documentElement.setAttribute('data-theme', theme);
+                  localStorage.setItem('dryrun-theme', 'light');
+                  document.documentElement.setAttribute('data-theme', 'light');
+                  document.documentElement.classList.remove('dark');
                 } catch (e) {
                   document.documentElement.setAttribute('data-theme', 'light');
                 }
